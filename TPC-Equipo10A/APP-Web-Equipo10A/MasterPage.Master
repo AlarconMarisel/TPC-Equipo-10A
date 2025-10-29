@@ -1,0 +1,179 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.Master.cs" Inherits="APP_Web_Equipo10A.Site" %>
+
+<!DOCTYPE html>
+<html lang="es">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title><%: Page.Title %> - SecondHand</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="Content/Site.css" rel="stylesheet" />
+    
+    <style>
+        .search-icon {
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            pointer-events: none;
+        }
+        .search-input {
+            padding-left: 40px;
+        }
+    </style>
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Top Navigation Bar -->
+        <header class="sticky-top bg-white bg-opacity-80 backdrop-blur-sm border-bottom border-light">
+            <div class="container">
+                <div class="d-flex align-items-center justify-content-between py-3">
+                    <!-- Logo and Brand -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-primary" style="width: 28px; height: 28px;">
+                            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+                                <path d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <h1 class="h5 fw-bold mb-0 text-dark">SecondHand</h1>
+                    </div>
+                    
+                    <!-- Desktop Navigation -->
+                    <nav class="d-none d-md-flex align-items-center gap-4">
+                        <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
+                        <a class="text-decoration-none text-dark fw-medium" href="DetalleArticulo.aspx">Productos</a>
+                        <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
+                        <a class="text-decoration-none text-dark fw-medium" href="PanelAdministrador.aspx">Admin</a>
+                    </nav>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex align-items-center gap-2 gap-sm-3">
+                        <!-- Search Bar (Desktop) -->
+                        <div class="d-none d-sm-flex position-relative" style="min-width: 208px; max-width: 332px;">
+                            <span class="material-symbols-outlined position-absolute search-icon text-muted">search</span>
+                            <input type="text" class="form-control search-input" placeholder="Buscar artículo..." />
+                        </div>
+                        
+                        <!-- Login Button (Desktop) -->
+                        <a href="Login.aspx" class="btn btn-primary rounded-pill d-none d-md-flex text-decoration-none" style="min-width: 84px; height: 40px; font-size: 14px; font-weight: 700;">
+                            Iniciar Sesión
+                        </a>
+                        
+                        <!-- Cart Button -->
+                        <a href="CarritoReserva.aspx" class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center text-decoration-none" style="width: 40px; height: 40px;">
+                            <span class="material-symbols-outlined">shopping_cart</span>
+                        </a>
+                        
+                        <!-- Mobile Menu Button -->
+                        <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center d-md-none" style="width: 40px; height: 40px;" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu -->
+                <div class="collapse d-md-none" id="mobileMenu">
+                    <div class="py-3 border-top">
+                        <!-- Mobile Search -->
+                        <div class="mb-3">
+                            <div class="position-relative">
+                                <span class="material-symbols-outlined position-absolute search-icon text-muted">search</span>
+                                <input type="text" class="form-control search-input" placeholder="Buscar artículo..." />
+                            </div>
+                        </div>
+                        
+                        <!-- Mobile Navigation -->
+                        <nav class="d-flex flex-column gap-3">
+                            <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
+                            <a class="text-decoration-none text-dark fw-medium" href="DetalleArticulo.aspx">Productos</a>
+                            <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
+                            <a class="text-decoration-none text-dark fw-medium" href="PanelAdministrador.aspx">Admin</a>
+                            <hr class="my-2">
+                            <a class="text-decoration-none text-dark fw-medium" href="Login.aspx">Iniciar Sesión</a>
+                            <a class="text-decoration-none text-dark fw-medium" href="Registro.aspx">Registrarse</a>
+                            <a class="text-decoration-none text-dark fw-medium" href="CarritoReserva.aspx">Carrito</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow-1">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-top border-light mt-5">
+            <div class="container py-5">
+                <div class="row g-4">
+                    <div class="col-6 col-md-3">
+                        <h5 class="fw-bold mb-3">SecondHand</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Sobre Nosotros</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Cómo funciona</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Contacto</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h5 class="fw-bold mb-3">Ayuda</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Preguntas Frecuentes</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Políticas de Envío</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Términos de Servicio</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h5 class="fw-bold mb-3">Categorías</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Electrónica</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Ropa</a></li>
+                            <li class="mb-2"><a class="text-decoration-none text-muted small" href="#">Muebles</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h5 class="fw-bold mb-3">Síguenos</h5>
+                        <div class="d-flex gap-3">
+                            <a class="text-muted" href="#">
+                                <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                                    <path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path>
+                                </svg>
+                            </a>
+                            <a class="text-muted" href="#">
+                                <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-top border-light text-center">
+                    <small class="text-muted">© 2024 SecondHand. Todos los derechos reservados.</small>
+                </div>
+            </div>
+        </footer>
+    </form>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="Scripts/Site.js"></script>
+    
+    <asp:ContentPlaceHolder ID="scripts" runat="server">
+    </asp:ContentPlaceHolder>
+</body>
+</html>
