@@ -17,7 +17,27 @@ namespace Negocio
           
             try
             {
-                datos.SetearConsulta("SELECT IDArticulo as Id, Nombre, Descripcion, Precio FROM ARTICULOS");
+                datos.SetearConsulta(@"
+                    SELECT 
+                        a.IDArticulo, 
+                        a.Nombre, 
+                        a.Descripcion, 
+                        a.Precio,
+                        c.IDCategoria,
+                        c.Nombre as CategoriaNombre,
+                        e.IDEstado,
+                        e.Nombre as EstadoNombre,
+                        img.RutaImagen AS ImagenPrincipal
+                    FROM ARTICULOS a
+                    INNER JOIN CATEGORIAS c ON a.IDCategoria = c.IDCategoria
+                    INNER JOIN ESTADOSARTICULO e ON a.IDEstado = e.IDEstado
+                    OUTER APPLY (
+                        SELECT TOP 1 RutaImagen
+                        FROM IMAGENESARTICULO ii
+                        WHERE ii.IDArticulo = a.IDArticulo
+                        ORDER BY ii.IDImagen
+                    ) img
+                    ORDER BY a.IDArticulo DESC");
 
                 datos.EjecutarLectura();
 
@@ -25,11 +45,36 @@ namespace Negocio
                 {
                     Articulo art = new Articulo();
 
-                    art.IdArticulo = (int)datos.Lector["Id"];
+                    
+                    art.IdArticulo = (int)datos.Lector["IDArticulo"];
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = (string)datos.Lector["Descripcion"];
                     art.Precio = (decimal)datos.Lector["Precio"];
 
+                    
+                    art.IdCategoriaArticulo = new Categoria();
+                    art.IdCategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
+                    art.IdCategoriaArticulo.Nombre = (string)datos.Lector["CategoriaNombre"];
+
+                    
+                    art.IdEstadoArticulo = new Estado();
+                    art.IdEstadoArticulo.IdEstado = (int)datos.Lector["IDEstado"];
+                    art.IdEstadoArticulo.Nombre = (string)datos.Lector["EstadoNombre"];
+
+                    
+                    art.Imagenes = new List<Imagen>();
+                    var imagenPrincipal = datos.Lector["ImagenPrincipal"];
+                    if (imagenPrincipal != DBNull.Value)
+                    {
+                        art.Imagenes.Add(new Imagen
+                        {
+                            IdArticulo = art.IdArticulo,
+                            RutaImagen = (string)imagenPrincipal
+                        });
+                    }
+
+                    
+                    lista.Add(art);
                 }
 
                 return lista;

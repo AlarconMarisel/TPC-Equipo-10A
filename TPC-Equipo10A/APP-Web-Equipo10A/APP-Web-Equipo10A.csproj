@@ -71,6 +71,10 @@
       <Project>{FA177779-18CD-4800-8871-3B60910D962B}</Project>
       <Name>Dominio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Negocio\Negocio.csproj">
+      <Project>{5AB3DD48-8EF1-4C67-98E4-139EF8C2648D}</Project>
+      <Name>Negocio</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminConfirmarSeña.aspx" />
@@ -80,6 +84,9 @@
     <Content Include="AdminGestionUsuario.aspx" />
     <Content Include="CarritoReserva.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\Uploads\Articulos\SetPosillos01.jpg" />
+    <Content Include="Content\Uploads\README.txt" />
+    <Content Include="Content\Uploads\Articulos\README.txt" />
     <Content Include="Default.aspx" />
     <Content Include="DetalleArticulo.aspx" />
     <Content Include="Global.asax" />
@@ -120,6 +127,9 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="DetalleArticulo.aspx.cs">
       <DependentUpon>DetalleArticulo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -154,6 +164,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Uploads\Articulos\HeladeraGafaFreezer01.webp" />
+    <Content Include="Content\Uploads\Articulos\MesaRatona01.webp" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
