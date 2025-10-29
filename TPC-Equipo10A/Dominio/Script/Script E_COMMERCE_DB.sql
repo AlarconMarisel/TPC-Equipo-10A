@@ -57,7 +57,7 @@ CREATE TABLE DETALLERESERVA(
 IDDetalleReserva INTEGER PRIMARY KEY IDENTITY(1,1),
 IDReserva INTEGER NOT NULL,
 IDArticulo INTEGER NOT NULL,
-MontoSeña MONEY NOT NULL,
+MontoSeï¿½a MONEY NOT NULL,
 FOREIGN KEY (IDReserva) REFERENCES RESERVAS (IDReserva),
 FOREIGN KEY (IDArticulo) REFERENCES ARTICULOS (IDArticulo)
 )
@@ -88,3 +88,9 @@ VALUES
     ('Heladera', 'Heladera Gafa con Frizzer', 100000, 3, 1),
     ('Mesa Ratona', 'Mesa ratona en excelente estado de 60X100 cm', 50000, 2, 1),
     ('Set Posillos', 'Set de 4 Posillos con platito, poco uso', 10000, 4, 2)
+
+INSERT INTO IMAGENESARTICULO (IDArticulo, RutaImagen)
+VALUES 
+(1, 'Content/Uploads/Articulos/HeladeraGafaFreezer01.webp'),
+(2, 'Content/Uploads/Articulos/MesaRatona01.webp'),
+(3, 'Content/Uploads/Articulos/SetPosillos01.jpg');
