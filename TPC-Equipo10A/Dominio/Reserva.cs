@@ -12,6 +12,8 @@ namespace Dominio
         public Usuario IdUsuario { get; set; }
         public DateTime FechaReserva { get; set; }
         public DateTime FechaVencimiento { get; set; }
+        public List<Articulo> ArticulosReservados { get; set; }
+        public Decimal MontoSeña { get; set; }
         public bool EstadoReserva { get; set; } 
     }
 }

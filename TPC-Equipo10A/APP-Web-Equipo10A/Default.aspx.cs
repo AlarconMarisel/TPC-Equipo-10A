@@ -34,7 +34,7 @@ namespace APP_Web_Equipo10A
                     .Where(a =>
                         (a.Nombre ?? string.Empty).IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0 ||
                         (a.Descripcion ?? string.Empty).IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        (a.IdCategoriaArticulo?.Nombre ?? string.Empty).IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        (a.CategoriaArticulo?.Nombre ?? string.Empty).IndexOf(query, System.StringComparison.OrdinalIgnoreCase) >= 0)
                     .ToList();
 
                 pnlResultados.Visible = true;

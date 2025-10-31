@@ -52,14 +52,14 @@ namespace Negocio
                     art.Precio = (decimal)datos.Lector["Precio"];
 
                     
-                    art.IdCategoriaArticulo = new Categoria();
-                    art.IdCategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
-                    art.IdCategoriaArticulo.Nombre = (string)datos.Lector["CategoriaNombre"];
+                    art.CategoriaArticulo = new Categoria();
+                    art.CategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
+                    art.CategoriaArticulo.Nombre = (string)datos.Lector["CategoriaNombre"];
 
                     
-                    art.IdEstadoArticulo = new Estado();
-                    art.IdEstadoArticulo.IdEstado = (int)datos.Lector["IDEstado"];
-                    art.IdEstadoArticulo.Nombre = (string)datos.Lector["EstadoNombre"];
+                    art.EstadoArticulo = new Estado();
+                    art.EstadoArticulo.IdEstado = (int)datos.Lector["IDEstado"];
+                    art.EstadoArticulo.Nombre = (string)datos.Lector["EstadoNombre"];
 
                     
                     art.Imagenes = new List<Imagen>();

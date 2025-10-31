@@ -118,8 +118,8 @@
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fw-semibold"><%# Eval("Nombre") %></h5>
                                         <p class="text-muted small mb-2"><%# Eval("Descripcion") %></p>
-                                        <p class="text-muted mb-1">Categoría: <%# Eval("IdCategoriaArticulo.Nombre") %></p>
-                                        <p class="text-muted">Estado: <%# Eval("IdEstadoArticulo.Nombre") %></p>
+                                        <p class="text-muted mb-1">Categoría: <%# Eval("CategoriaArticulo.Nombre") %></p>
+                                        <p class="text-muted">Estado: <%# Eval("EstadoArticulo.Nombre") %></p>
                                         <p class="card-text h4 fw-bold text-primary mb-3">$<%# string.Format("{0:N0}", Eval("Precio")) %></p>
                                     </div>
                                 </div>
