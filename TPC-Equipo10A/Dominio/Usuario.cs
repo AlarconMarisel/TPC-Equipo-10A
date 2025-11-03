@@ -22,6 +22,9 @@ namespace Dominio
         public string Telefono { get; set; }
         public string Domicilio { get; set; }
         public TipoUsuario Tipo { get; set; }
+
+        public Usuario() { }
+
         public Usuario(string email, string password, bool admin) { 
             
             Email = email;
