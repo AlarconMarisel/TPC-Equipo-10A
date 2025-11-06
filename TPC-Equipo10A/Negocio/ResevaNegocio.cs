@@ -115,7 +115,7 @@ namespace Negocio
             }
         }
 
-public void EliminarReserva(int id)
+        public void EliminarReserva(int id)
         {
             AccesoDatos datos = new AccesoDatos();
             try
