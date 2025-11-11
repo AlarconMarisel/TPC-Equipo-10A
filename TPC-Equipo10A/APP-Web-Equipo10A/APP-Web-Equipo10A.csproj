@@ -107,6 +107,9 @@
       <DependentUpon>AdminFormularioArticulo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="AdminFormularioArticulo.aspx.designer.cs">
+      <DependentUpon>AdminFormularioArticulo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AdminGestionArticulo.aspx.cs">
       <DependentUpon>AdminGestionArticulo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

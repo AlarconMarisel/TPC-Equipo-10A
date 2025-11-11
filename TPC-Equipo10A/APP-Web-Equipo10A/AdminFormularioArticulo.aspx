@@ -437,6 +437,7 @@
                 width: 100%;
             }
         }
+
     </style>
 </asp:Content>
 
@@ -479,15 +480,15 @@
                                 
                                 <!-- Category -->
                                 <div class="form-field">
-                                    <label class="form-label">Categoría</label>
-                                    <select class="form-select">
-                                        <option>Seleccionar categoría</option>
-                                        <option value="electronics">Electrónica</option>
-                                        <option value="home">Hogar y Jardín</option>
-                                        <option value="fashion">Moda y Accesorios</option>
-                                        <option value="sports">Deportes y Ocio</option>
-                                        <option value="vehicles">Vehículos</option>
-                                    </select>
+                                    <label class="form-label">Categoría 
+                                    <button type="button" id="btnAgregarCategoria" class="btn-primary ms-2">
+                                    +
+                                    </button>
+                                    </label>
+                                    <div>
+                                        <asp:DropDownList ID="ddlCategoria" runat="server" Class="form-select"> 
+                                        </asp:DropDownList>
+                                    </div>
                                 </div>
                             </div>
                         </div>
