@@ -152,6 +152,18 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Validar precio mínimo
+                if (nuevo.Precio <= 0)
+                {
+                    throw new Exception("El precio debe ser mayor a 0.");
+                }
+
+                // Validar nombre duplicado
+                if (ExisteNombre(nuevo.Nombre))
+                {
+                    throw new Exception($"Ya existe un artículo con el nombre '{nuevo.Nombre}'. Por favor, elija otro nombre.");
+                }
+
                 datos.SetearConsulta(@"INSERT INTO ARTICULOS (Nombre, Descripcion, Precio, IDCategoria, IDEstado, Eliminado) 
                                      VALUES (@Nombre, @Descripcion, @Precio, @IDCategoria, @IDEstado, 0); 
                                      SELECT SCOPE_IDENTITY();");
@@ -166,7 +178,12 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Si ya es una excepción con mensaje personalizado, relanzarla
+                if (ex.Message.Contains("Ya existe") || ex.Message.Contains("precio"))
+                {
+                    throw;
+                }
+                throw new Exception("Error al agregar el artículo: " + ex.Message, ex);
             }
             finally
             {
@@ -179,6 +196,18 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Validar precio mínimo
+                if (articulo.Precio <= 0)
+                {
+                    throw new Exception("El precio debe ser mayor a 0.");
+                }
+
+                // Validar nombre duplicado (excluyendo el artículo actual)
+                if (ExisteNombre(articulo.Nombre, articulo.IdArticulo))
+                {
+                    throw new Exception($"Ya existe otro artículo con el nombre '{articulo.Nombre}'. Por favor, elija otro nombre.");
+                }
+
                 datos.SetearConsulta(@"UPDATE ARTICULOS 
                                      SET Nombre=@Nombre, Descripcion=@Descripcion, Precio=@Precio, 
                                          IDCategoria=@IDCategoria, IDEstado=@IDEstado 
@@ -190,11 +219,23 @@ namespace Negocio
                 datos.SetearParametro("@IDCategoria", articulo.CategoriaArticulo.IdCategoria);
                 datos.SetearParametro("@IDEstado", articulo.EstadoArticulo.IdEstado);
 
+                // Verificar que el artículo existe antes de modificar
+                Articulo articuloExistente = ObtenerPorId(articulo.IdArticulo);
+                if (articuloExistente == null)
+                {
+                    throw new Exception("No se pudo modificar el artículo. Puede que no exista o haya sido eliminado.");
+                }
+
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Si ya es una excepción con mensaje personalizado, relanzarla
+                if (ex.Message.Contains("Ya existe") || ex.Message.Contains("precio") || ex.Message.Contains("No se pudo modificar"))
+                {
+                    throw;
+                }
+                throw new Exception("Error al modificar el artículo: " + ex.Message, ex);
             }
             finally
             {
@@ -213,7 +254,39 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("Error al eliminar el artículo: " + ex.Message, ex);
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public bool ExisteNombre(string nombre, int? idArticuloExcluir = null)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                string consulta = "SELECT COUNT(*) FROM ARTICULOS WHERE Nombre = @Nombre AND Eliminado = 0";
+                if (idArticuloExcluir.HasValue)
+                {
+                    consulta += " AND IDArticulo != @IDArticulo";
+                }
+
+                datos.SetearConsulta(consulta);
+                datos.SetearParametro("@Nombre", nombre);
+                if (idArticuloExcluir.HasValue)
+                {
+                    datos.SetearParametro("@IDArticulo", idArticuloExcluir.Value);
+                }
+
+                object result = datos.EjecutarAccionScalar();
+                int count = Convert.ToInt32(result);
+                return count > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al verificar si el nombre existe: " + ex.Message, ex);
             }
             finally
             {
