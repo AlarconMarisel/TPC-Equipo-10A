@@ -100,24 +100,39 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .related-item-image {
-        aspect-ratio: 4/5;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        border-radius: 8px;
-        width: 85%;
-        margin: 0 auto;
+    .product-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
     }
 
-    .carousel-container {
-        overflow-x: auto;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
     }
 
-    .carousel-container::-webkit-scrollbar {
-        display: none;
+    .product-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        background-color: #f8fafc;
+        border-radius: 12px;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .product-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+        max-height: 2.8em;
     }
 
     .detail-search-input {
@@ -171,46 +186,102 @@
         <nav class="mb-4">
             <div class="d-flex flex-wrap gap-2">
                 <a href="Default.aspx" class="breadcrumb-item text-decoration-none">Inicio</a>
-                <span class="breadcrumb-item">/</span>
-                <a href="#" class="breadcrumb-item text-decoration-none">Ropa</a>
-                <span class="breadcrumb-item">/</span>
-                <span class="breadcrumb-item">Chaquetas</span>
+                <span class="breadcrumb-item">//</span>
+                <asp:HyperLink ID="lnkCategoria" runat="server" CssClass="breadcrumb-item text-decoration-none"></asp:HyperLink>
             </div>
         </nav>
-        <!-- Thumbnail Gallery -->
-        <asp:Repeater ID="repImagenes" runat="server">
-            <ItemTemplate>
-                <div class="col">
-                    <div class="product-gallery-thumb"
-                        style='background-image: url("<%# Eval("RutaImagen") %>");'>
+        
+        <!-- Product Content -->
+        <div class="row justify-content-center">
+            <!-- Image Gallery -->
+            <div class="col-lg-6">
+                <div class="d-flex flex-column gap-3">
+                    <!-- Main Image -->
+                    <asp:Image ID="imgPrincipal" runat="server" CssClass="product-gallery-main" />
+                    
+                    <!-- Thumbnail Gallery -->
+                    <div class="row g-2">
+                        <asp:Repeater ID="Repeater1" runat="server">
+                            <ItemTemplate>
+                                <div class="col">
+                                    <div class="product-gallery-thumb"
+                                        style="background-image: url('<%# ResolveUrl(Eval("RutaImagen").ToString()) %>');"
+                                        onclick="document.getElementById('<%= imgPrincipal.ClientID %>').src = '<%# ResolveUrl(Eval("RutaImagen").ToString()) %>';">
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
                     </div>
                 </div>
-            </ItemTemplate>
-        </asp:Repeater>
-        <!-- Image Gallery -->
-        <div class="col-lg-6">
-            <div class="d-flex flex-column gap-3">
-                <!-- Main Image -->
-                <asp:Image ID="imgPrincipal" runat="server" CssClass="product-gallery-main" />
-                <div class="row g-2">
-                    <asp:Repeater ID="Repeater2" runat="server">
-                        <ItemTemplate>
-                            <div class="col">
-                                <div class="product-gallery-thumb"
-                                    style='background-image: url("<%# Eval("RutaImagen") %>");'>
-                                </div>
-                            </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </div>
+            </div>
 
-                <!-- Thumbnail Gallery -->
-                <div class="row g-2">
-                    <asp:Repeater ID="Repeater1" runat="server">
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="d-flex flex-column h-100 py-4">
+                    <!-- Product Title and Badge -->
+                    <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
+                        <div class="d-flex flex-column gap-2">
+                            <h1 class="product-title text-dark mb-0">
+                                <asp:Label ID="lblNombre" runat="server" />
+                            </h1>
+                            <p class="unique-badge mb-0">¡Única unidad disponible!</p>
+
+                            <p class="product-price text-dark mb-4">
+                                <asp:Label ID="lblPrecio" runat="server" />
+                            </p>
+                            <div class="product-description mb-4">
+                                <asp:Label ID="lblDescripcion" runat="server" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CTA Button -->
+                    <div class="mt-auto pt-4">
+                        <asp:LinkButton ID="btnAgregarCarrito"
+                            runat="server"
+                            CssClass="btn btn-primary cta-button w-100 w-md-auto d-flex align-items-center justify-content-center gap-2 text-decoration-none"
+                            OnClick="btnAgregarCarrito_Click">
+                            <span class="material-symbols-outlined">add_shopping_cart</span>
+                            <span>Agregar al Carrito</span>
+                        </asp:LinkButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Te puede Interesar -->
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h3 class="h2 fw-bold mb-4 text-center">Te puede Interesar</h3>
+                <div class="row g-4 justify-content-center">
+                    <asp:Repeater ID="rptTePuedeInteresar" runat="server">
                         <ItemTemplate>
-                            <div class="col">
-                                <div class="product-gallery-thumb"
-                                    style='background-image: url("<%# Eval("RutaImagen") %>");'>
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="card product-card h-100 border-0 shadow-sm">
+                                    <div class="position-relative overflow-hidden">
+                                        <a href='DetalleArticulo.aspx?id=<%# Eval("IdArticulo") %>' class="text-decoration-none">
+                                            <img src='<%# 
+    (Eval("Imagenes") != null && ((List<Dominio.Imagen>)Eval("Imagenes")).Count > 0)
+        ? ResolveUrl(((List<Dominio.Imagen>)Eval("Imagenes"))[0].RutaImagen)
+        : "https://via.placeholder.com/600x600?text=Sin+Imagen" 
+%>'
+                                                alt='<%# Eval("Nombre") %>'
+                                                class="card-img-top product-image" />
+                                        </a>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title fw-semibold"><%# Eval("Nombre") %></h5>
+                                        <asp:Panel runat="server" Visible='<%# !string.IsNullOrEmpty(Eval("Descripcion")?.ToString()) %>'>
+                                            <p class="text-muted small mb-2 product-description"><%# Eval("Descripcion") %></p>
+                                        </asp:Panel>
+                                        <p class="card-text h4 fw-bold text-primary mb-3">
+                                            $<%# string.Format("{0:N0}", Eval("Precio")) %>
+                                        </p>
+                                        <a href='DetalleArticulo.aspx?id=<%# Eval("IdArticulo") %>'
+                                            class="btn btn-primary w-100 fw-bold text-decoration-none">Ver Artículo</a>
+                                    </div>
                                 </div>
                             </div>
                         </ItemTemplate>
@@ -218,100 +289,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Product Info -->
-        <div class="col-lg-6">
-            <div class="d-flex flex-column h-100 py-4">
-                <!-- Product Title and Badge -->
-                <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
-                    <div class="d-flex flex-column gap-2">
-
-                        <h1 class="product-title text-dark mb-0">
-                            <asp:Label ID="lblNombre" runat="server" />
-                        </h1>
-                        <p class="unique-badge mb-0">¡Única unidad disponible!</p>
-
-                        <p class="product-price text-dark mb-4">
-                            <asp:Label ID="lblPrecio" runat="server" />
-                        </p>
-                        <div class="product-description mb-4">
-                            <asp:Label ID="lblDescripcion" runat="server" />
-                        </div>
-                    </div>
-                </div>
-                <!-- CTA Button -->
-                <div class="mt-auto pt-4">
-                    <asp:LinkButton ID="btnAgregarCarrito"
-                        runat="server"
-                        CssClass="btn btn-primary cta-button w-100 w-md-auto d-flex align-items-center justify-content-center gap-2 text-decoration-none"
-                        OnClick="btnAgregarCarrito_Click">
-        <span class="material-symbols-outlined">add_shopping_cart</span>
-        <span>Agregar al Carrito</span>
-                    </asp:LinkButton>
-                </div>
-
-                <!-- Separator -->
-                <div class="separator"></div>
-                <!-- Carousel -->
-                <div class="carousel-container">
-                    <div class="d-flex gap-4 px-0">
-                        <!-- Related Item 1 -->
-                        <div class="related-item">
-                            <div class="related-item-image mb-3"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuClb3G2pC2pjfAMA_r6ZEXsdLMWnZg86DsYwpRrWDskycP2WpsC_ECNEutXACQ2GFc65JrrlUrOznQk5ak224JRptUOQ2DEpD8YLl3y_Oh4WsCpH56TDh9dHsubadM1UuTKQFhtgbktaxzZGRf4UtZgVkFNkTQdDjUTClBhmruIrckY_39Mk7rUqQ3vm1D13hVaaU83wTb2s7tViTy2x8H87LpsDEnY5egx0opj5kst8OgDMVmuNBN6xkhPOQiOJsbkZnMm93GgVJY');">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <p class="text-dark fw-medium mb-1">Vaqueros Clásicos</p>
-                                <p class="text-dark fw-bold h5 mb-0">$25.00</p>
-                            </div>
-                        </div>
-
-                        <!-- Related Item 2 -->
-                        <div class="related-item">
-                            <div class="related-item-image mb-3"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsBjolgv7GduH6lN_4fNESs66xYP9zMGYjP0xhASwyWWs9wzFFFWRRG0BbAT34Iqr1OoNPtA8Y0tECKgJ9L3eC0kInH-_uKmu1kj53AenfVKzXj86r2-37A-2pnuipuCdwHWOLYTfacQ3PrUrgnJw4uvVpeTqS8C6dNU9oFiTHJ99nQExnRYjHZEt39FTLz9Y14Gi4VK1msvTob7TEApWRfcYuH9OBn2hpzYHd-4ISQG8SxSE6QlDW3wsXzG6Gk37LFxbBFDbyuOI');">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <p class="text-dark fw-medium mb-1">Botas de Cuero</p>
-                                <p class="text-dark fw-bold h5 mb-0">$60.00</p>
-                            </div>
-                        </div>
-
-                        <!-- Related Item 3 -->
-                        <div class="related-item">
-                            <div class="related-item-image mb-3"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAoOtnBM2KmYs1X4S0oEnX8gu5WTaYvbTDvlLZezFtGCrDMs53eJjqgTBsewfri5nNd8kHs0a_E17JfLbTNh02kJoQpw3kX2MyvsFrMqhh2I-s-KovrzPeZEYZHiaSVzAmUmzARdZGfidWsSc1Cn5GWj1th8IUmcKBK2rnSdQ7axKmqeREQ6N4jOW50Rwm6YlbDv-tV4_uGE2WRPKrBxxX9d7MHr4CfFHn105sfwrBLvvPd_yzA_a1Ds11BUa7LJEAAqjvmkmW5buQ');">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <p class="text-dark fw-medium mb-1">Gafas de Sol Aviador</p>
-                                <p class="text-dark fw-bold h5 mb-0">$15.00</p>
-                            </div>
-                        </div>
-
-                        <!-- Related Item 4 -->
-                        <div class="related-item">
-                            <div class="related-item-image mb-3"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVZN1ccYAX6JYIS1a499KQnl2BYfQUmjMlluQw5uFxeAZjDxCM3vWv1MgEBIgGz93NLkie3TeWwyO_xh2tLuH5LtLKAuiiIxUaGzyiXrkSLAOW3ljnLhGeUpWIrxOnBVghefvxuinIdUQjD8kWF4yGJZMl8xw2Dk06ktTFF7STlfb1xHhSp6yNveVZHs5BaKuHxjj-eG6S34A9mKZByQoyCOXePGDafDresAFrbdrKlguDptaXywQEd4TAH1vbFkUI47HU4L_CHvU');">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <p class="text-dark fw-medium mb-1">Reloj de Pulsera Clásico</p>
-                                <p class="text-dark fw-bold h5 mb-0">$35.00</p>
-                            </div>
-                        </div>
-
-                        <!-- Related Item 5 -->
-                        <div class="related-item">
-                            <div class="related-item-image mb-3"
-                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgWcwpk0gipseKt86HDf2do45898cJsc1glzsJB47DO4s6ChA7_JnnFCAp1U3ItnCXorPwC2k6mfUnD9al1uTs3WlXiCy330rJPBMIvQHRDrawZC0m5e-iOZBCOEALz5Q9oI_iA19-MKnZDm9CJZaCQxKJAFX_L8pcqXu74K-s7Urw-Y-rX95yKNrywbDoJAnpTabKGylxPrjaPqvihFkKkkiQVsscQR3LsAUs8jpHU2I4kqmzTGz10aWGib-QP7kduBS3E26V1pg');">
-                            </div>
-                            <div class="d-flex flex-column">
-                                <p class="text-dark fw-medium mb-1">Cinturón de Piel</p>
-                                <p class="text-dark fw-bold h5 mb-0">$12.00</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">

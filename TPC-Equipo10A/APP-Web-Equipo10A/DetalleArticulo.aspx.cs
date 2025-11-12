@@ -25,7 +25,7 @@ namespace APP_Web_Equipo10A
                 }
                 else
                 {
-                    lblNombre.Text = "Art�culo no encontrado";
+                    lblNombre.Text = "Artículo no encontrado";
                 }
             }
         }
@@ -48,17 +48,56 @@ namespace APP_Web_Equipo10A
                     else
                         imgPrincipal.ImageUrl = "https://via.placeholder.com/600x600?text=Sin+Imagen";
 
-                    repImagenes.DataSource = art.Imagenes;
-                    repImagenes.DataBind();
+                    // Cargar miniaturas de imágenes
+                    if (art.Imagenes != null && art.Imagenes.Count > 0)
+                    {
+                        Repeater1.DataSource = art.Imagenes;
+                        Repeater1.DataBind();
+                    }
+
+                    // Configurar breadcrumb dinámico
+                    if (art.CategoriaArticulo != null)
+                    {
+                        lnkCategoria.Text = art.CategoriaArticulo.Nombre;
+                        lnkCategoria.NavigateUrl = $"Default.aspx?categoria={art.CategoriaArticulo.IdCategoria}";
+                    }
+
+                    // Cargar artículos más caros (excluyendo el actual)
+                    CargarTePuedeInteresar(id);
                 }
                 else
                 {
-                    lblNombre.Text = "Art�culo no encontrado";
+                    lblNombre.Text = "Artículo no encontrado";
                 }
             }
             catch (Exception ex)
             {
-                lblNombre.Text = "Error al cargar el art�culo: " + ex.Message;
+                lblNombre.Text = "Error al cargar el artículo: " + ex.Message;
+            }
+        }
+
+        private void CargarTePuedeInteresar(int idArticuloActual)
+        {
+            try
+            {
+                var negocio = new ArticuloNegocio();
+                var todosLosArticulos = negocio.listarArticulo();
+
+                var articulosMasCaros = todosLosArticulos
+                    .Where(a => a.IdArticulo != idArticuloActual) // Excluir el artículo actual
+                    .OrderByDescending(a => a.Precio)
+                    .Take(4)
+                    .ToList();
+
+                if (articulosMasCaros.Count > 0)
+                {
+                    rptTePuedeInteresar.DataSource = articulosMasCaros;
+                    rptTePuedeInteresar.DataBind();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error al cargar artículos más caros - se ignora silenciosamente
             }
         }
 
@@ -66,7 +105,7 @@ namespace APP_Web_Equipo10A
         {
             try
             {
-                // Verificamos que haya un ID de art�culo en el query string
+                // Verificamos que haya un ID de artículo en el query string
                 if (Request.QueryString["id"] != null)
                 {
                     int id = int.Parse(Request.QueryString["id"]);
@@ -75,7 +114,7 @@ namespace APP_Web_Equipo10A
 
                     if (articulo != null)
                     {
-                        // Si no existe a�n el carrito, lo creamos
+                        // Si no existe aún el carrito, lo creamos
                         List<Articulo> carrito = Session["CarritoReserva"] as List<Articulo>;
                         if (carrito == null)
                             carrito = new List<Articulo>();

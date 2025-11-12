@@ -54,19 +54,12 @@
                     <!-- Desktop Navigation -->
                     <nav class="d-none d-md-flex align-items-center gap-4">
                         <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
-                        <a class="text-decoration-none text-dark fw-medium" href="DetalleArticulo.aspx">Productos</a>
                         <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
                         <a class="text-decoration-none text-dark fw-medium" href="PanelAdministrador.aspx">Admin</a>
                     </nav>
                     
                     <!-- Action Buttons -->
                     <div class="d-flex align-items-center gap-2 gap-sm-3">
-                        <!-- Search Bar (Desktop) -->
-                        <div class="d-none d-sm-flex position-relative" style="min-width: 208px; max-width: 332px;">
-                            <span class="material-symbols-outlined position-absolute search-icon text-muted">search</span>
-                            <input type="text" class="form-control search-input" placeholder="Buscar artículo..." />
-                        </div>
-                        
                         <!-- Login Button (Desktop) -->
                         <a href="Login.aspx" class="btn btn-primary rounded-pill d-none d-md-flex text-decoration-none" style="min-width: 84px; height: 40px; font-size: 14px; font-weight: 700;">
                             Iniciar Sesión
@@ -87,18 +80,9 @@
                 <!-- Mobile Menu -->
                 <div class="collapse d-md-none" id="mobileMenu">
                     <div class="py-3 border-top">
-                        <!-- Mobile Search -->
-                        <div class="mb-3">
-                            <div class="position-relative">
-                                <span class="material-symbols-outlined position-absolute search-icon text-muted">search</span>
-                                <input type="text" class="form-control search-input" placeholder="Buscar artículo..." />
-                            </div>
-                        </div>
-                        
                         <!-- Mobile Navigation -->
                         <nav class="d-flex flex-column gap-3">
                             <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
-                            <a class="text-decoration-none text-dark fw-medium" href="DetalleArticulo.aspx">Productos</a>
                             <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
                             <a class="text-decoration-none text-dark fw-medium" href="PanelAdministrador.aspx">Admin</a>
                             <hr class="my-2">
