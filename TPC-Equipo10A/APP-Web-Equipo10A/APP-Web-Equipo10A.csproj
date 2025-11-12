@@ -79,7 +79,9 @@
   <ItemGroup>
     <Content Include="AdminConfirmarSeña.aspx" />
     <Content Include="AdminFormularioArticulo.aspx" />
+    <Content Include="AdminFormularioCategoria.aspx" />
     <Content Include="AdminGestionArticulo.aspx" />
+    <Content Include="AdminGestionCategoria.aspx" />
     <Content Include="AdminGestionReserva.aspx" />
     <Content Include="AdminGestionUsuario.aspx" />
     <Content Include="CarritoReserva.aspx" />
@@ -110,9 +112,23 @@
     <Compile Include="AdminFormularioArticulo.aspx.designer.cs">
       <DependentUpon>AdminFormularioArticulo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AdminFormularioCategoria.aspx.cs">
+      <DependentUpon>AdminFormularioCategoria.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminFormularioCategoria.aspx.designer.cs">
+      <DependentUpon>AdminFormularioCategoria.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AdminGestionArticulo.aspx.cs">
       <DependentUpon>AdminGestionArticulo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminGestionCategoria.aspx.cs">
+      <DependentUpon>AdminGestionCategoria.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminGestionCategoria.aspx.designer.cs">
+      <DependentUpon>AdminGestionCategoria.aspx</DependentUpon>
     </Compile>
     <Compile Include="AdminGestionArticulo.aspx.designer.cs">
       <DependentUpon>AdminGestionArticulo.aspx</DependentUpon>

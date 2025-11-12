@@ -76,9 +76,9 @@ namespace APP_Web_Equipo10A
                 ddlEstado.DataBind();
                 ddlEstado.Items.Insert(0, new ListItem("Todos los Estados", "0"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                // Error al cargar filtros - se ignora silenciosamente
             }
         }
 

@@ -526,6 +526,10 @@
                         <span class="material-symbols-outlined nav-icon">inventory_2</span>
                         <p class="nav-text">Artículos</p>
                     </a>
+                    <a class="nav-link" href="AdminGestionCategoria.aspx">
+                        <span class="material-symbols-outlined nav-icon">category</span>
+                        <p class="nav-text">Categorías</p>
+                    </a>
                     <a class="nav-link" href="#">
                         <span class="material-symbols-outlined nav-icon">receipt_long</span>
                         <p class="nav-text">Ventas</p>
