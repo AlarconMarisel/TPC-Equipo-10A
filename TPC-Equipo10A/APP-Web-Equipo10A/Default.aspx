@@ -110,41 +110,48 @@
             </div>
         </section>
 
-       <!-- Resultados de búsqueda -->
-<asp:Panel ID="pnlResultados" runat="server" Visible="false">
-    <section class="mb-4">
-        <h3 class="h2 fw-bold mb-3">Resultados</h3>
-        <asp:Literal ID="litResumen" runat="server" />
-        <div class="row g-3 mt-2">
-            <asp:Repeater ID="rptResultados" runat="server">
-                <ItemTemplate>
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-                        <div class="card product-card h-100 border-0 shadow-sm">
-                            <div class="position-relative overflow-hidden">
-                                <img src="<%# !string.IsNullOrEmpty((Eval("Imagenes[0].RutaImagen") ?? "").ToString()) ? ResolveUrl(Eval("Imagenes[0].RutaImagen").ToString()) : "https://via.placeholder.com/600x600?text=Sin+Imagen" %>"
-                                     alt="<%# Eval("Nombre") %>"
-                                     class="card-img-top product-image" />
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-semibold"><%# Eval("Nombre") %></h5>
-                                <p class="text-muted small mb-2"><%# Eval("Descripcion") %></p>
-                                <p class="text-muted mb-1">Categoría: <%# Eval("CategoriaArticulo.Nombre") %></p>
-                                <p class="text-muted">Estado: <%# Eval("EstadoArticulo.Nombre") %></p>
-                                <p class="card-text h4 fw-bold text-primary mb-3">
-                                    $<%# string.Format("{0:N0}", Eval("Precio")) %>
-                                </p>
+        <!-- Resultados de búsqueda -->
+        <asp:Panel ID="pnlResultados" runat="server" Visible="false">
+            <section class="mb-4">
+                <h3 class="h2 fw-bold mb-3">Resultados</h3>
+                <asp:Literal ID="litResumen" runat="server" />
+                <div class="row g-3 mt-2">
+                    <asp:Repeater ID="rptResultados" runat="server">
+                        <ItemTemplate>
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="card product-card h-100 border-0 shadow-sm">
+                                    <div class="position-relative overflow-hidden">
+                                        <img src='<%# 
+    (Eval("Imagenes") != null && ((List<Dominio.Imagen>)Eval("Imagenes")).Count > 0)
+        ? ResolveUrl(((List<Dominio.Imagen>)Eval("Imagenes"))[0].RutaImagen)
+        : "https://via.placeholder.com/600x600?text=Sin+Imagen" 
+%>'
+                                            alt='<%# Eval("Nombre") %>'
+                                            class="card-img-top product-image" />
 
-                                <!-- 🔗 Botón Ver Artículo -->
-                                <a href='DetalleArticulo.aspx?id=<%# Eval("IdArticulo") %>'
-                                   class="btn btn-primary w-100 fw-bold text-decoration-none">Ver Artículo</a>
+                                        alt="<%# Eval("Nombre") %>"
+                                     class="card-img-top product-image" />
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title fw-semibold"><%# Eval("Nombre") %></h5>
+                                        <p class="text-muted small mb-2"><%# Eval("Descripcion") %></p>
+                                        <p class="text-muted mb-1">Categoría: <%# Eval("CategoriaArticulo.Nombre") %></p>
+                                        <p class="text-muted">Estado: <%# Eval("EstadoArticulo.Nombre") %></p>
+                                        <p class="card-text h4 fw-bold text-primary mb-3">
+                                            $<%# string.Format("{0:N0}", Eval("Precio")) %>
+                                        </p>
+
+                                        <!-- 🔗 Botón Ver Artículo -->
+                                        <a href='DetalleArticulo.aspx?id=<%# Eval("IdArticulo") %>'
+                                            class="btn btn-primary w-100 fw-bold text-decoration-none">Ver Artículo</a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>
-    </section>
-</asp:Panel>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </div>
+            </section>
+        </asp:Panel>
 
 
         <!-- Section Header & Product Grid (contenido de ejemplo) -->
