@@ -15,24 +15,9 @@ namespace APP_Web_Equipo10A
         {
             if (!IsPostBack)
             {
-                // carrito de prueba
-                if (Session["CarritoReserva"] == null)
-                {
-                    List<Articulo> carritoDemo = new List<Articulo>
-            {
-                new Articulo { IdArticulo = 1, Nombre = "Silla Ergonómica", Precio = 25000, Imagenes = new List<Imagen> { new Imagen { RutaImagen = "https://picsum.photos/100?1" } } },
-                new Articulo { IdArticulo = 2, Nombre = "Monitor Dell 24\"", Precio = 150000, Imagenes = new List<Imagen> { new Imagen { RutaImagen = "https://picsum.photos/100?2" } } },
-                new Articulo { IdArticulo = 3, Nombre = "Teclado Mecánico RGB", Precio = 80000, Imagenes = new List<Imagen> { new Imagen { RutaImagen = "https://picsum.photos/100?3" } } }
-            };
-
-                    Session["CarritoReserva"] = carritoDemo;
-                }
-
                 CargarCarrito();
             }
         }
-
-
 
         protected void btnConfirmarReserva_Click(object sender, EventArgs e)
         {
@@ -84,7 +69,6 @@ namespace APP_Web_Equipo10A
                 Response.Write("<script>alert('Ocurrió un error al confirmar la reserva: " + ex.Message + "');</script>");
             }
         }
-
 
         private void CargarCarrito()
         {
