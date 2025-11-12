@@ -758,9 +758,8 @@
                                     <tr>
                                         <th>Imagen</th>
                                         <th>Nombre del Artículo</th>
-                                        <th>SKU</th>
+                                        <th>Id Articulo</th>
                                         <th>Precio</th>
-                                        <th>Stock</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -773,9 +772,8 @@
                                                     <div class="product-image" style='background-image: url("<%# GetImagenUrl(Container.DataItem) %>");'></div>
                                                 </td>
                                                 <td class="product-name"><%# Eval("Nombre") %></td>
-                                                <td class="product-details">SKU-<%# Eval("IdArticulo") %></td>
+                                                <td class="product-details">Id - <%# Eval("IdArticulo") %></td>
                                                 <td class="product-details">$<%# string.Format("{0:N2}", Eval("Precio")) %></td>
-                                                <td class="product-details">-</td>
                                                 <td>
                                                     <span class="status-badge status-available"><%# Eval("EstadoArticulo.Nombre") %></span>
                                                 </td>
@@ -789,7 +787,7 @@
                                                         </a>
                                                         <asp:LinkButton ID="btnEliminar" runat="server" CssClass="action-button delete" 
                                                             CommandArgument='<%# Eval("IdArticulo") %>' OnClick="btnEliminar_Click"
-                                                            OnClientClick="return confirm('¿Está seguro de eliminar este artículo?');" title="Eliminar">
+                                                            OnClientClick='<%# "return confirmarEliminacion(\"" + Eval("Nombre").ToString().Replace("\"", "\\\"") + "\");" %>' title="Eliminar">
                                                             <span class="material-symbols-outlined action-icon">delete</span>
                                                         </asp:LinkButton>
                                                     </div>
@@ -799,7 +797,7 @@
                                     </asp:Repeater>
                                     <asp:Label ID="lblSinArticulos" runat="server" Visible="false">
                                         <tr>
-                                            <td colspan="7" class="text-center" style="padding: 2rem;">
+                                            <td colspan="6" class="text-center" style="padding: 2rem;">
                                                 <p class="text-muted">No hay artículos disponibles.</p>
                                             </td>
                                         </tr>
@@ -833,6 +831,10 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">
-
+    <script>
+        function confirmarEliminacion(nombreArticulo) {
+            return confirm('¿Está seguro de eliminar el artículo "' + nombreArticulo + '"?\n\nEsta acción no se puede deshacer.');
+        }
+    </script>
 </asp:Content>
 

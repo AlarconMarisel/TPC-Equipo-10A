@@ -32,6 +32,28 @@ namespace APP_Web_Equipo10A
             if (!IsPostBack)
             {
                 CargarFiltros();
+                
+                string exito = Request.QueryString["exito"];
+                if (!string.IsNullOrEmpty(exito))
+                {
+                    string mensaje = "";
+                    switch (exito.ToLower())
+                    {
+                        case "creado":
+                            mensaje = "El artículo se ha creado exitosamente.";
+                            break;
+                        case "editado":
+                            mensaje = "El artículo se ha actualizado exitosamente.";
+                            break;
+                        case "eliminado":
+                            mensaje = "El artículo se ha eliminado exitosamente.";
+                            break;
+                    }
+                    if (!string.IsNullOrEmpty(mensaje))
+                    {
+                        MostrarExito(mensaje);
+                    }
+                }
             }
             CargarArticulos();
         }
@@ -99,7 +121,8 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                lblSinArticulos.Text = $"<tr><td colspan='7' class='text-center text-danger' style='padding: 2rem;'>Error al cargar artículos: {Server.HtmlEncode(ex.Message)}</td></tr>";
+                MostrarError("Error al cargar artículos: " + ex.Message);
+                lblSinArticulos.Text = "<tr><td colspan='6' class='text-center text-muted' style='padding: 2rem;'>No se pudieron cargar los artículos.</td></tr>";
                 lblSinArticulos.Visible = true;
                 repArticulos.Visible = false;
             }
@@ -166,9 +189,8 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                lblSinArticulos.Text = $"<tr><td colspan='7' class='text-center text-danger' style='padding: 2rem;'>Error al buscar: {Server.HtmlEncode(ex.Message)}</td></tr>";
-                lblSinArticulos.Visible = true;
-                repArticulos.Visible = false;
+                MostrarError("Error al buscar: " + ex.Message);
+                CargarArticulos();
             }
         }
 
@@ -181,9 +203,8 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                lblSinArticulos.Text = $"<tr><td colspan='7' class='text-center text-danger' style='padding: 2rem;'>Error al filtrar: {Server.HtmlEncode(ex.Message)}</td></tr>";
-                lblSinArticulos.Visible = true;
-                repArticulos.Visible = false;
+                MostrarError("Error al filtrar: " + ex.Message);
+                CargarArticulos();
             }
         }
 
@@ -223,12 +244,13 @@ namespace APP_Web_Equipo10A
                 ArticuloNegocio articuloNegocio = new ArticuloNegocio();
                 articuloNegocio.Eliminar(idArticulo);
 
-                CargarArticulos();
+                // Redirigir con mensaje de éxito
+                Response.Redirect("AdminGestionArticulo.aspx?exito=eliminado", false);
             }
             catch (Exception ex)
             {
-                lblSinArticulos.Text = $"<tr><td colspan='7' class='text-center text-danger' style='padding: 2rem;'>Error al eliminar: {Server.HtmlEncode(ex.Message)}</td></tr>";
-                lblSinArticulos.Visible = true;
+                MostrarError("Error al eliminar el artículo: " + ex.Message);
+                CargarArticulos();
             }
         }
 
@@ -271,6 +293,39 @@ namespace APP_Web_Equipo10A
                     if (lit != null) lit.Visible = false;
                 }
             }
+        }
+
+        private void MostrarError(string mensaje)
+        {
+            string script = $@"
+                <div id='mensajeError' style='position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 1rem 1.5rem; background-color: #fee; border: 1px solid #fcc; border-radius: 0.5rem; color: #c33; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px;'>
+                    <strong>Error:</strong> {Server.HtmlEncode(mensaje)}
+                    <button onclick='document.getElementById(""mensajeError"").remove()' style='float: right; background: none; border: none; color: #c33; font-size: 1.2rem; cursor: pointer; margin-left: 1rem;'>&times;</button>
+                </div>
+                <script>
+                    setTimeout(function() {{
+                        var el = document.getElementById('mensajeError');
+                        if (el) el.remove();
+                    }}, 5000);
+                </script>";
+            ClientScript.RegisterStartupScript(this.GetType(), "ErrorScript", script, false);
+        }
+
+        private void MostrarExito(string mensaje)
+        {
+
+            string script = $@"
+                <div id='mensajeExito' style='position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 1rem 1.5rem; background-color: #efe; border: 1px solid #cfc; border-radius: 0.5rem; color: #3c3; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px;'>
+                    <strong>Éxito:</strong> {Server.HtmlEncode(mensaje)}
+                    <button onclick='document.getElementById(""mensajeExito"").remove()' style='float: right; background: none; border: none; color: #3c3; font-size: 1.2rem; cursor: pointer; margin-left: 1rem;'>&times;</button>
+                </div>
+                <script>
+                    setTimeout(function() {{
+                        var el = document.getElementById('mensajeExito');
+                        if (el) el.remove();
+                    }}, 5000);
+                </script>";
+            ClientScript.RegisterStartupScript(this.GetType(), "ExitoScript", script, false);
         }
     }
 }

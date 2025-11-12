@@ -30,7 +30,6 @@ namespace APP_Web_Equipo10A
         {
             try
             {
-                // Establecer enctype para permitir subida de archivos
                 if (Page.Form != null)
                 {
                     Page.Form.Enctype = "multipart/form-data";
@@ -41,7 +40,6 @@ namespace APP_Web_Equipo10A
                     CargarCategorias();
                     CargarEstados();
 
-                    // Verificar si es modo edición
                     string idParam = Request.QueryString["id"];
                     if (!string.IsNullOrEmpty(idParam) && int.TryParse(idParam, out int id))
                     {
@@ -50,7 +48,6 @@ namespace APP_Web_Equipo10A
                     }
                     else
                     {
-                        // Modo creación
                         IdArticuloActual = null;
                     }
                 }
@@ -94,7 +91,6 @@ namespace APP_Web_Equipo10A
                 ddlCategoria.SelectedValue = articulo.CategoriaArticulo.IdCategoria.ToString();
                 ddlEstado.SelectedValue = articulo.EstadoArticulo.IdEstado.ToString();
 
-                // Cargar imágenes existentes
                 if (articulo.Imagenes != null && articulo.Imagenes.Count > 0)
                 {
                     repImagenes.DataSource = articulo.Imagenes;
@@ -114,13 +110,11 @@ namespace APP_Web_Equipo10A
         {
             try
             {
-                // Validar página
                 if (!Page.IsValid)
                 {
                     return;
                 }
 
-                // Validar imágenes
                 int imagenesExistentes = 0;
                 if (IdArticuloActual.HasValue)
                 {
@@ -137,7 +131,6 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Validar archivos
                 if (imagenesNuevas > 0)
                 {
                     string errorValidacion = ValidarArchivos(fileUploadImagenes.PostedFiles);
@@ -148,7 +141,6 @@ namespace APP_Web_Equipo10A
                     }
                 }
 
-                // Crear objeto Artículo
                 Articulo articulo = new Articulo
                 {
                     Nombre = txtNombre.Text.Trim(),
@@ -169,29 +161,27 @@ namespace APP_Web_Equipo10A
 
                 if (IdArticuloActual.HasValue)
                 {
-                    // Modo edición
                     articulo.IdArticulo = IdArticuloActual.Value;
                     articuloNegocio.Modificar(articulo);
                     idArticulo = IdArticuloActual.Value;
                 }
                 else
                 {
-                    // Modo creación
                     idArticulo = articuloNegocio.Agregar(articulo);
                 }
 
-                // Procesar imágenes
                 if (imagenesNuevas > 0)
                 {
                     GuardarImagenes(idArticulo, fileUploadImagenes.PostedFiles);
                 }
 
-                // Redirigir al listado
-                Response.Redirect("AdminGestionArticulo.aspx", false);
+                // Redirigir con mensaje de éxito
+                string mensaje = IdArticuloActual.HasValue ? "editado" : "creado";
+                Response.Redirect($"AdminGestionArticulo.aspx?exito={mensaje}", false);
             }
             catch (Exception ex)
             {
-                MostrarError("Error al guardar el artículo: " + ex.Message);
+                MostrarError(ex.Message);
             }
         }
 
@@ -205,14 +195,12 @@ namespace APP_Web_Equipo10A
                 if (archivo.ContentLength == 0)
                     continue;
 
-                // Validar extensión
                 string extension = Path.GetExtension(archivo.FileName).ToLower();
                 if (!extensionesPermitidas.Contains(extension))
                 {
                     return $"El archivo '{archivo.FileName}' tiene una extensión no permitida. Use: JPG, PNG, GIF o WEBP.";
                 }
 
-                // Validar tamaño
                 if (archivo.ContentLength > tamanoMaximo)
                 {
                     return $"El archivo '{archivo.FileName}' excede el tamaño máximo de 10MB.";
@@ -226,7 +214,6 @@ namespace APP_Web_Equipo10A
         {
             string carpetaImagenes = Server.MapPath("~/Content/Uploads/Articulos/");
             
-            // Crear carpeta si no existe
             if (!Directory.Exists(carpetaImagenes))
             {
                 Directory.CreateDirectory(carpetaImagenes);
@@ -239,15 +226,12 @@ namespace APP_Web_Equipo10A
                 if (archivo.ContentLength == 0)
                     continue;
 
-                // Generar nombre único
                 string extension = Path.GetExtension(archivo.FileName);
                 string nombreArchivo = $"articulo_{idArticulo}_{DateTime.Now.Ticks}_{Path.GetFileNameWithoutExtension(archivo.FileName)}{extension}";
                 string rutaCompleta = Path.Combine(carpetaImagenes, nombreArchivo);
 
-                // Guardar archivo físicamente
                 archivo.SaveAs(rutaCompleta);
 
-                // Guardar ruta en BD (ruta relativa)
                 string rutaRelativa = $"Content/Uploads/Articulos/{nombreArchivo}";
                 Imagen imagen = new Imagen
                 {
@@ -266,25 +250,21 @@ namespace APP_Web_Equipo10A
                 LinkButton btn = (LinkButton)sender;
                 int idImagen = int.Parse(btn.CommandArgument);
 
-                // Obtener la imagen para eliminar el archivo físico
                 ImagenNegocio imagenNegocio = new ImagenNegocio();
                 var imagenes = imagenNegocio.ListarPorArticulo(IdArticuloActual ?? 0);
                 var imagenAEliminar = imagenes.FirstOrDefault(img => img.IdImagen == idImagen);
 
                 if (imagenAEliminar != null)
                 {
-                    // Eliminar archivo físico
                     string rutaFisica = Server.MapPath("~/" + imagenAEliminar.RutaImagen);
                     if (File.Exists(rutaFisica))
                     {
                         File.Delete(rutaFisica);
                     }
 
-                    // Eliminar de BD
                     imagenNegocio.EliminarImagen(idImagen);
                 }
 
-                // Recargar página para actualizar imágenes
                 if (IdArticuloActual.HasValue)
                 {
                     Response.Redirect($"AdminFormularioArticulo.aspx?id={IdArticuloActual.Value}", false);
@@ -298,8 +278,16 @@ namespace APP_Web_Equipo10A
 
         private void MostrarError(string mensaje)
         {
-            lblMensaje.Text = mensaje;
+            lblMensaje.Text = $"<div style='padding: 1rem; background-color: #fee; border: 1px solid #fcc; border-radius: 0.5rem; color: #c33;'>{Server.HtmlEncode(mensaje)}</div>";
             lblMensaje.Visible = true;
+            lblMensaje.CssClass = "mt-2";
+        }
+
+        private void MostrarExito(string mensaje)
+        {
+            lblMensaje.Text = $"<div style='padding: 1rem; background-color: #efe; border: 1px solid #cfc; border-radius: 0.5rem; color: #3c3;'>{Server.HtmlEncode(mensaje)}</div>";
+            lblMensaje.Visible = true;
+            lblMensaje.CssClass = "mt-2";
         }
     }
 }
