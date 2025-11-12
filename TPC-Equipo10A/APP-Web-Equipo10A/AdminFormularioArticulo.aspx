@@ -454,84 +454,100 @@
                     
                     <!-- Form Container -->
                     <div class="form-section">
-                        <!-- Basic Information Card -->
-                        <div class="form-card">
-                            <div class="form-grid">
-                                <!-- Article Name -->
-                                <div class="form-field full-width">
-                                    <label class="form-label">Nombre del artículo</label>
-                                    <input class="form-input" type="text" placeholder="Ej: Bicicleta de montaña casi nueva" value="" />
-                                </div>
-                                
-                                <!-- Description -->
-                                <div class="form-field full-width">
-                                    <label class="form-label">Descripción</label>
-                                    <textarea class="form-input form-textarea" placeholder="Describe detalles importantes como el estado, marca, modelo..."></textarea>
-                                </div>
-                                
-                                <!-- Price -->
-                                <div class="form-field">
-                                    <label class="form-label">Precio</label>
-                                    <div class="price-input-container">
-                                        <div class="price-symbol">$</div>
-                                        <input class="form-input price-input" type="text" placeholder="0.00" value="" />
+                            <!-- Basic Information Card -->
+                            <div class="form-card">
+                                <div class="form-grid">
+                                    <!-- Article Name -->
+                                    <div class="form-field full-width">
+                                        <label class="form-label">Nombre del artículo</label>
+                                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-input" placeholder="Ej: Bicicleta de montaña casi nueva"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvNombre" runat="server" ControlToValidate="txtNombre" 
+                                            ErrorMessage="El nombre es requerido" CssClass="text-danger small" Display="Dynamic"></asp:RequiredFieldValidator>
                                     </div>
-                                </div>
-                                
-                                <!-- Category -->
-                                <div class="form-field">
-                                    <label class="form-label">Categoría 
-                                    <button type="button" id="btnAgregarCategoria" class="btn-primary ms-2">
-                                    +
-                                    </button>
-                                    </label>
-                                    <div>
-                                        <asp:DropDownList ID="ddlCategoria" runat="server" Class="form-select"> 
-                                        </asp:DropDownList>
+                                    
+                                    <!-- Description -->
+                                    <div class="form-field full-width">
+                                        <label class="form-label">Descripción</label>
+                                        <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-input form-textarea" 
+                                            TextMode="MultiLine" Rows="4" placeholder="Describe detalles importantes como el estado, marca, modelo..."></asp:TextBox>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Image Upload Card -->
-                        <div class="image-upload-card">
-                            <h3 class="image-upload-title">Sube hasta 5 fotos</h3>
-                            <div class="image-upload-area">
-                                <div class="upload-content">
-                                    <span class="material-symbols-outlined upload-icon">cloud_upload</span>
-                                    <div class="upload-text">
-                                        <label class="upload-link" for="file-upload">
-                                            <span>Selecciona tus imágenes</span>
-                                            <input class="upload-input" id="file-upload" multiple="" name="file-upload" type="file" />
-                                        </label>
-                                        <p>o arrástralas aquí</p>
+                                    
+                                    <!-- Price -->
+                                    <div class="form-field">
+                                        <label class="form-label">Precio</label>
+                                        <div class="price-input-container">
+                                            <div class="price-symbol">$</div>
+                                            <asp:TextBox ID="txtPrecio" runat="server" CssClass="form-input price-input" placeholder="0.00"></asp:TextBox>
+                                        </div>
+                                        <asp:RequiredFieldValidator ID="rfvPrecio" runat="server" ControlToValidate="txtPrecio" 
+                                            ErrorMessage="El precio es requerido" CssClass="text-danger small" Display="Dynamic"></asp:RequiredFieldValidator>
+                                        <asp:CompareValidator ID="cvPrecio" runat="server" ControlToValidate="txtPrecio" 
+                                            Type="Double" Operator="GreaterThan" ValueToCompare="0" 
+                                            ErrorMessage="El precio debe ser mayor a 0" CssClass="text-danger small" Display="Dynamic"></asp:CompareValidator>
                                     </div>
-                                    <p class="upload-description">PNG, JPG, GIF hasta 10MB</p>
+                                    
+                                    <!-- Category -->
+                                    <div class="form-field">
+                                        <label class="form-label">Categoría</label>
+                                        <asp:DropDownList ID="ddlCategoria" runat="server" CssClass="form-select"></asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="rfvCategoria" runat="server" ControlToValidate="ddlCategoria" 
+                                            InitialValue="0" ErrorMessage="Debe seleccionar una categoría" CssClass="text-danger small" Display="Dynamic"></asp:RequiredFieldValidator>
+                                    </div>
+                                    
+                                    <!-- Estado -->
+                                    <div class="form-field">
+                                        <label class="form-label">Estado</label>
+                                        <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select"></asp:DropDownList>
+                                        <asp:RequiredFieldValidator ID="rfvEstado" runat="server" ControlToValidate="ddlEstado" 
+                                            InitialValue="0" ErrorMessage="Debe seleccionar un estado" CssClass="text-danger small" Display="Dynamic"></asp:RequiredFieldValidator>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Image Previews -->
-                            <div class="image-previews">
-                                <div class="image-preview">
-                                    <img class="preview-image" alt="Vista previa de imagen de artículo de segunda mano" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxSkwrtUxqfhqXtIwT8LCE6dJyYL3igdqpIKTetO2KxBsaI5XlL_qtkEPs6J7XZ65zYNNCKLUFbqkjTN33GNEaW9zWwQDuLH2u9bZc1y7oY1s0h9C8KkY5gP38xqMeTEnI5xA7cadwMPSICLirzcbPP4F32UYd9ftCEW9yIIENvDd9YlF0UIjIqot7HR6iUSGJ5DHoQEsJXtIKwLxto-GvG42E-lIKmsfuyaXB9vR_1zFwj-QM1LtvEbjW3maW_Xr6yPZoZbI0ZAA" />
-                                    <button class="remove-button">
-                                        <span class="material-symbols-outlined remove-icon">close</span>
-                                    </button>
+                            <!-- Image Upload Card -->
+                            <div class="image-upload-card">
+                                <h3 class="image-upload-title">Sube hasta 5 fotos</h3>
+                                <div class="image-upload-area">
+                                    <div class="upload-content">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="upload-text">
+                                            <asp:FileUpload ID="fileUploadImagenes" runat="server" AllowMultiple="true" CssClass="form-control" />
+                                            <p class="mt-2">PNG, JPG, GIF, WEBP hasta 10MB</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="image-preview">
-                                    <img class="preview-image" alt="Vista previa de imagen de artículo de segunda mano" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpEtKypbhRxmFh1uydRD0PFoeNgmbuCWQ-N6DwzMz3RIT9R9da0Ckr-wzMsvE4w7MGAJDQC0F30rrC_mAfdKheFfHaCEwhyagNyKFTFjjNmJvkwARGwoL4b6F9dHzPjDb9TXjcwguLkSAYTApK_T1up5HJmCa4pqfszPqENcxuVDqI4l82MtR_ghX0Jqw9DAOXQPmmH510j8PbyiBHqA7I32r2mWaqxjABY2EMTM-_FPtJ6mnrmb5tIMyq8Pt07FIkFZciwO300PI" />
-                                    <button class="remove-button">
-                                        <span class="material-symbols-outlined remove-icon">close</span>
-                                    </button>
-                                </div>
+                                
+                                <!-- Image Previews (para edición) -->
+                                <asp:Panel ID="pnlImagenesExistentes" runat="server" Visible="false">
+                                    <h4 class="mt-3 mb-2">Imágenes actuales:</h4>
+                                    <div class="image-previews">
+                                        <asp:Repeater ID="repImagenes" runat="server">
+                                            <ItemTemplate>
+                                                <div class="image-preview">
+                                                    <img class="preview-image" src='<%# Eval("RutaImagen") %>' alt="Imagen del artículo" />
+                                                    <asp:LinkButton ID="btnEliminarImagen" runat="server" CssClass="remove-button" 
+                                                        CommandArgument='<%# Eval("IdImagen") %>' OnClick="btnEliminarImagen_Click"
+                                                        OnClientClick="return confirm('¿Está seguro de eliminar esta imagen?');">
+                                                        <span class="material-symbols-outlined remove-icon">close</span>
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </ItemTemplate>
+                                        </asp:Repeater>
+                                    </div>
+                                </asp:Panel>
+                                
+                                <asp:Label ID="lblMensajeImagenes" runat="server" CssClass="text-danger small mt-2" Visible="false"></asp:Label>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <a href="AdminGestionArticulo.aspx" class="cancel-button text-decoration-none d-inline-block text-center">Cancelar</a>
-                        <button class="submit-button" type="submit">Publicar Artículo</button>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <asp:LinkButton ID="btnCancelar" runat="server" CssClass="cancel-button text-decoration-none d-inline-block text-center" 
+                                PostBackUrl="~/AdminGestionArticulo.aspx">Cancelar</asp:LinkButton>
+                            <asp:Button ID="btnGuardar" runat="server" CssClass="submit-button" Text="Publicar Artículo" OnClick="btnGuardar_Click" />
+                        </div>
+                        
+                        <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger mt-2" Visible="false"></asp:Label>
                     </div>
                 </div>
             </div>

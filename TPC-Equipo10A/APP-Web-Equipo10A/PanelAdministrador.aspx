@@ -522,7 +522,7 @@
                         <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionArticulo.aspx">
                         <span class="material-symbols-outlined nav-icon">inventory_2</span>
                         <p class="nav-text">Artículos</p>
                     </a>

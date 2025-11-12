@@ -673,131 +673,42 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body">
-                                    <tr>
-                                        <td>
-                                            <div class="product-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAS6zwnlUFlcZ-eRvz33Djz5fblUFaUWXUprA53TZyiEVx2wtQqzYuBGw0NOBHGuwK8lCyg3X0nSGO-kTFGUM70yK9_ZRJ_BSN3E2T6hBcFpF3VDEtXoPkf_ryHQDQoKwTJXkSnQV8KqUh6Xu2GlMoqKfJonxYEWmHKMsxOifzKxoXr6D8qapErst91YNcSjHOBdt-Naykbib08wTpEeuRsYyk5y2CusJnIFJVhwh3O6kPUdaokaONbEF9tLFZ0U7NUc7UDhw_vKNc");'></div>
-                                        </td>
-                                        <td class="product-name">Cámara Vintage XYZ</td>
-                                        <td class="product-details">SKU-12345</td>
-                                        <td class="product-details">$150.00</td>
-                                        <td class="product-details">10</td>
-                                        <td>
-                                            <span class="status-badge status-available">Disponible</span>
-                                        </td>
-                                        <td>
-                                            <div class="actions-container">
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">edit</span>
-                                                </button>
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">visibility</span>
-                                                </button>
-                                                <button class="action-button delete">
-                                                    <span class="material-symbols-outlined action-icon">delete</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="product-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAnDDkpW6JqPl7Z8TjnHN2Eo_wYgO66jZqCU6dWIa_g2pA-Pghm-a6YO7qIYVe6lpAjgfT02X_jU44hjanFrBhFiYWnw9MjF_e5LToG_4_zaq5r-bSRKp9pL6e8oO9ax03xgBRNMG8qdlqQxm3NgDcgbRUIIWgmlEpIB6PE13wd2Afxd2jOj-AHfeF3uyUpk3qYL9aNWr2h7S1vwNQZeD3AWj6M-fOPavXlOyggvO_pT1g4bjfILIWf2UGyghAzWPf1e6W-H_OEdXw");'></div>
-                                        </td>
-                                        <td class="product-name">Sillón de Cuero</td>
-                                        <td class="product-details">SKU-12346</td>
-                                        <td class="product-details">$300.00</td>
-                                        <td class="product-details">5</td>
-                                        <td>
-                                            <span class="status-badge status-available">Disponible</span>
-                                        </td>
-                                        <td>
-                                            <div class="actions-container">
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">edit</span>
-                                                </button>
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">visibility</span>
-                                                </button>
-                                                <button class="action-button delete">
-                                                    <span class="material-symbols-outlined action-icon">delete</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="product-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBUucSPPc5e5k35KLDvgK6TSD_qJf5yVKdYoaZwnN7YjSsSfiNwe6lfofGa_fXaqqRZPPlmdg_7v82QorhOYkYUH5j8COW0LsmZtF320_9EFFxJMrADKuuetbzgwtIDGgsWMPj7gvRYIaYQMyuaOF3OtMD_kdYfBPATrcUITuYz7uOKW6jHkBfSR5NNu70uG73nVSlgRq0pgTGSkl2HWq-8rob4Avz0sif7EyQ_6aIIdyiudjCdCtrrwTDA-rmfMlg5kdP0kt8ZgI8");'></div>
-                                        </td>
-                                        <td class="product-name">Jarrón Antiguo</td>
-                                        <td class="product-details">SKU-12347</td>
-                                        <td class="product-details">$75.00</td>
-                                        <td class="product-details">1</td>
-                                        <td>
-                                            <span class="status-badge status-reserved">Reservado</span>
-                                        </td>
-                                        <td>
-                                            <div class="actions-container">
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">edit</span>
-                                                </button>
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">visibility</span>
-                                                </button>
-                                                <button class="action-button delete">
-                                                    <span class="material-symbols-outlined action-icon">delete</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="product-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAs-ImjlTdezBH7xk6qJYuhV12tPACX_EPkioY3Pta8QmDIfwadz8DpiGCmuIXPyNYazC6HJaeaSqTIi2-_kgJYkJjvpNE3CBRH26pLPYkYr4Vt-fFitxdPVCJXrbc8dYvcN5px1-b5mPKDI5-boRuQAMGQj05KqEYpmlDx5Vb-Ksxmt0c3f-xELXfEIDwThsl6-Tgn5QrDVqxrFe0RcNjsjU9MYaYanuWWSYPyunDG4VTBA8Ga8Z0fULpCicaaa48zPm6cSXnaK8Y");'></div>
-                                        </td>
-                                        <td class="product-name">Escritorio de Madera</td>
-                                        <td class="product-details">SKU-12348</td>
-                                        <td class="product-details">$220.00</td>
-                                        <td class="product-details">0</td>
-                                        <td>
-                                            <span class="status-badge status-sold">Vendido</span>
-                                        </td>
-                                        <td>
-                                            <div class="actions-container">
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">edit</span>
-                                                </button>
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">visibility</span>
-                                                </button>
-                                                <button class="action-button delete">
-                                                    <span class="material-symbols-outlined action-icon">delete</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="product-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQY0-NTWbKFv6SHoi6yrGr9aTHhEM1TRD0zwKRyFEjA7PFBh_Jst2Us73nY8G2g57xnUgeTNA6IWn5Qi8_pkFu6HO9y_D1efKyYWqN0Ze98vuprQ5JMLRdHYGFJGuG1B1AqfJSFl1Q9sljHPboubUXHLX1WLGpFG920lANBg-VSSRVV8TtjbSZ9x92ER6vGVi5owlQn5tC7LW3cDLbSYOS-CWx6sD2ItvAgGGq8kE_g13n7T8Pmoj97NR1sOjT9IkZKIDIY2zGbHA");'></div>
-                                        </td>
-                                        <td class="product-name">Bicicleta Clásica</td>
-                                        <td class="product-details">SKU-12349</td>
-                                        <td class="product-details">$180.00</td>
-                                        <td class="product-details">3</td>
-                                        <td>
-                                            <span class="status-badge status-available">Disponible</span>
-                                        </td>
-                                        <td>
-                                            <div class="actions-container">
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">edit</span>
-                                                </button>
-                                                <button class="action-button">
-                                                    <span class="material-symbols-outlined action-icon">visibility</span>
-                                                </button>
-                                                <button class="action-button delete">
-                                                    <span class="material-symbols-outlined action-icon">delete</span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <asp:Repeater ID="repArticulos" runat="server">
+                                        <ItemTemplate>
+                                            <tr>
+                                                <td>
+                                                    <div class="product-image" style='background-image: url("<%# GetImagenUrl(Container.DataItem) %>");'></div>
+                                                </td>
+                                                <td class="product-name"><%# Eval("Nombre") %></td>
+                                                <td class="product-details">SKU-<%# Eval("IdArticulo") %></td>
+                                                <td class="product-details">$<%# string.Format("{0:N2}", Eval("Precio")) %></td>
+                                                <td class="product-details">-</td>
+                                                <td>
+                                                    <span class="status-badge status-available"><%# Eval("EstadoArticulo.Nombre") %></span>
+                                                </td>
+                                                <td>
+                                                    <div class="actions-container">
+                                                        <a href='AdminFormularioArticulo.aspx?id=<%# Eval("IdArticulo") %>' class="action-button" title="Editar">
+                                                            <span class="material-symbols-outlined action-icon">edit</span>
+                                                        </a>
+                                                        <a href="#" class="action-button" title="Ver">
+                                                            <span class="material-symbols-outlined action-icon">visibility</span>
+                                                        </a>
+                                                        <a href="#" class="action-button delete" title="Eliminar">
+                                                            <span class="material-symbols-outlined action-icon">delete</span>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+                                    <asp:Label ID="lblSinArticulos" runat="server" Visible="false">
+                                        <tr>
+                                            <td colspan="7" class="text-center" style="padding: 2rem;">
+                                                <p class="text-muted">No hay artículos disponibles.</p>
+                                            </td>
+                                        </tr>
+                                    </asp:Label>
                                 </tbody>
                             </table>
                         </div>
