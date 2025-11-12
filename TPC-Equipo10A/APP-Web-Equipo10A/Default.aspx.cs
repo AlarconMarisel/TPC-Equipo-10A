@@ -14,6 +14,10 @@ namespace APP_Web_Equipo10A
         {
             if (!IsPostBack)
             {
+                
+                CargarArticulosRecientes();
+
+                
                 var query = Request["q"];
                 if (!string.IsNullOrWhiteSpace(query))
                 {
@@ -22,6 +26,34 @@ namespace APP_Web_Equipo10A
                 }
             }
         }
+
+        private void CargarTodosLosArticulos()
+        {
+            try
+            {
+                var negocio = new ArticuloNegocio();
+                var articulos = negocio.listarArticulo();
+
+                if (articulos != null && articulos.Count > 0)
+                {
+                    pnlResultados.Visible = true;
+                    litResumen.Text = $"<p class='text-muted mb-3'>Mostrando {articulos.Count} artículos disponibles</p>";
+                    rptResultados.DataSource = articulos;
+                    rptResultados.DataBind();
+                }
+                else
+                {
+                    pnlResultados.Visible = true;
+                    litResumen.Text = "<p class='text-muted mb-3'>No hay artículos disponibles por el momento.</p>";
+                }
+            }
+            catch (Exception ex)
+            {
+                litResumen.Text = $"<p class='text-danger'>Error al cargar artículos: {Server.HtmlEncode(ex.Message)}</p>";
+                pnlResultados.Visible = true;
+            }
+        }
+
 
         private void BuscarArticulos(string query)
         {
@@ -48,6 +80,34 @@ namespace APP_Web_Equipo10A
                 pnlResultados.Visible = true;
             }
         }
+
+        private void CargarArticulosRecientes()
+        {
+            try
+            {
+                var negocio = new ArticuloNegocio();
+                var articulos = negocio.listarArticulo();
+
+                if (articulos.Count > 0)
+                {
+                    rptResultados.DataSource = articulos;
+                    rptResultados.DataBind();
+                    pnlResultados.Visible = true;
+                    litResumen.Text = "<p class='text-muted mb-3'>Mostrando los artículos más recientes</p>";
+                }
+                else
+                {
+                    pnlResultados.Visible = true;
+                    litResumen.Text = "<p class='text-muted'>No hay artículos disponibles.</p>";
+                }
+            }
+            catch (Exception ex)
+            {
+                pnlResultados.Visible = true;
+                litResumen.Text = $"<p class='text-danger'>Error al cargar artículos: {Server.HtmlEncode(ex.Message)}</p>";
+            }
+        }
+
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
