@@ -211,6 +211,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            align-items: stretch;
         }
         
         @media (min-width: 768px) {
@@ -221,9 +222,65 @@
             }
         }
         
+        /* Clase común para todos los controles del toolbar - FORZAR MISMA ALTURA */
+        .toolbar input[type="text"],
+        .toolbar input[type="text"]:focus,
+        .toolbar select,
+        .toolbar select:focus,
+        .toolbar button,
+        .toolbar button:focus,
+        .toolbar .search-container {
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+        
+        /* Específico para TextBox de ASP.NET */
+        #txtBusqueda,
+        #MainContent_txtBusqueda {
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            width: 100% !important;
+            position: relative;
+            line-height: 1.5 !important;
+        }
+        
+        /* Específico para DropDownList de ASP.NET */
+        #ddlEstado,
+        #ddlCategoria,
+        #MainContent_ddlEstado,
+        #MainContent_ddlCategoria {
+            height: 2.5rem !important;
+            box-sizing: border-box !important;
+            vertical-align: middle !important;
+            margin: 0 !important;
+            display: inline-block !important;
+        }
+        
+        /* Asegurar que el botón también tenga la misma altura */
+        #btnBuscar,
+        #MainContent_btnBuscar {
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            vertical-align: middle !important;
+            margin: 0 !important;
+            line-height: 1.5 !important;
+        }
+        
         .search-container {
             position: relative;
             width: 100%;
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            display: block;
         }
         
         @media (min-width: 768px) {
@@ -238,23 +295,30 @@
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
+            z-index: 1;
+            pointer-events: none;
         }
         
         .search-input {
-            width: 100%;
-            border-radius: 0.5rem;
-            border: 1px solid #cbd5e1;
-            background-color: white;
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            font-size: 0.875rem;
-            color: #1e293b;
+            width: 100% !important;
+            border-radius: 0.5rem !important;
+            border: 1px solid #cbd5e1 !important;
+            background-color: white !important;
+            padding: 0.5rem 1rem 0.5rem 2.5rem !important;
+            font-size: 0.875rem !important;
+            color: #1e293b !important;
             transition: all 0.2s ease;
+            box-sizing: border-box !important;
+            height: 2.5rem !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+            vertical-align: middle !important;
         }
         
         .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(17, 115, 212, 0.1);
+            outline: none !important;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(17, 115, 212, 0.1) !important;
         }
         
         .search-input::placeholder {
@@ -265,6 +329,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            align-items: stretch;
         }
         
         @media (min-width: 640px) {
@@ -277,6 +342,7 @@
         .filter-buttons {
             display: flex;
             gap: 0.5rem;
+            align-items: center;
         }
         
         .filter-button {
@@ -293,9 +359,33 @@
             color: #374151;
             text-decoration: none;
             transition: all 0.2s ease;
+            cursor: pointer;
+            height: 2.5rem;
+            box-sizing: border-box;
         }
         
         .filter-button:hover {
+            background-color: #f8fafc;
+        }
+        
+        .filter-dropdown {
+            border-radius: 0.5rem !important;
+            border: 1px solid #cbd5e1 !important;
+            background-color: white !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 0.875rem !important;
+            font-weight: 500;
+            color: #374151 !important;
+            cursor: pointer;
+            box-sizing: border-box !important;
+            height: 2.5rem !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+            display: inline-block !important;
+            min-width: 150px;
+        }
+        
+        .filter-dropdown:hover {
             background-color: #f8fafc;
         }
         
@@ -636,19 +726,22 @@
                     <div class="toolbar">
                         <div class="search-container">
                             <span class="material-symbols-outlined search-icon">search</span>
-                            <input class="search-input" type="text" placeholder="Buscar por nombre o SKU..." />
+                            <asp:TextBox ID="txtBusqueda" runat="server" CssClass="search-input" placeholder="Buscar por nombre, descripción o categoría..." AutoPostBack="false" 
+                                Style="width: 100%; border-radius: 0.5rem; border: 1px solid #cbd5e1; background-color: white; padding: 0.5rem 1rem 0.5rem 2.5rem; font-size: 0.875rem; color: #1e293b; box-sizing: border-box; height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; line-height: 1.5; margin: 0;"></asp:TextBox>
                         </div>
                         
                         <div class="toolbar-actions">
                             <div class="filter-buttons">
-                                <button class="filter-button">
-                                    <span class="material-symbols-outlined">filter_list</span>
-                                    <span>Estado</span>
-                                </button>
-                                <button class="filter-button">
-                                    <span class="material-symbols-outlined">category</span>
-                                    <span>Categoría</span>
-                                </button>
+                                <asp:DropDownList ID="ddlEstado" runat="server" CssClass="filter-dropdown" AutoPostBack="true" OnSelectedIndexChanged="Filtros_Changed"
+                                    Style="height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; margin: 0; line-height: 1.5;">
+                                    <asp:ListItem Value="0" Text="Todos los Estados" Selected="True"></asp:ListItem>
+                                </asp:DropDownList>
+                                <asp:DropDownList ID="ddlCategoria" runat="server" CssClass="filter-dropdown" AutoPostBack="true" OnSelectedIndexChanged="Filtros_Changed"
+                                    Style="height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; margin: 0; line-height: 1.5;">
+                                    <asp:ListItem Value="0" Text="Todas las Categorías" Selected="True"></asp:ListItem>
+                                </asp:DropDownList>
+                                <asp:Button ID="btnBuscar" runat="server" CssClass="filter-button" Text="Buscar" OnClick="btnBuscar_Click" 
+                                    Style="height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; margin: 0; line-height: 1.5;" />
                             </div>
                             <a href="AdminFormularioArticulo.aspx" class="add-button text-decoration-none d-inline-flex align-items-center">
                                 <span class="material-symbols-outlined">add_circle</span>
@@ -694,9 +787,11 @@
                                                         <a href="#" class="action-button" title="Ver">
                                                             <span class="material-symbols-outlined action-icon">visibility</span>
                                                         </a>
-                                                        <a href="#" class="action-button delete" title="Eliminar">
+                                                        <asp:LinkButton ID="btnEliminar" runat="server" CssClass="action-button delete" 
+                                                            CommandArgument='<%# Eval("IdArticulo") %>' OnClick="btnEliminar_Click"
+                                                            OnClientClick="return confirm('¿Está seguro de eliminar este artículo?');" title="Eliminar">
                                                             <span class="material-symbols-outlined action-icon">delete</span>
-                                                        </a>
+                                                        </asp:LinkButton>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -715,19 +810,22 @@
                     </div>
                     
                     <!-- Pagination -->
-                    <div class="pagination">
-                        <a class="pagination-link" href="#">
+                    <asp:Panel ID="pnlPaginacion" runat="server" CssClass="pagination">
+                        <asp:LinkButton ID="lnkAnterior" runat="server" CssClass="pagination-link" OnClick="lnkAnterior_Click">
                             <span class="material-symbols-outlined pagination-icon">chevron_left</span>
-                        </a>
-                        <a class="pagination-link active" href="#">1</a>
-                        <a class="pagination-link normal" href="#">2</a>
-                        <a class="pagination-link normal" href="#">3</a>
-                        <span class="pagination-ellipsis">...</span>
-                        <a class="pagination-link normal" href="#">10</a>
-                        <a class="pagination-link" href="#">
+                        </asp:LinkButton>
+                        <asp:Repeater ID="repPaginacion" runat="server" OnItemDataBound="repPaginacion_ItemDataBound">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkPagina" runat="server" CssClass="pagination-link normal"
+                                    CommandArgument='<%# Eval("Numero") %>' OnClick="lnkPagina_Click" Text='<%# Eval("Numero") %>' Visible="false"></asp:LinkButton>
+                                <asp:Literal ID="litElipsis" runat="server" Visible="false" Text="<span class='pagination-ellipsis'>...</span>"></asp:Literal>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                        <asp:LinkButton ID="lnkSiguiente" runat="server" CssClass="pagination-link" OnClick="lnkSiguiente_Click">
                             <span class="material-symbols-outlined pagination-icon">chevron_right</span>
-                        </a>
-                    </div>
+                        </asp:LinkButton>
+                    </asp:Panel>
+                    <asp:Label ID="lblInfoPaginacion" runat="server" CssClass="text-muted small mt-2" style="display: block; text-align: center;"></asp:Label>
                 </div>
             </div>
         </main>
