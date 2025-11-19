@@ -102,23 +102,19 @@ namespace Negocio
             fueReactivada = false;
             try
             {
-                // Validar nombre único (solo en categorías activas)
                 if (ExisteNombre(nueva.Nombre))
                 {
                     throw new Exception($"Ya existe una categoría activa con el nombre '{nueva.Nombre}'. Por favor, elija otro nombre.");
                 }
 
-                // Verificar si existe una categoría eliminada con el mismo nombre
                 int? idCategoriaEliminada = ObtenerIdCategoriaEliminadaPorNombre(nueva.Nombre);
                 if (idCategoriaEliminada.HasValue)
                 {
-                    // Reactivar la categoría eliminada
                     ReactivarCategoria(idCategoriaEliminada.Value);
                     fueReactivada = true;
                 }
                 else
                 {
-                    // Crear nueva categoría
                     datos.SetearConsulta("INSERT INTO CATEGORIAS (Nombre, Eliminado) VALUES (@Nombre, 0)");
                     datos.SetearParametro("@Nombre", nueva.Nombre);
                     datos.EjecutarAccion();
@@ -128,7 +124,6 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                // Si ya es una excepción con mensaje personalizado, relanzarla
                 if (ex.Message.Contains("Ya existe") || ex.Message.Contains("reactivada"))
                 {
                     throw;
@@ -146,13 +141,11 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // Validar nombre único (excluyendo la categoría actual)
                 if (ExisteNombre(categoria.Nombre, categoria.IdCategoria))
                 {
                     throw new Exception($"Ya existe otra categoría con el nombre '{categoria.Nombre}'. Por favor, elija otro nombre.");
                 }
 
-                // Verificar que la categoría existe antes de modificar
                 Categoria categoriaExistente = ObtenerPorId(categoria.IdCategoria);
                 if (categoriaExistente == null)
                 {
@@ -166,7 +159,6 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                // Si ya es una excepción con mensaje personalizado, relanzarla
                 if (ex.Message.Contains("Ya existe") || ex.Message.Contains("No se pudo modificar"))
                 {
                     throw;
@@ -184,20 +176,17 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // Validar que no haya artículos asociados
                 if (TieneArticulosAsociados(id))
                 {
                     throw new Exception("No se puede eliminar la categoría porque tiene artículos asociados. Primero debe eliminar o cambiar la categoría de los artículos relacionados.");
                 }
 
-                // Soft delete
                 datos.SetearConsulta("UPDATE CATEGORIAS SET Eliminado = 1 WHERE IdCategoria = @IdCategoria");
                 datos.SetearParametro("@IdCategoria", id);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
             {
-                // Si ya es una excepción con mensaje personalizado, relanzarla
                 if (ex.Message.Contains("No se puede eliminar"))
                 {
                     throw;

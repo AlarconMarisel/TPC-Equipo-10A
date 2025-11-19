@@ -266,6 +266,24 @@ namespace APP_Web_Equipo10A
             return "https://via.placeholder.com/100?text=Sin+Imagen";
         }
 
+        protected string GetEstadoClass(object dataItem)
+        {
+            if (dataItem is Dominio.Articulo articulo)
+            {
+                string estadoNombre = articulo.EstadoArticulo?.Nombre?.ToLower() ?? "";
+                
+                if (estadoNombre.Contains("reservado") || estadoNombre.Contains("reserva"))
+                {
+                    return "status-reserved";
+                }
+                else if (estadoNombre.Contains("vendido") || estadoNombre.Contains("venta"))
+                {
+                    return "status-sold";
+                }
+            }
+            return "status-available";
+        }
+
         protected void repPaginacion_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)

@@ -175,7 +175,6 @@ namespace APP_Web_Equipo10A
                     GuardarImagenes(idArticulo, fileUploadImagenes.PostedFiles);
                 }
 
-                // Redirigir con mensaje de éxito
                 string mensaje = IdArticuloActual.HasValue ? "editado" : "creado";
                 Response.Redirect($"AdminGestionArticulo.aspx?exito={mensaje}", false);
             }

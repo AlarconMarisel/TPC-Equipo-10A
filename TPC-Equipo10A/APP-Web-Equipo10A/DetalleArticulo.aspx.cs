@@ -48,21 +48,21 @@ namespace APP_Web_Equipo10A
                     else
                         imgPrincipal.ImageUrl = "https://via.placeholder.com/600x600?text=Sin+Imagen";
 
-                    // Cargar miniaturas de imágenes
+
                     if (art.Imagenes != null && art.Imagenes.Count > 0)
                     {
                         Repeater1.DataSource = art.Imagenes;
                         Repeater1.DataBind();
                     }
 
-                    // Configurar breadcrumb dinámico
+
                     if (art.CategoriaArticulo != null)
                     {
                         lnkCategoria.Text = art.CategoriaArticulo.Nombre;
                         lnkCategoria.NavigateUrl = $"Default.aspx?categoria={art.CategoriaArticulo.IdCategoria}";
                     }
 
-                    // Cargar artículos más caros (excluyendo el actual)
+
                     CargarTePuedeInteresar(id);
                 }
                 else
@@ -84,7 +84,7 @@ namespace APP_Web_Equipo10A
                 var todosLosArticulos = negocio.listarArticulo();
 
                 var articulosMasCaros = todosLosArticulos
-                    .Where(a => a.IdArticulo != idArticuloActual) // Excluir el artículo actual
+                    .Where(a => a.IdArticulo != idArticuloActual)
                     .OrderByDescending(a => a.Precio)
                     .Take(4)
                     .ToList();
@@ -97,7 +97,7 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                // Error al cargar artículos más caros - se ignora silenciosamente
+
             }
         }
 

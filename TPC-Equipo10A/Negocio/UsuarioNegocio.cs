@@ -98,5 +98,41 @@ namespace Negocio
             }
         }
 
+        public Usuario ObtenerPorId(int id)
+        {
+            Usuario user = null;
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, Password, Dni, Telefono, Domicilio, EsAdmin FROM USUARIOS WHERE IdUsuario = @IdUsuario");
+                datos.SetearParametro("@IdUsuario", id);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    user = new Usuario();
+                    user.IdUsuario = (int)datos.Lector["IdUsuario"];
+                    user.Nombre = datos.Lector["Nombre"] != DBNull.Value ? (string)datos.Lector["Nombre"] : null;
+                    user.Apellido = datos.Lector["Apellido"] != DBNull.Value ? (string)datos.Lector["Apellido"] : null;
+                    user.Email = datos.Lector["Email"] != DBNull.Value ? (string)datos.Lector["Email"] : null;
+                    user.Password = datos.Lector["Password"] != DBNull.Value ? (string)datos.Lector["Password"] : null;
+                    user.Dni = datos.Lector["Dni"] != DBNull.Value ? (string)datos.Lector["Dni"] : null;
+                    user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
+                    user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
+                    user.Tipo = datos.Lector["EsAdmin"] != DBNull.Value && (bool)datos.Lector["EsAdmin"] ? TipoUsuario.ADMIN : TipoUsuario.NORMAL;
+                }
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
     }
 }

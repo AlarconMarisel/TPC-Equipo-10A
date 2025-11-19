@@ -133,5 +133,54 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
+        public Reserva ObtenerReservaPorArticulo(int idArticulo)
+        {
+            Reserva reserva = null;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+                    SELECT TOP 1
+                        r.IDReserva,
+                        r.IDUsuario,
+                        r.FechaReserva,
+                        r.FechaVencimientoReserva,
+                        r.MontoSeña,
+                        r.EstadoReserva
+                    FROM RESERVAS r
+                    INNER JOIN ARTICULOSXRESERVA ar ON r.IDReserva = ar.IDReserva
+                    WHERE ar.IDArticulo = @IDArticulo
+                    ORDER BY r.FechaReserva DESC");
+
+                datos.SetearParametro("@IDArticulo", idArticulo);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    reserva = new Reserva();
+                    reserva.IdReserva = (int)datos.Lector["IDReserva"];
+                    reserva.IdUsuario = new Usuario { IdUsuario = (int)datos.Lector["IDUsuario"] };
+                    reserva.FechaReserva = (DateTime)datos.Lector["FechaReserva"];
+                    reserva.FechaVencimiento = (DateTime)datos.Lector["FechaVencimientoReserva"];
+                    reserva.MontoSeña = (decimal)datos.Lector["MontoSeña"];
+                    reserva.EstadoReserva = (bool)datos.Lector["EstadoReserva"];
+
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    reserva.IdUsuario = usuarioNegocio.ObtenerPorId(reserva.IdUsuario.IdUsuario);
+                }
+
+                return reserva;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

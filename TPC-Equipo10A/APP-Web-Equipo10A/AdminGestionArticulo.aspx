@@ -508,8 +508,8 @@
         }
         
         .status-reserved {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #b45309;
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
         }
         
         .status-sold {
@@ -758,8 +758,9 @@
                                     <tr>
                                         <th>Imagen</th>
                                         <th>Nombre del Artículo</th>
-                                        <th>Id Articulo</th>
+                                        <th>ID</th>
                                         <th>Precio</th>
+                                        <th>Stock</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -772,22 +773,23 @@
                                                     <div class="product-image" style='background-image: url("<%# GetImagenUrl(Container.DataItem) %>");'></div>
                                                 </td>
                                                 <td class="product-name"><%# Eval("Nombre") %></td>
-                                                <td class="product-details">Id - <%# Eval("IdArticulo") %></td>
+                                                <td class="product-details">ID-<%# Eval("IdArticulo") %></td>
                                                 <td class="product-details">$<%# string.Format("{0:N2}", Eval("Precio")) %></td>
+                                                <td class="product-details">-</td>
                                                 <td>
-                                                    <span class="status-badge status-available"><%# Eval("EstadoArticulo.Nombre") %></span>
+                                                    <span class='status-badge <%# GetEstadoClass(Container.DataItem) %>'><%# Eval("EstadoArticulo.Nombre") %></span>
                                                 </td>
                                                 <td>
                                                     <div class="actions-container">
                                                         <a href='AdminFormularioArticulo.aspx?id=<%# Eval("IdArticulo") %>' class="action-button" title="Editar">
                                                             <span class="material-symbols-outlined action-icon">edit</span>
                                                         </a>
-                                                        <a href="#" class="action-button" title="Ver">
+                                                        <a href='AdminDetalleArticulo.aspx?id=<%# Eval("IdArticulo") %>' class="action-button" title="Ver">
                                                             <span class="material-symbols-outlined action-icon">visibility</span>
                                                         </a>
                                                         <asp:LinkButton ID="btnEliminar" runat="server" CssClass="action-button delete" 
                                                             CommandArgument='<%# Eval("IdArticulo") %>' OnClick="btnEliminar_Click"
-                                                            OnClientClick='<%# "return confirmarEliminacion(\"" + Eval("Nombre").ToString().Replace("\"", "\\\"") + "\");" %>' title="Eliminar">
+                                                            OnClientClick="return confirm('¿Está seguro de eliminar este artículo?');" title="Eliminar">
                                                             <span class="material-symbols-outlined action-icon">delete</span>
                                                         </asp:LinkButton>
                                                     </div>
@@ -797,7 +799,7 @@
                                     </asp:Repeater>
                                     <asp:Label ID="lblSinArticulos" runat="server" Visible="false">
                                         <tr>
-                                            <td colspan="6" class="text-center" style="padding: 2rem;">
+                                            <td colspan="7" class="text-center" style="padding: 2rem;">
                                                 <p class="text-muted">No hay artículos disponibles.</p>
                                             </td>
                                         </tr>
@@ -831,10 +833,6 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">
-    <script>
-        function confirmarEliminacion(nombreArticulo) {
-            return confirm('¿Está seguro de eliminar el artículo "' + nombreArticulo + '"?\n\nEsta acción no se puede deshacer.');
-        }
-    </script>
+
 </asp:Content>
 

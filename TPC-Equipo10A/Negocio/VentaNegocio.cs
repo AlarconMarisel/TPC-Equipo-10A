@@ -104,5 +104,55 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
+        public Venta ObtenerVentaPorArticulo(int idArticulo)
+        {
+            Venta venta = null;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+                    SELECT TOP 1
+                        v.IDVenta,
+                        v.IDReserva,
+                        v.FechaVenta,
+                        v.PrecioFinal,
+                        r.IDUsuario
+                    FROM VENTAS v
+                    INNER JOIN RESERVAS r ON v.IDReserva = r.IDReserva
+                    INNER JOIN ARTICULOSXRESERVA ar ON r.IDReserva = ar.IDReserva
+                    WHERE ar.IDArticulo = @IDArticulo
+                    ORDER BY v.FechaVenta DESC");
+
+                datos.SetearParametro("@IDArticulo", idArticulo);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    venta = new Venta();
+                    venta.IdVenta = (int)datos.Lector["IDVenta"];
+                    venta.FechaVenta = (DateTime)datos.Lector["FechaVenta"];
+                    venta.MontoTotal = (decimal)datos.Lector["PrecioFinal"];
+                    
+                    venta.Reserva = new Reserva();
+                    venta.Reserva.IdReserva = (int)datos.Lector["IDReserva"];
+                    venta.Reserva.IdUsuario = new Usuario { IdUsuario = (int)datos.Lector["IDUsuario"] };
+
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    venta.Reserva.IdUsuario = usuarioNegocio.ObtenerPorId(venta.Reserva.IdUsuario.IdUsuario);
+                }
+
+                return venta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace APP_Web_Equipo10A
 {
     public partial class Default : System.Web.UI.Page
     {
-        private const int ARTICULOS_POR_PAGINA = 16; // 4 filas x 4 columnas
+        private const int ARTICULOS_POR_PAGINA = 16;
         private const int ARTICULOS_MAS_CAROS = 4;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -19,7 +19,7 @@ namespace APP_Web_Equipo10A
             if (!IsPostBack)
             {
                 CargarCategorias();
-                CargarTePuedeInteresar(); // Siempre cargar "Te puede Interesar"
+                CargarTePuedeInteresar();
                 
                 var categoriaId = Request.QueryString["categoria"];
                 if (!string.IsNullOrEmpty(categoriaId) && int.TryParse(categoriaId, out int idCategoria))
@@ -53,7 +53,7 @@ namespace APP_Web_Equipo10A
                 {
                     CargarCategorias();
                 }
-                CargarTePuedeInteresar(); // Siempre cargar "Te puede Interesar"
+                CargarTePuedeInteresar();
             }
         }
 
@@ -112,7 +112,7 @@ namespace APP_Web_Equipo10A
                 rptResultados.DataSource = articulosPaginados;
                 rptResultados.DataBind();
 
-                // Configurar paginación
+
                 if (totalPaginas > 1)
                 {
                     ConfigurarPaginacion(pagina, totalPaginas, query: query);
@@ -157,7 +157,7 @@ namespace APP_Web_Equipo10A
                     litResumen.Text = "<p class='text-muted'>No hay artículos disponibles.</p>";
                 }
 
-                // Configurar paginación
+
                 if (totalPaginas > 1)
                 {
                     ConfigurarPaginacion(pagina, totalPaginas);
@@ -267,7 +267,7 @@ namespace APP_Web_Equipo10A
                     rptResultados.DataBind();
                 }
 
-                // Configurar paginación
+
                 if (totalPaginas > 1)
                 {
                     ConfigurarPaginacion(pagina, totalPaginas, idCategoria: idCategoria);
@@ -304,7 +304,7 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                // Error al cargar artículos más caros - se ignora silenciosamente
+
             }
         }
 
@@ -323,7 +323,7 @@ namespace APP_Web_Equipo10A
                 rptPaginacion.DataBind();
                 pnlPaginacion.Visible = true;
 
-                // Guardar parámetros en ViewState para usar en el evento de paginación
+
                 ViewState["Query"] = query;
                 ViewState["IdCategoria"] = idCategoria;
             }

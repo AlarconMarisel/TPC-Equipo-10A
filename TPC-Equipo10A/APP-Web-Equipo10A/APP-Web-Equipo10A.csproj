@@ -80,6 +80,7 @@
     <Content Include="AdminConfirmarSeña.aspx" />
     <Content Include="AdminFormularioArticulo.aspx" />
     <Content Include="AdminFormularioCategoria.aspx" />
+    <Content Include="AdminDetalleArticulo.aspx" />
     <Content Include="AdminGestionArticulo.aspx" />
     <Content Include="AdminGestionCategoria.aspx" />
     <Content Include="AdminGestionReserva.aspx" />
@@ -118,6 +119,13 @@
     </Compile>
     <Compile Include="AdminFormularioCategoria.aspx.designer.cs">
       <DependentUpon>AdminFormularioCategoria.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminDetalleArticulo.aspx.cs">
+      <DependentUpon>AdminDetalleArticulo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminDetalleArticulo.aspx.designer.cs">
+      <DependentUpon>AdminDetalleArticulo.aspx</DependentUpon>
     </Compile>
     <Compile Include="AdminGestionArticulo.aspx.cs">
       <DependentUpon>AdminGestionArticulo.aspx</DependentUpon>
