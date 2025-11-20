@@ -1,4 +1,4 @@
-<%@ Page Title="Gestión de Ventas" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="AdminGestionReserva.aspx.cs" Inherits="APP_Web_Equipo10A.AdminGestionReserva" %>
+<%@ Page Title="Gestión de Ventas" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="AdminGestionReserva.aspx.cs" Inherits="APP_Web_Equipo10A.AdminGestionReserva" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>

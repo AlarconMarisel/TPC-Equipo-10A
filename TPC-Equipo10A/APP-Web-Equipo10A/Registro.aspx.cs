@@ -13,5 +13,15 @@ namespace APP_Web_Equipo10A
         {
             
         }
+
+        protected void btnRegistrar_Click(object sender, EventArgs e)
+        {
+            if (!chkTerminos.Checked)
+            {
+                Response.Write("<script>alert('Debe aceptar los términos y condiciones para participar.');</script>");
+                return;
+            }
+        }
     }
+
 }

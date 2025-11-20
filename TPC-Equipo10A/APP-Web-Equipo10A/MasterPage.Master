@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.Master.cs" Inherits="APP_Web_Equipo10A.Site" %>
+<%@ Master Language="C#" AutoEventWireup="True" CodeBehind="MasterPage.Master.cs" Inherits="APP_Web_Equipo10A.Site" %>
 
 <!DOCTYPE html>
 <html lang="es">

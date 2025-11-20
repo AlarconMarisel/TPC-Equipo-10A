@@ -1,4 +1,4 @@
-<%@ Page Title="Registro de Usuario" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="Registro.aspx.cs" Inherits="APP_Web_Equipo10A.Registro" %>
+<%@ Page Title="Registro de Usuario" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="Registro.aspx.cs" Inherits="APP_Web_Equipo10A.Registro" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
@@ -13,7 +13,7 @@
         
         .register-card {
             width: 100%;
-            max-width: 28rem;
+            max-width: 70rem;
             border-radius: 12px;
             border: 1px solid #e2e8f0;
             background-color: white;
@@ -236,6 +236,14 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+        .validacion {
+            color: red;
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            min-height: 0;
+
+        }
     </style>
 </asp:Content>
 
@@ -253,42 +261,66 @@
                 <div class="d-flex flex-column gap-4">
                     <!-- Header -->
                     <div class="d-flex flex-column gap-3 text-center">
-                        <h1 class="register-title mb-0">Crea tu Cuenta para Empezar a Comprar y Vender</h1>
-                        <p class="register-subtitle mb-0">Es rápido, fácil y seguro.</p>
+                        <h1 class="register-title mb-0">Crea tu Cuenta para Empezar a Comprar</h1>
++                        <p class="register-subtitle mb-0">Es rápido, fácil y seguro.</p>
                     </div>
                     
-                    <!-- Registration Form -->
-                    <form class="d-flex flex-column gap-4">
-                        <!-- Name Fields Row -->
+                    <!-- Registracion Form -->
+                    <div class="d-flex flex-column gap-4">
+                        <!-- Nombre y Apellido Fields Row -->
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Nombre</label>
-                                <input type="text" class="form-input" placeholder="Introduce tu nombre" />
+                                <asp:TextBox ID="txtNombre" runat="server" class="form-input" placeholder="Ingresar Nombre" onkeypress="return soloLetrasYEspacios(event)"></asp:TextBox>
+                                <asp:RequiredFieldValidator CssClass="validacion"  ErrorMessage="Campo requerido!" ControlToValidate="txtNombre" runat="server" />
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Apellido</label>
-                                <input type="text" class="form-input" placeholder="Introduce tu apellido" />
+                                <asp:TextBox ID="txtApellido" runat="server" class="form-input" placeholder="Ingresar Apellido" onkeypress="return soloLetrasYEspacios(event)"></asp:TextBox>
+                                <asp:RequiredFieldValidator CssClass="validacion"  ErrorMessage="Campo requerido!" ControlToValidate="txtApellido" runat="server" />
                             </div>
                         </div>
-                        
+                        <!-- DNI - Telefono Fields Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">DNI</label>
+                                <asp:TextBox ID="txtDNI" runat="server" class="form-input" placeholder="Ingresar DNI" MaxLength="8" onkeypress="return soloNumeros(event)"></asp:TextBox>
+                                <asp:RequiredFieldValidator CssClass="validacion"  ErrorMessage="Campo requerido!" ControlToValidate="txtDNI" runat="server" />
+                        </div>
+                            <div class="form-group">
+                                <label class="form-label">Telefono</label>
+                                <asp:TextBox ID="txtTelefono" runat="server" class="form-input" placeholder="Ingresar telefono" onkeypress="return soloNumeros(event)"></asp:TextBox>
+                                <asp:RequiredFieldValidator CssClass="validacion"  ErrorMessage="Campo requerido!" ControlToValidate="txtTelefono" runat="server" />
+                            </div>
+                        </div>
+                        <!-- Domicilio Field -->
+                        <div class="form-group">
+                            <label class="form-label">Domicilio</label>
+                               <asp:TextBox ID="txtDomicilio" runat="server" class="form-input" placeholder="Ingresar Domicilio"></asp:TextBox>
+                               <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtDomicilio" runat="server" />
+                        </div>
                         <!-- Email Field -->
                         <div class="form-group">
                             <label class="form-label">Dirección de Email</label>
-                            <input type="email" class="form-input" placeholder="email@ejemplo.com" />
+                            <div class="form-input">
+                               <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control email-input" placeholder="Ingresar email@ejemplo.com"></asp:TextBox>
+                               <asp:RegularExpressionValidator CssClass="validacion" ErrorMessage="Formato de email inválido" ControlToValidate="txtEmail" ValidationExpression="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" runat="server" />
+                            </div>
+                               <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtEmail" runat="server" />
                         </div>
                         
-                        <!-- Password Field -->
+                        <div class="form-row">
+                        <!-- Contraseña Field -->
                         <div class="form-group">
                             <label class="form-label">Contraseña</label>
                             <div class="password-input-container">
                                 <input type="password" class="form-input" placeholder="Mínimo 8 caracteres" style="padding-right: 40px;" />
                                 <button type="button" class="password-toggle">
-                                    <span class="material-symbols-outlined">visibility</span>
+                                    <span class="material-symbols-outlined">visibility_off</span>
                                 </button>
                             </div>
-                        </div>
-                        
-                        <!-- Confirm Password Field -->
+                        </div>                
+                        <!-- Confirmacion Contraseña Field -->
                         <div class="form-group">
                             <label class="form-label">Confirmar Contraseña</label>
                             <div class="password-input-container">
@@ -298,21 +330,22 @@
                                 </button>
                             </div>
                         </div>
+                       </div>
                         
                         <!-- Terms Checkbox -->
                         <div class="checkbox-container">
-                            <input type="checkbox" class="form-checkbox" id="terms-checkbox" />
                             <label class="checkbox-label" for="terms-checkbox">
-                                Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a>.
+                            <asp:Checkbox runat="server" id="chkTerminos"/>
+                                Acepto los Términos y Condiciones y la Política de Privacidad.
                             </label>
                         </div>
                         
                         <!-- Submit Button -->
-                        <button type="submit" class="register-button">
+                        <button ID="AceptarRegistro" type="submit" class="register-button" Onclick="AceptarRegistro_Click">
                             <span class="material-symbols-outlined">person_add</span>
                             Registrarse
                         </button>
-                    </form>
+                    </div>
                     
                     <!-- Login Link -->
                     <div class="login-link">
@@ -325,6 +358,39 @@
             </div>
         </div>
     </div>
+
+        <script type="text/javascript">
+        var timeoutId;
+        
+        function soloNumeros(event) {
+            var charCode = (event.which) ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function soloLetrasYEspacios(event) {
+            var charCode = (event.which) ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122) && charCode !== 32 && charCode !== 241 && charCode !== 209) {
+                return false;
+            }
+            return true;
+        }
+
+        var timeoutValidacionDNI;
+
+        function validarDNIOnInput(input) {
+            if (timeoutValidacionDNI) {
+                clearTimeout(timeoutValidacionDNI);
+            }
+            
+            timeoutValidacionDNI = setTimeout(function() {
+                validarDNIOnBlur(input);
+            }, 2000);
+        }
+        </script>
+
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">

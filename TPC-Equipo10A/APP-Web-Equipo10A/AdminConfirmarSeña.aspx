@@ -1,4 +1,4 @@
-<%@ Page Title="Gestión de Señas Pendientes" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="AdminConfirmarSeña.aspx.cs" Inherits="APP_Web_Equipo10A.AdminConfirmarSeña" %>
+<%@ Page Title="Gestión de Señas Pendientes" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="AdminConfirmarSeña.aspx.cs" Inherits="APP_Web_Equipo10A.AdminConfirmarSeña" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>

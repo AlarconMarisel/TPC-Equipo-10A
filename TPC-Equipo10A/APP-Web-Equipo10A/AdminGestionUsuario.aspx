@@ -1,4 +1,4 @@
-<%@ Page Title="Gestión de Usuarios - Admin Panel" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="AdminGestionUsuario.aspx.cs" Inherits="APP_Web_Equipo10A.AdminGestionUsuario" %>
+<%@ Page Title="Gestión de Usuarios - Admin Panel" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="AdminGestionUsuario.aspx.cs" Inherits="APP_Web_Equipo10A.AdminGestionUsuario" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>

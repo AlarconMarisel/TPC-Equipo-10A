@@ -1,4 +1,4 @@
-<%@ Page Title="Panel de Administrador" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="PanelAdministrador.aspx.cs" Inherits="APP_Web_Equipo10A.PanelAdministrador" %>
+<%@ Page Title="Panel de Administrador" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="PanelAdministrador.aspx.cs" Inherits="APP_Web_Equipo10A.PanelAdministrador" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>

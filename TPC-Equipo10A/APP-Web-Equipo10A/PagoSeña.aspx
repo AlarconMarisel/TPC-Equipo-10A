@@ -1,4 +1,4 @@
-<%@ Page Title="Pago de Seña" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="PagoSeña.aspx.cs" Inherits="APP_Web_Equipo10A.PagoSeña" %>
+<%@ Page Title="Pago de Seña" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="True" CodeBehind="PagoSeña.aspx.cs" Inherits="APP_Web_Equipo10A.PagoSeña" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
