@@ -12,42 +12,53 @@
         /* Sidebar */
         .sidebar {
             display: flex;
+            height: 100vh;
+            min-height: 100%;
             flex-direction: column;
-            width: 16rem;
+            justify-content: space-between;
             background-color: white;
-            border-right: 1px solid #e2e8f0;
             padding: 1rem;
-            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 16rem;
             position: sticky;
             top: 0;
-            height: 100vh;
+            flex-shrink: 0;
             z-index: 10;
         }
         
         .sidebar-header {
             display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar-brand {
+            display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem;
+            padding: 0 0.75rem;
         }
         
-        .sidebar-logo {
-            color: var(--primary-color);
-            font-size: 1.875rem;
+        .brand-logo {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
         }
         
-        .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-        
-        .sidebar-content {
+        .brand-info {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            margin-top: 1rem;
+        }
+        
+        .brand-subtitle {
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.5;
         }
         
         .sidebar-nav {
@@ -72,80 +83,27 @@
         }
         
         .nav-link:not(.active) {
-            color: #475569;
+            color: #374151;
         }
         
         .nav-link:not(.active):hover {
-            background-color: #f1f5f9;
+            background-color: #f3f4f6;
         }
         
         .nav-icon {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
         }
         
         .nav-text {
             font-size: 0.875rem;
             font-weight: 500;
-        }
-        
-        .nav-text.bold {
-            font-weight: 700;
+            line-height: 1.5;
         }
         
         .sidebar-footer {
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            color: #475569;
-            transition: all 0.2s ease;
-        }
-        
-        .user-info:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .user-avatar {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            width: 2.5rem;
-            height: 2.5rem;
-        }
-        
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #1e293b;
-            line-height: 1.25;
-        }
-        
-        .user-email {
-            font-size: 0.75rem;
-            color: #64748b;
-            line-height: 1.25;
-        }
-        
-        .logout-link {
-            color: rgba(220, 53, 69, 0.8);
-        }
-        
-        .logout-link:hover {
-            background-color: rgba(220, 53, 69, 0.1);
         }
         
         /* Main Content */
@@ -606,6 +564,7 @@
                 width: 100%;
                 height: auto;
                 position: relative;
+                min-height: auto;
             }
             
             .main-content {
@@ -663,49 +622,53 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <span class="material-symbols-outlined sidebar-logo">storefront</span>
-                <h1 class="sidebar-title">Segunda Vida</h1>
-            </div>
-            
-            <div class="sidebar-content">
+                <!-- Brand -->
+                <div class="sidebar-brand">
+                    <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
+                    <div class="brand-info">
+                        <h1 class="brand-subtitle">Panel de Administrador</h1>
+                    </div>
+                </div>
+                
                 <!-- Navigation -->
                 <nav class="sidebar-nav">
                     <a class="nav-link" href="PanelAdministrador.aspx">
-                        <span class="material-symbols-outlined nav-icon">dashboard</span>
+                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="AdminGestionArticulo.aspx">
                         <span class="material-symbols-outlined nav-icon">inventory_2</span>
-                        <p class="nav-text bold">Gestión de Artículos</p>
+                        <p class="nav-text">Artículos</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionCategoria.aspx">
+                        <span class="material-symbols-outlined nav-icon">category</span>
+                        <p class="nav-text">Categorías</p>
                     </a>
                     <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">shopping_cart</span>
-                        <p class="nav-text">Pedidos</p>
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Ventas</p>
                     </a>
                     <a class="nav-link" href="#">
                         <span class="material-symbols-outlined nav-icon">group</span>
-                        <p class="nav-text">Clientes</p>
+                        <p class="nav-text">Usuarios</p>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <span class="material-symbols-outlined nav-icon">mail</span>
+                        <p class="nav-text">Mensajes</p>
                     </a>
                 </nav>
-                
-                <!-- Footer -->
-                <div class="sidebar-footer">
-                    <div class="user-info">
-                        <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZkHszPKnmh_FnWUjKGOw-yoPCOiqduLs4ARXKt0-dAXSWRlUIfPSWMWBaTLrrcVwMIcyVDSWy34JHMq8lNJ3R8vT6sMEBOZ4dqjdu7hHE4bs09Yiuq7-sROgvC7Qwntv7pDh0ZPay1YCOjfqPu2rPpKNxbH3P6catl5ZPbjKIKQNvCFRqZgjoukrliR8q-ppl88gypFBtKnC3wLEjeFaLn8wLkZRE_bZqIjBJ2rjYReXMnQU_7rpf1aXgXwT6iE1uSwpzLVoqpnQ");'></div>
-                        <div class="user-details">
-                            <h1 class="user-name">Admin</h1>
-                            <p class="user-email">admin@segundavida.com</p>
-                        </div>
-                    </div>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">settings</span>
-                        <p class="nav-text">Ajustes</p>
-                    </a>
-                    <a class="nav-link logout-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">logout</span>
-                        <p class="nav-text">Cerrar Sesión</p>
-                    </a>
-                </div>
+            </div>
+            
+            <!-- Footer Links -->
+            <div class="sidebar-footer">
+                <a class="nav-link" href="#">
+                    <span class="material-symbols-outlined nav-icon">account_circle</span>
+                    <p class="nav-text">Mi Perfil</p>
+                </a>
+                <a class="nav-link" href="#">
+                    <span class="material-symbols-outlined nav-icon">logout</span>
+                    <p class="nav-text">Cerrar Sesión</p>
+                </a>
             </div>
         </aside>
         
@@ -760,7 +723,6 @@
                                         <th>Nombre del Artículo</th>
                                         <th>ID</th>
                                         <th>Precio</th>
-                                        <th>Stock</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -775,7 +737,6 @@
                                                 <td class="product-name"><%# Eval("Nombre") %></td>
                                                 <td class="product-details">ID-<%# Eval("IdArticulo") %></td>
                                                 <td class="product-details">$<%# string.Format("{0:N2}", Eval("Precio")) %></td>
-                                                <td class="product-details">-</td>
                                                 <td>
                                                     <span class='status-badge <%# GetEstadoClass(Container.DataItem) %>'><%# Eval("EstadoArticulo.Nombre") %></span>
                                                 </td>
@@ -799,7 +760,7 @@
                                     </asp:Repeater>
                                     <asp:Label ID="lblSinArticulos" runat="server" Visible="false">
                                         <tr>
-                                            <td colspan="7" class="text-center" style="padding: 2rem;">
+                                            <td colspan="6" class="text-center" style="padding: 2rem;">
                                                 <p class="text-muted">No hay artículos disponibles.</p>
                                             </td>
                                         </tr>

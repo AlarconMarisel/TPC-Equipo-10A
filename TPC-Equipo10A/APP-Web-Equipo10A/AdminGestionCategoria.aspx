@@ -12,42 +12,53 @@
         /* Sidebar */
         .sidebar {
             display: flex;
+            height: 100vh;
+            min-height: 100%;
             flex-direction: column;
-            width: 16rem;
+            justify-content: space-between;
             background-color: white;
-            border-right: 1px solid #e2e8f0;
             padding: 1rem;
-            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 16rem;
             position: sticky;
             top: 0;
-            height: 100vh;
+            flex-shrink: 0;
             z-index: 10;
         }
         
         .sidebar-header {
             display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar-brand {
+            display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem;
+            padding: 0 0.75rem;
         }
         
-        .sidebar-logo {
-            color: var(--primary-color);
-            font-size: 1.875rem;
+        .brand-logo {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
         }
         
-        .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-        
-        .sidebar-content {
+        .brand-info {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            margin-top: 1rem;
+        }
+        
+        .brand-subtitle {
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.5;
         }
         
         .sidebar-nav {
@@ -72,80 +83,27 @@
         }
         
         .nav-link:not(.active) {
-            color: #475569;
+            color: #374151;
         }
         
         .nav-link:not(.active):hover {
-            background-color: #f1f5f9;
+            background-color: #f3f4f6;
         }
         
         .nav-icon {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
         }
         
         .nav-text {
             font-size: 0.875rem;
             font-weight: 500;
-        }
-        
-        .nav-text.bold {
-            font-weight: 700;
+            line-height: 1.5;
         }
         
         .sidebar-footer {
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            color: #475569;
-            transition: all 0.2s ease;
-        }
-        
-        .user-info:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .user-avatar {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            width: 2.5rem;
-            height: 2.5rem;
-        }
-        
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #1e293b;
-            line-height: 1.25;
-        }
-        
-        .user-email {
-            font-size: 0.75rem;
-            color: #64748b;
-            line-height: 1.25;
-        }
-        
-        .logout-link {
-            color: rgba(220, 53, 69, 0.8);
-        }
-        
-        .logout-link:hover {
-            background-color: rgba(220, 53, 69, 0.1);
         }
         
         /* Main Content */
@@ -222,12 +180,35 @@
             }
         }
         
-        .search-container {
-            position: relative;
-            width: 100%;
+        /* Clase común para todos los controles del toolbar - FORZAR MISMA ALTURA */
+        .toolbar input[type="text"],
+        .toolbar input[type="text"]:focus,
+        .toolbar button,
+        .toolbar button:focus,
+        .toolbar .search-container {
             height: 2.5rem !important;
             min-height: 2.5rem !important;
             max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+        }
+        
+        /* Específico para TextBox de ASP.NET */
+        #txtBusqueda,
+        #MainContent_txtBusqueda {
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            width: 100% !important;
+            position: relative;
+            line-height: 1.5 !important;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 100%;
             display: block;
         }
         
@@ -303,6 +284,18 @@
             cursor: pointer;
             height: 2.5rem;
             box-sizing: border-box;
+        }
+        
+        /* Asegurar que el botón también tenga la misma altura */
+        #btnBuscar,
+        #MainContent_btnBuscar {
+            height: 2.5rem !important;
+            min-height: 2.5rem !important;
+            max-height: 2.5rem !important;
+            box-sizing: border-box !important;
+            vertical-align: middle !important;
+            margin: 0 !important;
+            line-height: 1.5 !important;
         }
         
         .filter-button:hover {
@@ -438,6 +431,7 @@
                 width: 100%;
                 height: auto;
                 position: relative;
+                min-height: auto;
             }
             
             .main-content {
@@ -494,53 +488,53 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <span class="material-symbols-outlined sidebar-logo">storefront</span>
-                <h1 class="sidebar-title">Segunda Vida</h1>
-            </div>
-            
-            <div class="sidebar-content">
+                <!-- Brand -->
+                <div class="sidebar-brand">
+                    <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
+                    <div class="brand-info">
+                        <h1 class="brand-subtitle">Panel de Administrador</h1>
+                    </div>
+                </div>
+                
                 <!-- Navigation -->
                 <nav class="sidebar-nav">
                     <a class="nav-link" href="PanelAdministrador.aspx">
-                        <span class="material-symbols-outlined nav-icon">dashboard</span>
+                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
                     <a class="nav-link" href="AdminGestionArticulo.aspx">
                         <span class="material-symbols-outlined nav-icon">inventory_2</span>
-                        <p class="nav-text">Gestión de Artículos</p>
+                        <p class="nav-text">Artículos</p>
                     </a>
                     <a class="nav-link active" href="AdminGestionCategoria.aspx">
                         <span class="material-symbols-outlined nav-icon">category</span>
-                        <p class="nav-text bold">Gestión de Categorías</p>
+                        <p class="nav-text">Categorías</p>
                     </a>
-                    <a class="nav-link" href="AdminGestionReserva.aspx">
-                        <span class="material-symbols-outlined nav-icon">shopping_cart</span>
-                        <p class="nav-text">Pedidos</p>
+                    <a class="nav-link" href="#">
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Ventas</p>
                     </a>
-                    <a class="nav-link" href="AdminGestionUsuario.aspx">
+                    <a class="nav-link" href="#">
                         <span class="material-symbols-outlined nav-icon">group</span>
-                        <p class="nav-text">Clientes</p>
+                        <p class="nav-text">Usuarios</p>
+                    </a>
+                    <a class="nav-link" href="#">
+                        <span class="material-symbols-outlined nav-icon">mail</span>
+                        <p class="nav-text">Mensajes</p>
                     </a>
                 </nav>
-                
-                <!-- Footer -->
-                <div class="sidebar-footer">
-                    <div class="user-info">
-                        <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZkHszPKnmh_FnWUjKGOw-yoPCOiqduLs4ARXKt0-dAXSWRlUIfPSWMWBaTLrrcVwMIcyVDSWy34JHMq8lNJ3R8vT6sMEBOZ4dqjdu7hHE4bs09Yiuq7-sROgvC7Qwntv7pDh0ZPay1YCOjfqPu2rPpKNxbH3P6catl5ZPbjKIKQNvCFRqZgjoukrliR8q-ppl88gypFBtKnC3wLEjeFaLn8wLkZRE_bZqIjBJ2rjYReXMnQU_7rpf1aXgXwT6iE1uSwpzLVoqpnQ");'></div>
-                        <div class="user-details">
-                            <h1 class="user-name">Admin</h1>
-                            <p class="user-email">admin@segundavida.com</p>
-                        </div>
-                    </div>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">settings</span>
-                        <p class="nav-text">Ajustes</p>
-                    </a>
-                    <a class="nav-link logout-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">logout</span>
-                        <p class="nav-text">Cerrar Sesión</p>
-                    </a>
-                </div>
+            </div>
+            
+            <!-- Footer Links -->
+            <div class="sidebar-footer">
+                <a class="nav-link" href="#">
+                    <span class="material-symbols-outlined nav-icon">account_circle</span>
+                    <p class="nav-text">Mi Perfil</p>
+                </a>
+                <a class="nav-link" href="#">
+                    <span class="material-symbols-outlined nav-icon">logout</span>
+                    <p class="nav-text">Cerrar Sesión</p>
+                </a>
             </div>
         </aside>
         
@@ -561,13 +555,11 @@
                     <div class="toolbar">
                         <div class="search-container">
                             <span class="material-symbols-outlined search-icon">search</span>
-                            <asp:TextBox ID="txtBusqueda" runat="server" CssClass="search-input" placeholder="Buscar por nombre..." AutoPostBack="false" 
-                                Style="width: 100%; border-radius: 0.5rem; border: 1px solid #cbd5e1; background-color: white; padding: 0.5rem 1rem 0.5rem 2.5rem; font-size: 0.875rem; color: #1e293b; box-sizing: border-box; height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; line-height: 1.5; margin: 0;"></asp:TextBox>
+                            <asp:TextBox ID="txtBusqueda" runat="server" CssClass="search-input" placeholder="Buscar por nombre..." AutoPostBack="false"></asp:TextBox>
                         </div>
                         
                         <div class="toolbar-actions">
-                            <asp:Button ID="btnBuscar" runat="server" CssClass="filter-button" Text="Buscar" OnClick="btnBuscar_Click" 
-                                Style="height: 2.5rem; min-height: 2.5rem; max-height: 2.5rem; box-sizing: border-box; margin: 0; line-height: 1.5;" />
+                            <asp:Button ID="btnBuscar" runat="server" CssClass="filter-button" Text="Buscar" OnClick="btnBuscar_Click" />
                             <a href="AdminFormularioCategoria.aspx" class="add-button text-decoration-none d-inline-flex align-items-center">
                                 <span class="material-symbols-outlined">add_circle</span>
                                 <span class="add-button-text">Agregar Nueva Categoría</span>

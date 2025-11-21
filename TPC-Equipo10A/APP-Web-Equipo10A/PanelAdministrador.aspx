@@ -62,9 +62,9 @@
         }
         
         .brand-subtitle {
-            color: #6b7280;
-            font-size: 0.875rem;
-            font-weight: 400;
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 700;
             line-height: 1.5;
         }
         
@@ -511,8 +511,7 @@
                 <div class="sidebar-brand">
                     <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
                     <div class="brand-info">
-                        <h1 class="brand-title">Marketplace</h1>
-                        <p class="brand-subtitle">Panel de Administrador</p>
+                        <h1 class="brand-subtitle">Panel de Administrador</h1>
                     </div>
                 </div>
                 
@@ -541,10 +540,6 @@
                     <a class="nav-link" href="#">
                         <span class="material-symbols-outlined nav-icon">mail</span>
                         <p class="nav-text">Mensajes</p>
-                    </a>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">settings</span>
-                        <p class="nav-text">Configuración</p>
                     </a>
                 </nav>
             </div>
