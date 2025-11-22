@@ -9,7 +9,8 @@ namespace Dominio
     public enum TipoUsuario
     { 
         NORMAL = 0,
-        ADMIN = 1
+        ADMIN = 1,
+        SUPERADMIN = 2
     }
     public class Usuario
     {
@@ -25,11 +26,26 @@ namespace Dominio
 
         public Usuario() { }
 
-        public Usuario(string email, string password, bool admin) { 
+        public Usuario(string email, string password, int admin) { 
             
             Email = email;
             Password = password;
-            Tipo = admin ? TipoUsuario.ADMIN : TipoUsuario.NORMAL;
+            if (admin == 1)
+            {
+                Tipo = TipoUsuario.ADMIN;
+            }
+            else if (admin == 2)
+            {
+                Tipo = TipoUsuario.SUPERADMIN;
+            }
+            else
+            {
+                Tipo = TipoUsuario.NORMAL;
+            }
+
+
+
+
 
         }
 
