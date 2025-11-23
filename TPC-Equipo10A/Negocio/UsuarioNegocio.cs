@@ -16,7 +16,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, Password, EsAdmin FROM USUARIOS");
+                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, Password, Dni, Telefono, Domicilio, TipoUsuario, IDAdministrador, NombreTienda, FechaAlta, FechaVencimiento, Activo, Eliminado FROM USUARIOS");
                 datos.EjecutarLectura();
                 while (datos.Lector.Read())
                 {
@@ -29,7 +29,13 @@ namespace Negocio
                     user.Apellido = (string)datos.Lector["Apellido"];
                     user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
                     user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
-                    user.Tipo = (bool)datos.Lector["EsAdmin"] ? TipoUsuario.ADMIN : TipoUsuario.NORMAL;
+                    user.Tipo = (TipoUsuario)(int)datos.Lector["TipoUsuario"];
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)datos.Lector["IDAdministrador"] : null;
+                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
+                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)datos.Lector["FechaAlta"] : null;
+                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)datos.Lector["FechaVencimiento"] : null;
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && (bool)datos.Lector["Activo"];
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && (bool)datos.Lector["Eliminado"];
                     lista.Add(user);
                 }
                 return lista;
@@ -58,7 +64,7 @@ namespace Negocio
                 datos.SetearParametro("@Dni", (object)nuevo.Dni ?? DBNull.Value);
                 datos.SetearParametro("@Telefono", (object)nuevo.Telefono ?? DBNull.Value);
                 datos.SetearParametro("@Domicilio", (object)nuevo.Domicilio ?? DBNull.Value);
-                datos.SetearParametro("@EsAdmin", nuevo.Tipo == TipoUsuario.ADMIN);
+                datos.SetearParametro("@TipoUsuario", (int)nuevo.Tipo);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
@@ -76,7 +82,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE USUARIOS SET Nombre=@Nombre, Apellido=@Apellido, Email=@Email, Password=@Password, Dni=@Dni, Telefono=@Telefono, Domicilio=@Domicilio, EsAdmin=@EsAdmin WHERE IdUsuario=@IdUsuario");
+                datos.SetearConsulta("UPDATE USUARIOS SET Nombre=@Nombre, Apellido=@Apellido, Email=@Email, Password=@Password, Dni=@Dni, Telefono=@Telefono, Domicilio=@Domicilio, TipoUsuario=@TipoUsuario, IDAdministrador=@IDAdministrador, NombreTienda=@NombreTienda, FechaAlta=@FechaAlta, FechaVencimiento=@FechaVencimiento, Activo=@Activo, Eliminado=@Eliminado WHERE IdUsuario=@IdUsuario");
                 datos.SetearParametro("@Nombre", user.Nombre);
                 datos.SetearParametro("@Apellido", user.Apellido);
                 datos.SetearParametro("@Email", user.Email);
@@ -84,7 +90,13 @@ namespace Negocio
                 datos.SetearParametro("@Dni", (object)user.Dni ?? DBNull.Value);
                 datos.SetearParametro("@Telefono", (object)user.Telefono ?? DBNull.Value);
                 datos.SetearParametro("@Domicilio", (object)user.Domicilio ?? DBNull.Value);
-                datos.SetearParametro("@EsAdmin", user.Tipo == TipoUsuario.ADMIN);
+                datos.SetearParametro("@TipoUsuario", (int)user.Tipo);
+                datos.SetearParametro("@IDAdministrador", (object)user.IDAdministrador ?? DBNull.Value);
+                datos.SetearParametro("@NombreTienda", (object)user.NombreTienda ?? DBNull.Value);
+                datos.SetearParametro("@FechaAlta", (object)user.FechaAlta ?? DBNull.Value);
+                datos.SetearParametro("@FechaVencimiento", (object)user.FechaVencimiento ?? DBNull.Value);
+                datos.SetearParametro("@Activo", user.Activo);
+                datos.SetearParametro("@Eliminado", user.Eliminado);
                 datos.SetearParametro("@IdUsuario", user.IdUsuario);
                 datos.EjecutarAccion();
             }
@@ -104,7 +116,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, Password, Dni, Telefono, Domicilio, EsAdmin FROM USUARIOS WHERE IdUsuario = @IdUsuario");
+                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, Password, Dni, Telefono, Domicilio, TipoUsuario, IDAdministrador, NombreTienda, FechaAlta, FechaVencimiento, Activo, Eliminado FROM USUARIOS WHERE IdUsuario = @IdUsuario");
                 datos.SetearParametro("@IdUsuario", id);
                 datos.EjecutarLectura();
 
@@ -119,7 +131,13 @@ namespace Negocio
                     user.Dni = datos.Lector["Dni"] != DBNull.Value ? (string)datos.Lector["Dni"] : null;
                     user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
                     user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
-                    user.Tipo = datos.Lector["EsAdmin"] != DBNull.Value && (bool)datos.Lector["EsAdmin"] ? TipoUsuario.ADMIN : TipoUsuario.NORMAL;
+                    user.Tipo = (TipoUsuario)(int)datos.Lector["TipoUsuario"];
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)datos.Lector["IDAdministrador"] : null;
+                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
+                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)datos.Lector["FechaAlta"] : null;
+                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)datos.Lector["FechaVencimiento"] : null;
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && (bool)datos.Lector["Activo"];
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && (bool)datos.Lector["Eliminado"];
                 }
 
                 return user;

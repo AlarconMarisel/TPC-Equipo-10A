@@ -23,6 +23,12 @@ namespace Dominio
         public string Telefono { get; set; }
         public string Domicilio { get; set; }
         public TipoUsuario Tipo { get; set; }
+        public int? IDAdministrador { get; set; }
+        public string NombreTienda { get; set; }
+        public DateTime? FechaAlta { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
+        public bool Activo { get; set; }
+        public bool Eliminado { get; set; }
 
         public Usuario() { }
 

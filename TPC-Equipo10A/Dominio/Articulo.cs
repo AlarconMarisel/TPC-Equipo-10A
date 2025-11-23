@@ -16,5 +16,6 @@ namespace Dominio
         public Categoria CategoriaArticulo { get; set; }
         public Estado EstadoArticulo { get; set; }
         public List<Imagen> Imagenes { get; set; }
+        public int IDAdministrador { get; set; }
     }
 }

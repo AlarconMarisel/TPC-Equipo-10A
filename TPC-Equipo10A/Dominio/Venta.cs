@@ -12,5 +12,6 @@ namespace Dominio
         public Reserva Reserva { get; set; }
         public DateTime FechaVenta { get; set; }
         public Decimal MontoTotal { get; set; }
+        public int IDAdministrador { get; set; }
     }
 }

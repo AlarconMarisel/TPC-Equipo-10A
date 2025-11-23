@@ -12,5 +12,6 @@ namespace Dominio
         public Usuario Usuario { get; set; }
         public Articulo Articulo { get; set; }
         public DateTime FechaAgregado { get; set; }
+        public int IDAdministrador { get; set; }
     }
 }
