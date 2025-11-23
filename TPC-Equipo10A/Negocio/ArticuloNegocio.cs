@@ -10,19 +10,32 @@ namespace Negocio
 {
     public class ArticuloNegocio
     {
-        public List<Articulo> listarArticulo()
+        public List<Articulo> listarArticulo(int? idAdministrador = null)
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
           
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "WHERE a.Eliminado = 0";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND a.IDAdministrador = @IDAdministrador";
+                }
+
                 datos.SetearConsulta(@"
                     SELECT 
                         a.IDArticulo, 
                         a.Nombre, 
                         a.Descripcion, 
                         a.Precio,
+                        a.IDAdministrador,
                         c.IDCategoria,
                         c.Nombre as CategoriaNombre,
                         e.IDEstado,
@@ -37,8 +50,13 @@ namespace Negocio
                         WHERE ii.IDArticulo = a.IDArticulo
                         ORDER BY ii.IDImagen
                     ) img
-                    WHERE a.Eliminado = 0
+                    " + whereClause + @"
                     ORDER BY a.IDArticulo DESC");
+
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
 
                 datos.EjecutarLectura();
 
@@ -51,6 +69,7 @@ namespace Negocio
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = (string)datos.Lector["Descripcion"];
                     art.Precio = (decimal)datos.Lector["Precio"];
+                    art.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     
                     art.CategoriaArticulo = new Categoria();
@@ -97,12 +116,22 @@ namespace Negocio
 
             try
             {
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                string whereClause = "WHERE a.IDArticulo = @IDArticulo AND a.Eliminado = 0";
+                
+                // Si hay un administrador en sesión, validar que el artículo le pertenece
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND a.IDAdministrador = @IDAdministrador";
+                }
+
                 datos.SetearConsulta(@"
                     SELECT 
                         a.IDArticulo, 
                         a.Nombre, 
                         a.Descripcion, 
                         a.Precio,
+                        a.IDAdministrador,
                         c.IDCategoria,
                         c.Nombre as CategoriaNombre,
                         e.IDEstado,
@@ -110,9 +139,13 @@ namespace Negocio
                     FROM ARTICULOS a
                     INNER JOIN CATEGORIAS c ON a.IDCategoria = c.IDCategoria
                     INNER JOIN ESTADOSARTICULO e ON a.IDEstado = e.IDEstado
-                    WHERE a.IDArticulo = @IDArticulo AND a.Eliminado = 0");
+                    " + whereClause);
 
                 datos.SetearParametro("@IDArticulo", id);
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())
@@ -122,6 +155,7 @@ namespace Negocio
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     art.Precio = (decimal)datos.Lector["Precio"];
+                    art.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     art.CategoriaArticulo = new Categoria();
                     art.CategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
@@ -152,26 +186,35 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
+                }
+
                 // Validar precio mínimo
                 if (nuevo.Precio <= 0)
                 {
                     throw new Exception("El precio debe ser mayor a 0.");
                 }
 
-                // Validar nombre duplicado
-                if (ExisteNombre(nuevo.Nombre))
+                // Validar nombre duplicado (solo para este administrador)
+                if (ExisteNombre(nuevo.Nombre, null, idAdministrador.Value))
                 {
                     throw new Exception($"Ya existe un artículo con el nombre '{nuevo.Nombre}'. Por favor, elija otro nombre.");
                 }
 
-                datos.SetearConsulta(@"INSERT INTO ARTICULOS (Nombre, Descripcion, Precio, IDCategoria, IDEstado, Eliminado) 
-                                     VALUES (@Nombre, @Descripcion, @Precio, @IDCategoria, @IDEstado, 0); 
+                datos.SetearConsulta(@"INSERT INTO ARTICULOS (Nombre, Descripcion, Precio, IDCategoria, IDEstado, IDAdministrador, Eliminado) 
+                                     VALUES (@Nombre, @Descripcion, @Precio, @IDCategoria, @IDEstado, @IDAdministrador, 0); 
                                      SELECT SCOPE_IDENTITY();");
                 datos.SetearParametro("@Nombre", nuevo.Nombre);
                 datos.SetearParametro("@Descripcion", (object)nuevo.Descripcion ?? DBNull.Value);
                 datos.SetearParametro("@Precio", nuevo.Precio);
                 datos.SetearParametro("@IDCategoria", nuevo.CategoriaArticulo.IdCategoria);
                 datos.SetearParametro("@IDEstado", nuevo.EstadoArticulo.IdEstado);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
 
                 object result = datos.EjecutarAccionScalar();
                 return Convert.ToInt32(result);
@@ -196,14 +239,35 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
+                }
+
+                // Verificar que el artículo existe y pertenece al administrador
+                Articulo articuloExistente = ObtenerPorId(articulo.IdArticulo);
+                if (articuloExistente == null)
+                {
+                    throw new Exception("No se pudo modificar el artículo. Puede que no exista, haya sido eliminado o no tenga permisos para acceder.");
+                }
+
+                // Validar que el artículo pertenece al administrador
+                if (!TenantHelper.ValidarAccesoAdministrador(articuloExistente.IDAdministrador))
+                {
+                    throw new UnauthorizedAccessException("No tiene permisos para modificar este artículo.");
+                }
+
                 // Validar precio mínimo
                 if (articulo.Precio <= 0)
                 {
                     throw new Exception("El precio debe ser mayor a 0.");
                 }
 
-                // Validar nombre duplicado (excluyendo el artículo actual)
-                if (ExisteNombre(articulo.Nombre, articulo.IdArticulo))
+                // Validar nombre duplicado (excluyendo el artículo actual, solo para este administrador)
+                if (ExisteNombre(articulo.Nombre, articulo.IdArticulo, idAdministrador.Value))
                 {
                     throw new Exception($"Ya existe otro artículo con el nombre '{articulo.Nombre}'. Por favor, elija otro nombre.");
                 }
@@ -211,20 +275,14 @@ namespace Negocio
                 datos.SetearConsulta(@"UPDATE ARTICULOS 
                                      SET Nombre=@Nombre, Descripcion=@Descripcion, Precio=@Precio, 
                                          IDCategoria=@IDCategoria, IDEstado=@IDEstado 
-                                     WHERE IDArticulo=@IDArticulo AND Eliminado = 0");
+                                     WHERE IDArticulo=@IDArticulo AND IDAdministrador=@IDAdministrador AND Eliminado = 0");
                 datos.SetearParametro("@IDArticulo", articulo.IdArticulo);
                 datos.SetearParametro("@Nombre", articulo.Nombre);
                 datos.SetearParametro("@Descripcion", (object)articulo.Descripcion ?? DBNull.Value);
                 datos.SetearParametro("@Precio", articulo.Precio);
                 datos.SetearParametro("@IDCategoria", articulo.CategoriaArticulo.IdCategoria);
                 datos.SetearParametro("@IDEstado", articulo.EstadoArticulo.IdEstado);
-
-                // Verificar que el artículo existe antes de modificar
-                Articulo articuloExistente = ObtenerPorId(articulo.IdArticulo);
-                if (articuloExistente == null)
-                {
-                    throw new Exception("No se pudo modificar el artículo. Puede que no exista o haya sido eliminado.");
-                }
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
 
                 datos.EjecutarAccion();
             }
@@ -248,8 +306,30 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE ARTICULOS SET Eliminado = 1 WHERE IDArticulo=@IDArticulo");
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
+                }
+
+                // Verificar que el artículo existe y pertenece al administrador
+                Articulo articulo = ObtenerPorId(id);
+                if (articulo == null)
+                {
+                    throw new Exception("No se pudo eliminar el artículo. Puede que no exista, haya sido eliminado o no tenga permisos para acceder.");
+                }
+
+                // Validar que el artículo pertenece al administrador
+                if (!TenantHelper.ValidarAccesoAdministrador(articulo.IDAdministrador))
+                {
+                    throw new UnauthorizedAccessException("No tiene permisos para eliminar este artículo.");
+                }
+
+                datos.SetearConsulta("UPDATE ARTICULOS SET Eliminado = 1 WHERE IDArticulo=@IDArticulo AND IDAdministrador=@IDAdministrador");
                 datos.SetearParametro("@IDArticulo", id);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
@@ -262,12 +342,24 @@ namespace Negocio
             }
         }
 
-        public bool ExisteNombre(string nombre, int? idArticuloExcluir = null)
+        public bool ExisteNombre(string nombre, int? idArticuloExcluir = null, int? idAdministrador = null)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 string consulta = "SELECT COUNT(*) FROM ARTICULOS WHERE Nombre = @Nombre AND Eliminado = 0";
+                
+                if (idAdministrador.HasValue)
+                {
+                    consulta += " AND IDAdministrador = @IDAdministrador";
+                }
+                
                 if (idArticuloExcluir.HasValue)
                 {
                     consulta += " AND IDArticulo != @IDArticulo";
@@ -275,6 +367,12 @@ namespace Negocio
 
                 datos.SetearConsulta(consulta);
                 datos.SetearParametro("@Nombre", nombre);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 if (idArticuloExcluir.HasValue)
                 {
                     datos.SetearParametro("@IDArticulo", idArticuloExcluir.Value);
@@ -294,19 +392,32 @@ namespace Negocio
             }
         }
 
-        public List<Articulo> Buscar(string criterio)
+        public List<Articulo> Buscar(string criterio, int? idAdministrador = null)
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "WHERE a.Eliminado = 0 AND (a.Nombre LIKE @Criterio OR a.Descripcion LIKE @Criterio OR c.Nombre LIKE @Criterio)";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND a.IDAdministrador = @IDAdministrador";
+                }
+
                 datos.SetearConsulta(@"
                     SELECT 
                         a.IDArticulo, 
                         a.Nombre, 
                         a.Descripcion, 
                         a.Precio,
+                        a.IDAdministrador,
                         c.IDCategoria,
                         c.Nombre as CategoriaNombre,
                         e.IDEstado,
@@ -321,12 +432,15 @@ namespace Negocio
                         WHERE ii.IDArticulo = a.IDArticulo
                         ORDER BY ii.IDImagen
                     ) img
-                    WHERE a.Eliminado = 0 
-                    AND (a.Nombre LIKE @Criterio OR a.Descripcion LIKE @Criterio OR c.Nombre LIKE @Criterio)
+                    " + whereClause + @"
                     ORDER BY a.IDArticulo DESC");
 
                 string criterioBusqueda = "%" + criterio + "%";
                 datos.SetearParametro("@Criterio", criterioBusqueda);
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -336,6 +450,7 @@ namespace Negocio
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     art.Precio = (decimal)datos.Lector["Precio"];
+                    art.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     art.CategoriaArticulo = new Categoria();
                     art.CategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
@@ -371,14 +486,25 @@ namespace Negocio
             }
         }
 
-        public List<Articulo> ListarConPaginacion(int pagina, int registrosPorPagina)
+        public List<Articulo> ListarConPaginacion(int pagina, int registrosPorPagina, int? idAdministrador = null)
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 int offset = (pagina - 1) * registrosPorPagina;
+                string whereClause = "WHERE a.Eliminado = 0";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND a.IDAdministrador = @IDAdministrador";
+                }
 
                 datos.SetearConsulta(@"
                     SELECT 
@@ -386,6 +512,7 @@ namespace Negocio
                         a.Nombre, 
                         a.Descripcion, 
                         a.Precio,
+                        a.IDAdministrador,
                         c.IDCategoria,
                         c.Nombre as CategoriaNombre,
                         e.IDEstado,
@@ -400,13 +527,17 @@ namespace Negocio
                         WHERE ii.IDArticulo = a.IDArticulo
                         ORDER BY ii.IDImagen
                     ) img
-                    WHERE a.Eliminado = 0
+                    " + whereClause + @"
                     ORDER BY a.IDArticulo DESC
                     OFFSET @Offset ROWS
                     FETCH NEXT @RegistrosPorPagina ROWS ONLY");
 
                 datos.SetearParametro("@Offset", offset);
                 datos.SetearParametro("@RegistrosPorPagina", registrosPorPagina);
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -416,6 +547,7 @@ namespace Negocio
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     art.Precio = (decimal)datos.Lector["Precio"];
+                    art.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     art.CategoriaArticulo = new Categoria();
                     art.CategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
@@ -451,12 +583,23 @@ namespace Negocio
             }
         }
 
-        public int ContarTotal(string criterio = null)
+        public int ContarTotal(string criterio = null, int? idAdministrador = null)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 string consulta = "SELECT COUNT(*) FROM ARTICULOS a INNER JOIN CATEGORIAS c ON a.IDCategoria = c.IDCategoria WHERE a.Eliminado = 0";
+                
+                if (idAdministrador.HasValue)
+                {
+                    consulta += " AND a.IDAdministrador = @IDAdministrador";
+                }
                 
                 if (!string.IsNullOrEmpty(criterio))
                 {
@@ -464,6 +607,11 @@ namespace Negocio
                 }
 
                 datos.SetearConsulta(consulta);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
                 
                 if (!string.IsNullOrEmpty(criterio))
                 {
@@ -484,15 +632,26 @@ namespace Negocio
             }
         }
 
-        public List<Articulo> ListarConFiltrosYPaginacion(int pagina, int registrosPorPagina, string criterio = null, int? idCategoria = null, int? idEstado = null)
+        public List<Articulo> ListarConFiltrosYPaginacion(int pagina, int registrosPorPagina, string criterio = null, int? idCategoria = null, int? idEstado = null, int? idAdministrador = null)
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 int offset = (pagina - 1) * registrosPorPagina;
                 string whereClause = "WHERE a.Eliminado = 0";
+
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND a.IDAdministrador = @IDAdministrador";
+                }
 
                 if (!string.IsNullOrEmpty(criterio))
                 {
@@ -515,6 +674,7 @@ namespace Negocio
                         a.Nombre, 
                         a.Descripcion, 
                         a.Precio,
+                        a.IDAdministrador,
                         c.IDCategoria,
                         c.Nombre as CategoriaNombre,
                         e.IDEstado,
@@ -538,6 +698,11 @@ namespace Negocio
 
                 datos.SetearParametro("@Offset", offset);
                 datos.SetearParametro("@RegistrosPorPagina", registrosPorPagina);
+
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
 
                 if (!string.IsNullOrEmpty(criterio))
                 {
@@ -564,6 +729,7 @@ namespace Negocio
                     art.Nombre = (string)datos.Lector["Nombre"];
                     art.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     art.Precio = (decimal)datos.Lector["Precio"];
+                    art.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     art.CategoriaArticulo = new Categoria();
                     art.CategoriaArticulo.IdCategoria = (int)datos.Lector["IDCategoria"];
@@ -599,12 +765,23 @@ namespace Negocio
             }
         }
 
-        public int ContarConFiltros(string criterio = null, int? idCategoria = null, int? idEstado = null)
+        public int ContarConFiltros(string criterio = null, int? idCategoria = null, int? idEstado = null, int? idAdministrador = null)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 string consulta = "SELECT COUNT(*) FROM ARTICULOS a INNER JOIN CATEGORIAS c ON a.IDCategoria = c.IDCategoria WHERE a.Eliminado = 0";
+
+                if (idAdministrador.HasValue)
+                {
+                    consulta += " AND a.IDAdministrador = @IDAdministrador";
+                }
 
                 if (!string.IsNullOrEmpty(criterio))
                 {
@@ -622,6 +799,11 @@ namespace Negocio
                 }
 
                 datos.SetearConsulta(consulta);
+
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
 
                 if (!string.IsNullOrEmpty(criterio))
                 {

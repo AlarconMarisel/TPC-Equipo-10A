@@ -18,7 +18,7 @@ namespace APP_Web_Equipo10A
         {
             if (!chkTerminos.Checked)
             {
-                Response.Write("<script>alert('Debe aceptar los términos y condiciones para participar.');</script>");
+                Response.Write("<script>alert('Debe aceptar los tÃ©rminos y condiciones para participar.');</script>");
                 return;
             }
         }

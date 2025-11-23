@@ -12,31 +12,34 @@
         /* Sidebar */
         .sidebar {
             display: flex;
-            width: 16rem;
+            height: 100vh;
+            min-height: 100%;
             flex-direction: column;
+            justify-content: space-between;
             background-color: white;
-            border-right: 1px solid #e2e8f0;
             padding: 1rem;
-            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 16rem;
             position: sticky;
             top: 0;
-            height: 100vh;
+            flex-shrink: 0;
             z-index: 10;
-        }
-        
-        .sidebar-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
         }
         
         .sidebar-header {
             display: flex;
-            gap: 0.75rem;
-            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
         }
         
-        .sidebar-logo {
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 0.75rem;
+        }
+        
+        .brand-logo {
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -46,30 +49,29 @@
             height: 2.5rem;
         }
         
-        .sidebar-title {
+        .brand-info {
             display: flex;
             flex-direction: column;
         }
         
-        .sidebar-title-main {
-            color: #0f172a;
+        .brand-title {
+            color: #111827;
             font-size: 1rem;
             font-weight: 500;
-            line-height: 1.25;
+            line-height: 1.5;
         }
         
-        .sidebar-title-sub {
-            color: #64748b;
-            font-size: 0.875rem;
-            font-weight: 400;
-            line-height: 1.25;
+        .brand-subtitle {
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.5;
         }
         
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            margin-top: 1rem;
         }
         
         .nav-link {
@@ -82,96 +84,33 @@
             transition: all 0.2s ease;
         }
         
-        .nav-link:hover {
-            background-color: #f1f5f9;
+        .nav-link.active {
+            background-color: rgba(17, 115, 212, 0.2);
+            color: var(--primary-color);
         }
         
-        .nav-link.active {
-            background-color: rgba(17, 115, 212, 0.1);
+        .nav-link:not(.active) {
+            color: #374151;
+        }
+        
+        .nav-link:not(.active):hover {
+            background-color: #f3f4f6;
         }
         
         .nav-icon {
-            color: #374151;
-            font-size: 1.5rem;
-        }
-        
-        .nav-icon.active {
-            color: var(--primary-color);
+            font-size: 1.25rem;
         }
         
         .nav-text {
-            color: #1e293b;
             font-size: 0.875rem;
             font-weight: 500;
-            line-height: 1.25;
-        }
-        
-        .nav-text.active {
-            color: var(--primary-color);
+            line-height: 1.5;
         }
         
         .sidebar-footer {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .new-listing-button {
-            display: flex;
-            min-width: 5.25rem;
-            max-width: 30rem;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-radius: 0.5rem;
-            height: 2.5rem;
-            padding: 0 1rem;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 700;
-            line-height: 1.25;
-            letter-spacing: 0.015em;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        
-        .new-listing-button:hover {
-            background-color: rgba(17, 115, 212, 0.9);
-        }
-        
-        .footer-links {
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
-        }
-        
-        .footer-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        
-        .footer-link:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .footer-icon {
-            color: #374151;
-            font-size: 1.5rem;
-        }
-        
-        .footer-text {
-            color: #1e293b;
-            font-size: 0.875rem;
-            font-weight: 500;
-            line-height: 1.25;
         }
         
         /* Main Content */
@@ -338,6 +277,15 @@
             background-color: white;
         }
         
+        .data-table td, .data-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f8fafc;
+        }
+        
         .table-header {
             background-color: #f8fafc;
         }
@@ -406,6 +354,85 @@
         .admin-checkbox:focus {
             outline: none;
             box-shadow: 0 0 0 2px rgba(17, 115, 212, 0.5);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+        
+        .btn-success {
+            background-color: #059669;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #047857;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .validacion {
+            color: #dc2626;
+            font-size: 0.875rem;
         }
         
         /* Pagination */
@@ -570,54 +597,50 @@
     <div class="admin-container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-content">
-                <div class="sidebar-header">
-                    <div class="sidebar-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAgPiCeeIUNVABgCnamqsdHLZDSM3cJTU1QZ-kOtek7yX_l-ZAXTuUxQ8QCQvYcFJLQNb-97SW5Vi9Jgo2rtQJdC4klkEndavZJtxTmPx5mblHmF2JiY_4jPn8Uggdkl_wAg5R5vu1_vQtCHVhuvfRnofS-E1PY2qxVQEpejCQqizST3tW2t4vELqX2erM9GChgvdgw5fQzxcOC1f_vJ4AEkGJPoBWVr5E0CCyhvNzR_RHszZniQxOCU4M3MloLnxHJXiI9CAJ5l8E");'></div>
-                    <div class="sidebar-title">
-                        <h1 class="sidebar-title-main">Admin Panel</h1>
-                        <p class="sidebar-title-sub">Used Goods Marketplace</p>
+            <div class="sidebar-header">
+                <!-- Brand -->
+                <div class="sidebar-brand">
+                    <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
+                    <div class="brand-info">
+                        <h1 class="brand-subtitle">Panel de Administrador</h1>
                     </div>
                 </div>
                 
+                <!-- Navigation -->
                 <nav class="sidebar-nav">
                     <a class="nav-link" href="PanelAdministrador.aspx">
-                        <span class="material-symbols-outlined nav-icon">dashboard</span>
+                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">sell</span>
-                        <p class="nav-text">Listings</p>
+                    <a class="nav-link" href="AdminGestionArticulo.aspx">
+                        <span class="material-symbols-outlined nav-icon">inventory_2</span>
+                        <p class="nav-text">Artículos</p>
                     </a>
-                    <a class="nav-link active" href="#">
-                        <span class="material-symbols-outlined nav-icon active">group</span>
-                        <p class="nav-text active">Users</p>
+                    <a class="nav-link" href="AdminGestionCategoria.aspx">
+                        <span class="material-symbols-outlined nav-icon">category</span>
+                        <p class="nav-text">Categorías</p>
                     </a>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">shopping_cart</span>
-                        <p class="nav-text">Orders</p>
+                    <a class="nav-link" href="AdminGestionReserva.aspx">
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Ventas</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link active" href="AdminGestionUsuario.aspx">
+                        <span class="material-symbols-outlined nav-icon">group</span>
+                        <p class="nav-text">Usuarios</p>
+                    </a>
+                    <a class="nav-link" href="AdminConfiguracionTienda.aspx">
                         <span class="material-symbols-outlined nav-icon">settings</span>
-                        <p class="nav-text">Settings</p>
+                        <p class="nav-text">Configuración</p>
                     </a>
                 </nav>
             </div>
             
+            <!-- Footer Links -->
             <div class="sidebar-footer">
-                <button class="new-listing-button">
-                    <span>New Listing</span>
-                </button>
-                
-                <div class="footer-links">
-                    <a class="footer-link" href="#">
-                        <span class="material-symbols-outlined footer-icon">help</span>
-                        <p class="footer-text">Support</p>
-                    </a>
-                    <a class="footer-link" href="#">
-                        <span class="material-symbols-outlined footer-icon">logout</span>
-                        <p class="footer-text">Log out</p>
-                    </a>
-                </div>
+                <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
+                    <span class="material-symbols-outlined nav-icon">account_circle</span>
+                    <p class="nav-text">Mi Perfil</p>
+                </a>
             </div>
         </aside>
         
@@ -628,11 +651,8 @@
                 <div class="page-heading">
                     <div class="page-title-section">
                         <h1 class="page-title">Gestión de Usuarios</h1>
-                        <p class="page-subtitle">Revisa y modifica los roles de los usuarios registrados.</p>
+                        <p class="page-subtitle">Gestiona los usuarios normales de tu tienda. Puedes dar de baja o reactivar usuarios.</p>
                     </div>
-                    <button class="save-button">
-                        <span>Guardar Cambios</span>
-                    </button>
                 </div>
                 
                 <!-- Search Bar -->
@@ -647,66 +667,51 @@
                     </label>
                 </div>
                 
+                <!-- Mensaje de error/éxito -->
+                <asp:Label ID="lblMensaje" runat="server" CssClass="validacion" Visible="false"></asp:Label>
+                
                 <!-- Table -->
                 <div class="table-container">
                     <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead class="table-header">
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Nombre de usuario</th>
-                                    <th scope="col">Es Admin</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body">
-                                <tr>
-                                    <td class="user-id">101</td>
-                                    <td class="user-email">ana.perez@email.com</td>
-                                    <td class="user-name">Ana Pérez</td>
-                                    <td>
-                                        <input class="admin-checkbox" type="checkbox" checked />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="user-id">102</td>
-                                    <td class="user-email">carlos.gomez@email.com</td>
-                                    <td class="user-name">Carlos Gómez</td>
-                                    <td>
-                                        <input class="admin-checkbox" type="checkbox" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="user-id">103</td>
-                                    <td class="user-email">beatriz.martin@email.com</td>
-                                    <td class="user-name">Beatriz Martín</td>
-                                    <td>
-                                        <input class="admin-checkbox" type="checkbox" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="user-id">104</td>
-                                    <td class="user-email">david.sanchez@email.com</td>
-                                    <td class="user-name">David Sánchez</td>
-                                    <td>
-                                        <input class="admin-checkbox" type="checkbox" checked />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="user-id">105</td>
-                                    <td class="user-email">elena.ruiz@email.com</td>
-                                    <td class="user-name">Elena Ruiz</td>
-                                    <td>
-                                        <input class="admin-checkbox" type="checkbox" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <asp:GridView ID="gvUsuarios" runat="server" CssClass="data-table" AutoGenerateColumns="false" 
+                            OnRowCommand="gvUsuarios_RowCommand" EmptyDataText="No hay usuarios registrados.">
+                            <Columns>
+                                <asp:BoundField DataField="IdUsuario" HeaderText="ID" ItemStyle-CssClass="user-id" />
+                                <asp:BoundField DataField="NombreCompleto" HeaderText="Nombre" ItemStyle-CssClass="user-name" />
+                                <asp:BoundField DataField="Email" HeaderText="Email" ItemStyle-CssClass="user-email" />
+                                <asp:BoundField DataField="FechaAltaFormateada" HeaderText="Fecha Registro" />
+                                <asp:TemplateField HeaderText="Estado">
+                                    <ItemTemplate>
+                                        <span class='<%# Eval("Eliminado").ToString() == "True" ? "badge badge-danger" : "badge badge-success" %>'>
+                                            <%# Eval("Eliminado").ToString() == "True" ? "Inactivo" : "Activo" %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Acciones">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="btnDarDeBaja" runat="server" 
+                                            CommandName="DarDeBaja" 
+                                            CommandArgument='<%# Eval("IdUsuario") %>'
+                                            Text="Dar de Baja"
+                                            CssClass="btn btn-danger btn-sm"
+                                            Visible='<%# Eval("Eliminado").ToString() == "False" %>'
+                                            OnClientClick="return confirm('¿Está seguro de dar de baja a este usuario?');" />
+                                        <asp:LinkButton ID="btnReactivar" runat="server" 
+                                            CommandName="Reactivar" 
+                                            CommandArgument='<%# Eval("IdUsuario") %>'
+                                            Text="Reactivar"
+                                            CssClass="btn btn-success btn-sm"
+                                            Visible='<%# Eval("Eliminado").ToString() == "True" %>'
+                                            OnClientClick="return confirm('¿Está seguro de reactivar a este usuario?');" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
                     </div>
                 </div>
                 
-                <!-- Pagination -->
-                <div class="pagination-container">
+                <!-- Pagination - Solo mostrar si hay usuarios -->
+                <asp:Panel ID="pnlPaginacion" runat="server" CssClass="pagination-container" Visible="false">
                     <nav class="pagination-nav">
                         <a class="pagination-link" href="#">
                             <span class="material-symbols-outlined pagination-icon">chevron_left</span>
@@ -720,17 +725,10 @@
                             <span class="material-symbols-outlined pagination-icon">chevron_right</span>
                         </a>
                     </nav>
-                </div>
+                </asp:Panel>
             </div>
         </main>
         
-        <!-- Toast Notification -->
-        <div class="toast-container">
-            <div class="toast">
-                <span class="material-symbols-outlined toast-icon">check_circle</span>
-                <p>Roles actualizados correctamente.</p>
-            </div>
-        </div>
     </div>
 </asp:Content>
 

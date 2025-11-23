@@ -31,7 +31,7 @@ namespace APP_Web_Equipo10A
 
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                // Buscar usuario (comparación case-insensitive para email)
+                // Busca usuario (comparacion case-insensitive para email)
                 Usuario usuario = negocio.ListarUsuarios()
                     .Find(u => u.Email != null && 
                                u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && 
@@ -44,7 +44,7 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Validar que el usuario no esté eliminado
+                // Valida que el usuario no este eliminado
                 if (usuario.Eliminado)
                 {
                     lblError.Text = "Su cuenta ha sido desactivada. Contacte al administrador.";
@@ -52,7 +52,7 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Validar si es ADMIN que esté activo y no vencido
+                // Valida si es ADMIN que esta activo y no vencido
                 if (usuario.Tipo == TipoUsuario.ADMIN)
                 {
                     if (!usuario.Activo)
@@ -70,29 +70,29 @@ namespace APP_Web_Equipo10A
                     }
                 }
 
-                // Guardar usuario en sesión
+                // Guarda usuario en sesion
                 Session["Usuario"] = usuario;
 
-                // Crear carrito del usuario (solo si es usuario normal)
+                // Crea carrito del usuario (solo si es usuario normal)
                 if (usuario.Tipo == TipoUsuario.NORMAL)
                 {
                     try
                     {
                         CarritoNegocio carritoNegocio = new CarritoNegocio();
-                        // Por ahora usar IDAdministrador = 0, se actualizará en Fase 3
-                        carritoNegocio.CrearCarritoSiNoExiste(usuario.IdUsuario, 0);
+                        // Usar el IDAdministrador del usuario
+                        int idAdministrador = usuario.IDAdministrador ?? 0;
+                        carritoNegocio.CrearCarritoSiNoExiste(usuario.IdUsuario, idAdministrador);
                     }
                     catch
                     {
-                        // Si falla crear carrito, no es crítico, continuar con el login
                     }
                 }
 
-                // Carrito de sesión temporal
+                // Carrito de sesion temporal
                 if (Session["CarritoReserva"] == null)
                     Session["CarritoReserva"] = new List<Articulo>();
 
-                // Redirigir según tipo de usuario
+                // Redirige segun tipo de usuario
                 if (usuario.Tipo == TipoUsuario.SUPERADMIN)
                 {
                     Response.Redirect("PanelSuperAdmin.aspx", false);
@@ -108,7 +108,7 @@ namespace APP_Web_Equipo10A
             }
             catch (Exception ex)
             {
-                // Mostrar error detallado para debugging
+                // Muestra error detallado para debugging
                 lblError.Text = "Error al iniciar sesión: " + ex.Message;
                 if (ex.InnerException != null)
                 {
@@ -128,7 +128,7 @@ namespace APP_Web_Equipo10A
                 // Admin = 0 por ahora hasta definir Multi-Tenancy
                 int idCarrito = carritoNegocio.CrearCarritoSiNoExiste(idUsuario, 0);
 
-                // Si querés guardar el IDCarrito en la sesión:
+                // Si se quiere guardar el IDCarrito en la sesión:
                 Session["IDCarrito"] = idCarrito;
             }
             catch (Exception ex)

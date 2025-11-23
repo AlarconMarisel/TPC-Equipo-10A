@@ -9,19 +9,38 @@ namespace Negocio
 {
     public class CategoriaNegocio
     {
-        public List<Categoria> ListarCategorias()
+        public List<Categoria> ListarCategorias(int? idAdministrador = null)
         {
             List<Categoria> lista = new List<Categoria>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdCategoria, Nombre FROM CATEGORIAS WHERE Eliminado = 0 ORDER BY Nombre");
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "WHERE Eliminado = 0";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT IdCategoria, Nombre, IDAdministrador FROM CATEGORIAS " + whereClause + " ORDER BY Nombre");
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 datos.EjecutarLectura();
                 while (datos.Lector.Read())
                 {
                     Categoria categoria = new Categoria();
                     categoria.IdCategoria = (int)datos.Lector["IdCategoria"];
                     categoria.Nombre = (string)datos.Lector["Nombre"];
+                    categoria.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
                     lista.Add(categoria);
                 }
                 return lista;
@@ -42,8 +61,23 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdCategoria, Nombre FROM CATEGORIAS WHERE IdCategoria = @IdCategoria AND Eliminado = 0");
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                string whereClause = "WHERE IdCategoria = @IdCategoria AND Eliminado = 0";
+                
+                // Si hay un administrador en sesión, validar que la categoría le pertenece
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT IdCategoria, Nombre, IDAdministrador FROM CATEGORIAS " + whereClause);
                 datos.SetearParametro("@IdCategoria", id);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())
@@ -51,6 +85,7 @@ namespace Negocio
                     categoria = new Categoria();
                     categoria.IdCategoria = (int)datos.Lector["IdCategoria"];
                     categoria.Nombre = (string)datos.Lector["Nombre"];
+                    categoria.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
                 }
 
                 return categoria;
@@ -65,15 +100,33 @@ namespace Negocio
             }
         }
 
-        public List<Categoria> Buscar(string criterio)
+        public List<Categoria> Buscar(string criterio, int? idAdministrador = null)
         {
             List<Categoria> lista = new List<Categoria>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdCategoria, Nombre FROM CATEGORIAS WHERE Eliminado = 0 AND Nombre LIKE @Criterio ORDER BY Nombre");
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "WHERE Eliminado = 0 AND Nombre LIKE @Criterio";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT IdCategoria, Nombre, IDAdministrador FROM CATEGORIAS " + whereClause + " ORDER BY Nombre");
                 string criterioBusqueda = "%" + criterio + "%";
                 datos.SetearParametro("@Criterio", criterioBusqueda);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -81,6 +134,7 @@ namespace Negocio
                     Categoria categoria = new Categoria();
                     categoria.IdCategoria = (int)datos.Lector["IdCategoria"];
                     categoria.Nombre = (string)datos.Lector["Nombre"];
+                    categoria.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
                     lista.Add(categoria);
                 }
 
@@ -102,12 +156,21 @@ namespace Negocio
             fueReactivada = false;
             try
             {
-                if (ExisteNombre(nueva.Nombre))
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
+                }
+
+                // Validar nombre duplicado (solo para este administrador)
+                if (ExisteNombre(nueva.Nombre, null, idAdministrador.Value))
                 {
                     throw new Exception($"Ya existe una categoría activa con el nombre '{nueva.Nombre}'. Por favor, elija otro nombre.");
                 }
 
-                int? idCategoriaEliminada = ObtenerIdCategoriaEliminadaPorNombre(nueva.Nombre);
+                int? idCategoriaEliminada = ObtenerIdCategoriaEliminadaPorNombre(nueva.Nombre, idAdministrador.Value);
                 if (idCategoriaEliminada.HasValue)
                 {
                     ReactivarCategoria(idCategoriaEliminada.Value);
@@ -115,8 +178,9 @@ namespace Negocio
                 }
                 else
                 {
-                    datos.SetearConsulta("INSERT INTO CATEGORIAS (Nombre, Eliminado) VALUES (@Nombre, 0)");
+                    datos.SetearConsulta("INSERT INTO CATEGORIAS (Nombre, IDAdministrador, Eliminado) VALUES (@Nombre, @IDAdministrador, 0)");
                     datos.SetearParametro("@Nombre", nueva.Nombre);
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                     datos.EjecutarAccion();
                     fueReactivada = false;
                 }
@@ -141,20 +205,36 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                if (ExisteNombre(categoria.Nombre, categoria.IdCategoria))
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
                 {
-                    throw new Exception($"Ya existe otra categoría con el nombre '{categoria.Nombre}'. Por favor, elija otro nombre.");
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
                 }
 
                 Categoria categoriaExistente = ObtenerPorId(categoria.IdCategoria);
                 if (categoriaExistente == null)
                 {
-                    throw new Exception("No se pudo modificar la categoría. Puede que no exista o haya sido eliminada.");
+                    throw new Exception("No se pudo modificar la categoría. Puede que no exista, haya sido eliminada o no tenga permisos para acceder.");
                 }
 
-                datos.SetearConsulta("UPDATE CATEGORIAS SET Nombre = @Nombre WHERE IdCategoria = @IdCategoria AND Eliminado = 0");
+                // Validar que la categoría pertenece al administrador
+                if (!TenantHelper.ValidarAccesoAdministrador(categoriaExistente.IDAdministrador))
+                {
+                    throw new UnauthorizedAccessException("No tiene permisos para modificar esta categoría.");
+                }
+
+                // Validar nombre duplicado (solo para este administrador)
+                if (ExisteNombre(categoria.Nombre, categoria.IdCategoria, idAdministrador.Value))
+                {
+                    throw new Exception($"Ya existe otra categoría con el nombre '{categoria.Nombre}'. Por favor, elija otro nombre.");
+                }
+
+                datos.SetearConsulta("UPDATE CATEGORIAS SET Nombre = @Nombre WHERE IdCategoria = @IdCategoria AND IDAdministrador = @IDAdministrador AND Eliminado = 0");
                 datos.SetearParametro("@Nombre", categoria.Nombre);
                 datos.SetearParametro("@IdCategoria", categoria.IdCategoria);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
@@ -176,13 +256,35 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Obtener IDAdministrador desde sesión
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador. Debe estar logueado como administrador.");
+                }
+
+                // Verificar que la categoría existe y pertenece al administrador
+                Categoria categoria = ObtenerPorId(id);
+                if (categoria == null)
+                {
+                    throw new Exception("No se pudo eliminar la categoría. Puede que no exista, haya sido eliminada o no tenga permisos para acceder.");
+                }
+
+                // Validar que la categoría pertenece al administrador
+                if (!TenantHelper.ValidarAccesoAdministrador(categoria.IDAdministrador))
+                {
+                    throw new UnauthorizedAccessException("No tiene permisos para eliminar esta categoría.");
+                }
+
                 if (TieneArticulosAsociados(id))
                 {
                     throw new Exception("No se puede eliminar la categoría porque tiene artículos asociados. Primero debe eliminar o cambiar la categoría de los artículos relacionados.");
                 }
 
-                datos.SetearConsulta("UPDATE CATEGORIAS SET Eliminado = 1 WHERE IdCategoria = @IdCategoria");
+                datos.SetearConsulta("UPDATE CATEGORIAS SET Eliminado = 1 WHERE IdCategoria = @IdCategoria AND IDAdministrador = @IDAdministrador");
                 datos.SetearParametro("@IdCategoria", id);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
@@ -221,12 +323,24 @@ namespace Negocio
             }
         }
 
-        public bool ExisteNombre(string nombre, int? idCategoriaExcluir = null)
+        public bool ExisteNombre(string nombre, int? idCategoriaExcluir = null, int? idAdministrador = null)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
                 string consulta = "SELECT COUNT(*) FROM CATEGORIAS WHERE Nombre = @Nombre AND Eliminado = 0";
+                
+                if (idAdministrador.HasValue)
+                {
+                    consulta += " AND IDAdministrador = @IDAdministrador";
+                }
+                
                 if (idCategoriaExcluir.HasValue)
                 {
                     consulta += " AND IdCategoria != @IdCategoria";
@@ -234,6 +348,12 @@ namespace Negocio
 
                 datos.SetearConsulta(consulta);
                 datos.SetearParametro("@Nombre", nombre);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 if (idCategoriaExcluir.HasValue)
                 {
                     datos.SetearParametro("@IdCategoria", idCategoriaExcluir.Value);
@@ -253,13 +373,30 @@ namespace Negocio
             }
         }
 
-        public int? ObtenerIdCategoriaEliminadaPorNombre(string nombre)
+        public int? ObtenerIdCategoriaEliminadaPorNombre(string nombre, int? idAdministrador = null)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT TOP 1 IdCategoria FROM CATEGORIAS WHERE Nombre = @Nombre AND Eliminado = 1");
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "WHERE Nombre = @Nombre AND Eliminado = 1";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT TOP 1 IdCategoria FROM CATEGORIAS " + whereClause);
                 datos.SetearParametro("@Nombre", nombre);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())

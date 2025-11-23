@@ -173,9 +173,8 @@ namespace Negocio
             }
         }
 
-        // =============================================
-        // MÉTODOS PARA SUPERADMIN
-        // =============================================
+
+        // METODOS PARA SUPERADMIN
 
         public List<Usuario> ListarAdministradores()
         {
@@ -219,7 +218,7 @@ namespace Negocio
             int idAdministradorCreado = 0;
             try
             {
-                // Crear el administrador
+                // Crea el administrador
                 datos.SetearConsulta(@"INSERT INTO USUARIOS (Email, Password, DNI, Nombre, Apellido, Telefono, Domicilio, TipoUsuario, IDAdministrador, FechaAlta, FechaVencimiento, Activo, Eliminado, NombreTienda)
                                        VALUES (@Email, @Password, @DNI, @Nombre, @Apellido, @Telefono, @Domicilio, 1, NULL, GETDATE(), @FechaVencimiento, @Activo, 0, NULL);
                                        SELECT SCOPE_IDENTITY();");
@@ -239,7 +238,7 @@ namespace Negocio
 
                 datos.cerrarConexion();
 
-                // Crear categorías por defecto
+                // Crea categorias por defecto
                 if (idAdministradorCreado > 0)
                 {
                     CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
@@ -286,6 +285,192 @@ namespace Negocio
                 datos.SetearConsulta("UPDATE USUARIOS SET FechaVencimiento = @FechaVencimiento WHERE IdUsuario = @IdUsuario AND TipoUsuario = 1");
                 datos.SetearParametro("@FechaVencimiento", (object)fechaVencimiento ?? DBNull.Value);
                 datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Lista los usuarios normales de un administrador específico
+        /// </summary>
+        public List<Usuario> ListarUsuariosNormales(int idAdministrador)
+        {
+            List<Usuario> lista = new List<Usuario>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(@"
+                    SELECT IdUsuario, Nombre, Apellido, Email, Password, DNI, Telefono, Domicilio, 
+                           TipoUsuario, IDAdministrador, NombreTienda, FechaAlta, FechaVencimiento, Activo, Eliminado 
+                    FROM USUARIOS 
+                    WHERE TipoUsuario = 0 
+                    AND IDAdministrador = @IDAdministrador
+                    ORDER BY FechaAlta DESC");
+
+                datos.SetearParametro("@IDAdministrador", idAdministrador);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Usuario user = new Usuario();
+                    user.IdUsuario = Convert.ToInt32(datos.Lector["IdUsuario"]);
+                    user.Nombre = datos.Lector["Nombre"] != DBNull.Value ? (string)datos.Lector["Nombre"] : null;
+                    user.Apellido = datos.Lector["Apellido"] != DBNull.Value ? (string)datos.Lector["Apellido"] : null;
+                    user.Email = datos.Lector["Email"] != DBNull.Value ? (string)datos.Lector["Email"] : null;
+                    user.Password = datos.Lector["Password"] != DBNull.Value ? (string)datos.Lector["Password"] : null;
+                    user.Dni = datos.Lector["DNI"] != DBNull.Value ? (string)datos.Lector["DNI"] : null;
+                    user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
+                    user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
+                    user.Tipo = (TipoUsuario)Convert.ToByte(datos.Lector["TipoUsuario"]);
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : (int?)null;
+                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
+                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? Convert.ToDateTime(datos.Lector["FechaAlta"]) : (DateTime?)null;
+                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? Convert.ToDateTime(datos.Lector["FechaVencimiento"]) : (DateTime?)null;
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Activo"]);
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Eliminado"]);
+                    lista.Add(user);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Da de baja un usuario (soft delete)
+        /// </summary>
+        public void DarDeBajaUsuario(int idUsuario, int idAdministrador)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Validar que el usuario pertenece al administrador
+                datos.SetearConsulta("SELECT IDAdministrador FROM USUARIOS WHERE IdUsuario = @IdUsuario AND TipoUsuario = 0");
+                datos.SetearParametro("@IdUsuario", idUsuario);
+                datos.EjecutarLectura();
+
+                if (!datos.Lector.Read())
+                {
+                    throw new Exception("Usuario no encontrado.");
+                }
+
+                int? idAdminUsuario = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : (int?)null;
+
+                if (!idAdminUsuario.HasValue || idAdminUsuario.Value != idAdministrador)
+                {
+                    throw new Exception("No tiene permisos para gestionar este usuario.");
+                }
+
+                datos.cerrarConexion();
+
+                // Actualizar eliminado
+                datos.SetearConsulta("UPDATE USUARIOS SET Eliminado = 1 WHERE IdUsuario = @IdUsuario");
+                datos.SetearParametro("@IdUsuario", idUsuario);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Reactiva un usuario (quita soft delete)
+        /// </summary>
+        public void ReactivarUsuario(int idUsuario, int idAdministrador)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Validar que el usuario pertenece al administrador
+                datos.SetearConsulta("SELECT IDAdministrador FROM USUARIOS WHERE IdUsuario = @IdUsuario AND TipoUsuario = 0");
+                datos.SetearParametro("@IdUsuario", idUsuario);
+                datos.EjecutarLectura();
+
+                if (!datos.Lector.Read())
+                {
+                    throw new Exception("Usuario no encontrado.");
+                }
+
+                int? idAdminUsuario = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : (int?)null;
+
+                if (!idAdminUsuario.HasValue || idAdminUsuario.Value != idAdministrador)
+                {
+                    throw new Exception("No tiene permisos para gestionar este usuario.");
+                }
+
+                datos.cerrarConexion();
+
+                // Actualizar eliminado
+                datos.SetearConsulta("UPDATE USUARIOS SET Eliminado = 0 WHERE IdUsuario = @IdUsuario");
+                datos.SetearParametro("@IdUsuario", idUsuario);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Actualiza el nombre de tienda de un administrador
+        /// </summary>
+        public void ActualizarNombreTienda(int idAdministrador, string nombreTienda)
+        {
+            // Validar que el nombre de tienda sea único (si se proporciona)
+            if (!string.IsNullOrEmpty(nombreTienda))
+            {
+                AccesoDatos datosValidacion = new AccesoDatos();
+                try
+                {
+                    datosValidacion.SetearConsulta("SELECT COUNT(*) FROM USUARIOS WHERE NombreTienda = @NombreTienda AND IdUsuario != @IdAdministrador AND Eliminado = 0");
+                    datosValidacion.SetearParametro("@NombreTienda", nombreTienda);
+                    datosValidacion.SetearParametro("@IdAdministrador", idAdministrador);
+                    object result = datosValidacion.EjecutarAccionScalar();
+
+                    if (Convert.ToInt32(result) > 0)
+                    {
+                        throw new Exception("El nombre de tienda ya está en uso.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    datosValidacion.cerrarConexion();
+                }
+            }
+
+            // Actualizar nombre de tienda (usar objeto separado para evitar conflictos de parámetros)
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE USUARIOS SET NombreTienda = @NombreTienda WHERE IdUsuario = @IdAdministrador AND TipoUsuario = 1");
+                datos.SetearParametro("@NombreTienda", (object)nombreTienda ?? DBNull.Value);
+                datos.SetearParametro("@IdAdministrador", idAdministrador);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)

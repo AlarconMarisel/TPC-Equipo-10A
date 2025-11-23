@@ -84,6 +84,7 @@
     <Content Include="AdminGestionArticulo.aspx" />
     <Content Include="AdminGestionCategoria.aspx" />
     <Content Include="AdminGestionReserva.aspx" />
+    <Content Include="AdminConfiguracionTienda.aspx" />
     <Content Include="AdminGestionUsuario.aspx" />
     <Content Include="CarritoReserva.aspx" />
     <Content Include="Content\Site.css" />
@@ -158,6 +159,13 @@
     </Compile>
     <Compile Include="AdminGestionReserva.aspx.designer.cs">
       <DependentUpon>AdminGestionReserva.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminConfiguracionTienda.aspx.cs">
+      <DependentUpon>AdminConfiguracionTienda.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminConfiguracionTienda.aspx.designer.cs">
+      <DependentUpon>AdminConfiguracionTienda.aspx</DependentUpon>
     </Compile>
     <Compile Include="AdminGestionUsuario.aspx.cs">
       <DependentUpon>AdminGestionUsuario.aspx</DependentUpon>

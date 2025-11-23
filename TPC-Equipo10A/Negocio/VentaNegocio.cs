@@ -9,14 +9,33 @@ namespace Negocio
 {
     public class VentaNegocio
     {
-        public List<Venta> ListarVentas()
+        public List<Venta> ListarVentas(int? idAdministrador = null)
         {
             List<Venta> lista = new List<Venta>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta("SELECT IDVenta, IDReserva, FechaVenta, PrecioFinal FROM VENTAS");
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause = "WHERE v.IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta(@"SELECT v.IDVenta, v.IDReserva, v.FechaVenta, v.PrecioFinal, v.IDAdministrador 
+                                     FROM VENTAS v " + whereClause);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -26,6 +45,7 @@ namespace Negocio
                     aux.Reserva = new Reserva { IdReserva = (int)datos.Lector["IDReserva"] };
                     aux.FechaVenta = (DateTime)datos.Lector["FechaVenta"];
                     aux.MontoTotal = (decimal)datos.Lector["PrecioFinal"];
+                    aux.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
                     lista.Add(aux);
                 }
 
@@ -46,10 +66,34 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("INSERT INTO VENTAS (IDReserva, FechaVenta, PrecioFinal) VALUES (@IDReserva, @FechaVenta, @PrecioFinal); SELECT SCOPE_IDENTITY();");
+                // Obtener IDAdministrador desde la reserva asociada
+                int? idAdministrador = null;
+                if (nueva.Reserva != null && nueva.Reserva.IdReserva > 0)
+                {
+                    ReservaNegocio reservaNegocio = new ReservaNegocio();
+                    Reserva reserva = reservaNegocio.ObtenerPorId(nueva.Reserva.IdReserva);
+                    if (reserva != null)
+                    {
+                        idAdministrador = reserva.IDAdministrador;
+                    }
+                }
+
+                // Si no se pudo obtener de la reserva, intentar desde sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador para la venta.");
+                }
+
+                datos.SetearConsulta("INSERT INTO VENTAS (IDReserva, FechaVenta, PrecioFinal, IDAdministrador) VALUES (@IDReserva, @FechaVenta, @PrecioFinal, @IDAdministrador); SELECT SCOPE_IDENTITY();");
                 datos.SetearParametro("@IDReserva", nueva.Reserva.IdReserva);
                 datos.SetearParametro("@FechaVenta", nueva.FechaVenta);
                 datos.SetearParametro("@PrecioFinal", nueva.MontoTotal);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
 
                 object result = datos.EjecutarAccionScalar();
                 return Convert.ToInt32(result);

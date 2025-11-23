@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <generado automáticamente>
 //     Este código fue generado por una herramienta.
 //
@@ -11,7 +11,7 @@ namespace APP_Web_Equipo10A
 {
 
 
-    public partial class AdminGestionUsuario
+    public partial class AdminConfiguracionTienda
     {
 
         /// <summary>
@@ -24,21 +24,40 @@ namespace APP_Web_Equipo10A
         protected global::System.Web.UI.WebControls.Label lblMensaje;
 
         /// <summary>
-        /// Control gvUsuarios.
+        /// Control txtNombreTienda.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvUsuarios;
+        protected global::System.Web.UI.WebControls.TextBox txtNombreTienda;
 
         /// <summary>
-        /// Control pnlPaginacion.
+        /// Control urlPreview.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlPaginacion;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl urlPreview;
+
+        /// <summary>
+        /// Control litIDAdministrador.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litIDAdministrador;
+
+        /// <summary>
+        /// Control btnGuardar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardar;
     }
 }
+

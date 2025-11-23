@@ -6,8 +6,111 @@
             display: flex;
             min-height: 100vh;
             width: 100%;
+            flex-direction: row;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            height: 100vh;
+            min-height: 100%;
             flex-direction: column;
-            overflow-x: hidden;
+            justify-content: space-between;
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 16rem;
+            position: sticky;
+            top: 0;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 0.75rem;
+        }
+        
+        .brand-logo {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .brand-title {
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .brand-subtitle {
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+        
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link.active {
+            background-color: rgba(17, 115, 212, 0.2);
+            color: var(--primary-color);
+        }
+        
+        .nav-link:not(.active) {
+            color: #374151;
+        }
+        
+        .nav-link:not(.active):hover {
+            background-color: #f3f4f6;
+        }
+        
+        .nav-icon {
+            font-size: 1.25rem;
+        }
+        
+        .nav-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
         }
         
         .layout-container {
@@ -30,22 +133,9 @@
         
         /* Main Content */
         .main-content {
-            display: flex;
             flex: 1;
-            justify-content: center;
-            padding: 1.25rem 1rem;
-        }
-        
-        @media (min-width: 640px) {
-            .main-content {
-                padding: 1.25rem 1.5rem;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .main-content {
-                padding: 1.25rem 2rem;
-            }
+            padding: 2rem;
+            overflow-y: auto;
         }
         
         .content-container {
@@ -393,6 +483,21 @@
         
         
         @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
             .page-title {
                 font-size: 1.875rem;
             }
@@ -428,9 +533,56 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <!-- Brand -->
+                <div class="sidebar-brand">
+                    <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
+                    <div class="brand-info">
+                        <h1 class="brand-subtitle">Panel de Administrador</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="sidebar-nav">
+                    <a class="nav-link" href="PanelAdministrador.aspx">
+                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                        <p class="nav-text">Dashboard</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionArticulo.aspx">
+                        <span class="material-symbols-outlined nav-icon">inventory_2</span>
+                        <p class="nav-text">Artículos</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionCategoria.aspx">
+                        <span class="material-symbols-outlined nav-icon">category</span>
+                        <p class="nav-text">Categorías</p>
+                    </a>
+                    <a class="nav-link active" href="AdminGestionReserva.aspx">
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Ventas</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionUsuario.aspx">
+                        <span class="material-symbols-outlined nav-icon">group</span>
+                        <p class="nav-text">Usuarios</p>
+                    </a>
+                    <a class="nav-link" href="AdminConfiguracionTienda.aspx">
+                        <span class="material-symbols-outlined nav-icon">settings</span>
+                        <p class="nav-text">Configuración</p>
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Footer Links -->
+            <div class="sidebar-footer">
+                <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
+                    <span class="material-symbols-outlined nav-icon">account_circle</span>
+                    <p class="nav-text">Mi Perfil</p>
+                </a>
+            </div>
+        </aside>
+        
         <div class="layout-container">
-            
-            
             <!-- Main Content -->
             <main class="main-content">
                 <div class="content-container">

@@ -508,30 +508,26 @@
                         <span class="material-symbols-outlined nav-icon">category</span>
                         <p class="nav-text">Categorías</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionReserva.aspx">
                         <span class="material-symbols-outlined nav-icon">receipt_long</span>
                         <p class="nav-text">Ventas</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionUsuario.aspx">
                         <span class="material-symbols-outlined nav-icon">group</span>
                         <p class="nav-text">Usuarios</p>
                     </a>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">mail</span>
-                        <p class="nav-text">Mensajes</p>
+                    <a class="nav-link" href="AdminConfiguracionTienda.aspx">
+                        <span class="material-symbols-outlined nav-icon">settings</span>
+                        <p class="nav-text">Configuración</p>
                     </a>
                 </nav>
             </div>
             
             <!-- Footer Links -->
             <div class="sidebar-footer">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
                     <span class="material-symbols-outlined nav-icon">account_circle</span>
                     <p class="nav-text">Mi Perfil</p>
-                </a>
-                <a class="nav-link" href="#">
-                    <span class="material-symbols-outlined nav-icon">logout</span>
-                    <p class="nav-text">Cerrar Sesión</p>
                 </a>
             </div>
         </aside>

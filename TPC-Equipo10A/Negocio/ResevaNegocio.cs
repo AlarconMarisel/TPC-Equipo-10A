@@ -9,14 +9,32 @@ namespace Negocio
 {
     public class ReservaNegocio
     {
-        public List<Reserva> ListarReservas()
+        public List<Reserva> ListarReservas(int? idAdministrador = null)
         {
             List<Reserva> lista = new List<Reserva>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta("SELECT IDReserva, IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva FROM RESERVAS");
+                // Si no se especifica idAdministrador, intentar obtenerlo de la sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                string whereClause = "";
+                if (idAdministrador.HasValue)
+                {
+                    whereClause = "WHERE IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT IDReserva, IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador FROM RESERVAS " + whereClause);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -28,6 +46,7 @@ namespace Negocio
                     aux.FechaVencimiento = (DateTime)datos.Lector["FechaVencimientoReserva"];
                     aux.MontoSeña = (decimal)datos.Lector["MontoSeña"];
                     aux.EstadoReserva = (bool)datos.Lector["EstadoReserva"];
+                    aux.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
 
                     lista.Add(aux);
                 }
@@ -49,13 +68,43 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("INSERT INTO RESERVAS (IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva) " +
-                                     "VALUES (@IDUsuario, @FechaReserva, @FechaVencimientoReserva, @MontoSeña, @EstadoReserva); SELECT SCOPE_IDENTITY();");
+                // Obtener IDAdministrador del usuario que hace la reserva
+                int? idAdministrador = null;
+                if (nueva.IdUsuario != null && nueva.IdUsuario.IdUsuario > 0)
+                {
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    Usuario usuario = usuarioNegocio.ObtenerPorId(nueva.IdUsuario.IdUsuario);
+                    if (usuario != null)
+                    {
+                        idAdministrador = usuario.IDAdministrador;
+                    }
+                }
+
+                // Si no se pudo obtener del usuario, intentar desde sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                // Si la reserva ya tiene IDAdministrador asignado, usarlo
+                if (nueva.IDAdministrador > 0)
+                {
+                    idAdministrador = nueva.IDAdministrador;
+                }
+
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador para la reserva.");
+                }
+
+                datos.SetearConsulta("INSERT INTO RESERVAS (IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador) " +
+                                     "VALUES (@IDUsuario, @FechaReserva, @FechaVencimientoReserva, @MontoSeña, @EstadoReserva, @IDAdministrador); SELECT SCOPE_IDENTITY();");
                 datos.SetearParametro("@IDUsuario", nueva.IdUsuario.IdUsuario);
                 datos.SetearParametro("@FechaReserva", nueva.FechaReserva);
                 datos.SetearParametro("@FechaVencimientoReserva", nueva.FechaVencimiento);
                 datos.SetearParametro("@MontoSeña", nueva.MontoSeña);
                 datos.SetearParametro("@EstadoReserva", nueva.EstadoReserva);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
 
                 object result = datos.EjecutarAccionScalar();
                 return Convert.ToInt32(result);
@@ -134,6 +183,59 @@ namespace Negocio
             }
         }
 
+        public Reserva ObtenerPorId(int idReserva)
+        {
+            Reserva reserva = null;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                string whereClause = "WHERE IDReserva = @IDReserva";
+                
+                // Si hay un administrador en sesión, validar que la reserva le pertenece
+                if (idAdministrador.HasValue)
+                {
+                    whereClause += " AND IDAdministrador = @IDAdministrador";
+                }
+
+                datos.SetearConsulta("SELECT IDReserva, IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador FROM RESERVAS " + whereClause);
+                datos.SetearParametro("@IDReserva", idReserva);
+                
+                if (idAdministrador.HasValue)
+                {
+                    datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
+                }
+                
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    reserva = new Reserva();
+                    reserva.IdReserva = (int)datos.Lector["IDReserva"];
+                    reserva.IdUsuario = new Usuario { IdUsuario = (int)datos.Lector["IDUsuario"] };
+                    reserva.FechaReserva = (DateTime)datos.Lector["FechaReserva"];
+                    reserva.FechaVencimiento = (DateTime)datos.Lector["FechaVencimientoReserva"];
+                    reserva.MontoSeña = (decimal)datos.Lector["MontoSeña"];
+                    reserva.EstadoReserva = (bool)datos.Lector["EstadoReserva"];
+                    reserva.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? Convert.ToInt32(datos.Lector["IDAdministrador"]) : 0;
+
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    reserva.IdUsuario = usuarioNegocio.ObtenerPorId(reserva.IdUsuario.IdUsuario);
+                }
+
+                return reserva;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public Reserva ObtenerReservaPorArticulo(int idArticulo)
         {
             Reserva reserva = null;
@@ -189,12 +291,49 @@ namespace Negocio
 
             try
             {
+                // Obtener IDAdministrador del primer artículo o del usuario
+                int? idAdministrador = null;
+                
+                // Si hay artículos, obtener IDAdministrador del primero
+                if (articulos != null && articulos.Count > 0 && articulos[0].IDAdministrador > 0)
+                {
+                    idAdministrador = articulos[0].IDAdministrador;
+                }
+                
+                // Si no, obtener del usuario que hace la reserva
+                if (!idAdministrador.HasValue && reserva.IdUsuario != null && reserva.IdUsuario.IdUsuario > 0)
+                {
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    Usuario usuario = usuarioNegocio.ObtenerPorId(reserva.IdUsuario.IdUsuario);
+                    if (usuario != null)
+                    {
+                        idAdministrador = usuario.IDAdministrador;
+                    }
+                }
+
+                // Si la reserva ya tiene IDAdministrador asignado, usarlo
+                if (reserva.IDAdministrador > 0)
+                {
+                    idAdministrador = reserva.IDAdministrador;
+                }
+
+                // Si no se pudo obtener, intentar desde sesión
+                if (!idAdministrador.HasValue)
+                {
+                    idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+                }
+
+                if (!idAdministrador.HasValue)
+                {
+                    throw new Exception("No se puede determinar el administrador para la reserva.");
+                }
+
                 // 1) Insertar la reserva y obtener ID generado
                 datos.SetearConsulta(@"
             INSERT INTO RESERVAS 
-            (IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva)
+            (IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador)
             VALUES 
-            (@IDUsuario, @FechaReserva, @FechaVencimiento, @MontoSeña, @EstadoReserva);
+            (@IDUsuario, @FechaReserva, @FechaVencimiento, @MontoSeña, @EstadoReserva, @IDAdministrador);
             SELECT SCOPE_IDENTITY();");
 
                 datos.SetearParametro("@IDUsuario", reserva.IdUsuario.IdUsuario);
@@ -202,6 +341,7 @@ namespace Negocio
                 datos.SetearParametro("@FechaVencimiento", reserva.FechaVencimiento);
                 datos.SetearParametro("@MontoSeña", reserva.MontoSeña);
                 datos.SetearParametro("@EstadoReserva", reserva.EstadoReserva);
+                datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
 
                 object result = datos.EjecutarAccionScalar();
                 int idReserva = Convert.ToInt32(result);

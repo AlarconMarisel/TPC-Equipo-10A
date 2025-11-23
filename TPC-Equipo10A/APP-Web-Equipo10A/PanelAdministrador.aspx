@@ -517,7 +517,7 @@
                 
                 <!-- Navigation -->
                 <nav class="sidebar-nav">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="PanelAdministrador.aspx">
                         <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
@@ -529,30 +529,26 @@
                         <span class="material-symbols-outlined nav-icon">category</span>
                         <p class="nav-text">Categorías</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionReserva.aspx">
                         <span class="material-symbols-outlined nav-icon">receipt_long</span>
                         <p class="nav-text">Ventas</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionUsuario.aspx">
                         <span class="material-symbols-outlined nav-icon">group</span>
                         <p class="nav-text">Usuarios</p>
                     </a>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">mail</span>
-                        <p class="nav-text">Mensajes</p>
+                    <a class="nav-link" href="AdminConfiguracionTienda.aspx">
+                        <span class="material-symbols-outlined nav-icon">settings</span>
+                        <p class="nav-text">Configuración</p>
                     </a>
                 </nav>
             </div>
             
             <!-- Footer Links -->
             <div class="sidebar-footer">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
                     <span class="material-symbols-outlined nav-icon">account_circle</span>
                     <p class="nav-text">Mi Perfil</p>
-                </a>
-                <a class="nav-link" href="#">
-                    <span class="material-symbols-outlined nav-icon">logout</span>
-                    <p class="nav-text">Cerrar Sesión</p>
                 </a>
             </div>
         </aside>
@@ -578,19 +574,24 @@
                 <!-- Stats Grid -->
                 <section class="stats-grid">
                     <div class="stat-card">
-                        <p class="stat-label">Total de Ventas</p>
-                        <p class="stat-value">$12,450.00</p>
-                        <p class="stat-change">+5.2% vs mes anterior</p>
+                        <p class="stat-label">Artículos Activos</p>
+                        <p class="stat-value"><asp:Label ID="lblCantidadArticulos" runat="server" Text="0"></asp:Label></p>
+                        <p class="stat-change">Total de artículos en tu tienda</p>
                     </div>
                     <div class="stat-card">
-                        <p class="stat-label">Artículos Vendidos</p>
-                        <p class="stat-value">312</p>
-                        <p class="stat-change">+8.1% vs mes anterior</p>
+                        <p class="stat-label">Categorías</p>
+                        <p class="stat-value"><asp:Label ID="lblCantidadCategorias" runat="server" Text="0"></asp:Label></p>
+                        <p class="stat-change">Categorías disponibles</p>
                     </div>
                     <div class="stat-card">
-                        <p class="stat-label">Nuevos Usuarios</p>
-                        <p class="stat-value">89</p>
-                        <p class="stat-change">+2.5% vs mes anterior</p>
+                        <p class="stat-label">Reservas Pendientes</p>
+                        <p class="stat-value"><asp:Label ID="lblCantidadReservas" runat="server" Text="0"></asp:Label></p>
+                        <p class="stat-change">Requieren tu atención</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-label">Ventas del Mes</p>
+                        <p class="stat-value"><asp:Label ID="lblCantidadVentas" runat="server" Text="0"></asp:Label></p>
+                        <p class="stat-change">Ventas realizadas este mes</p>
                     </div>
                 </section>
                 
@@ -602,8 +603,8 @@
                             <p class="urgent-title">Señás Pendientes de Confirmar</p>
                             <div class="urgent-details">
                                 <div class="urgent-info">
-                                    <p class="urgent-number">7</p>
-                                    <p class="urgent-description">Hay 7 señas que requieren tu revisión y confirmación manual para completar las ventas.</p>
+                                    <p class="urgent-number"><asp:Label ID="lblReservasPendientes" runat="server" Text="0"></asp:Label></p>
+                                    <p class="urgent-description">Hay <asp:Label ID="lblReservasPendientesTexto" runat="server" Text="0"></asp:Label> señas que requieren tu revisión y confirmación manual para completar las ventas.</p>
                                 </div>
                                 <a href="AdminConfirmarSeña.aspx" class="urgent-button text-decoration-none d-block text-center">
                                     <span>Gestionar Señás</span>
