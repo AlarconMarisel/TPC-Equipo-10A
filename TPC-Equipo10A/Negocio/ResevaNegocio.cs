@@ -182,5 +182,58 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
+        public int AgregarReservaConArticulos(Reserva reserva, List<Articulo> articulos)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                // 1) Insertar la reserva y obtener ID generado
+                datos.SetearConsulta(@"
+            INSERT INTO RESERVAS 
+            (IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva)
+            VALUES 
+            (@IDUsuario, @FechaReserva, @FechaVencimiento, @MontoSeña, @EstadoReserva);
+            SELECT SCOPE_IDENTITY();");
+
+                datos.SetearParametro("@IDUsuario", reserva.IdUsuario.IdUsuario);
+                datos.SetearParametro("@FechaReserva", reserva.FechaReserva);
+                datos.SetearParametro("@FechaVencimiento", reserva.FechaVencimiento);
+                datos.SetearParametro("@MontoSeña", reserva.MontoSeña);
+                datos.SetearParametro("@EstadoReserva", reserva.EstadoReserva);
+
+                object result = datos.EjecutarAccionScalar();
+                int idReserva = Convert.ToInt32(result);
+
+                datos.cerrarConexion();
+
+                // 2) Insertar artículos asociados a la reserva
+                foreach (var art in articulos)
+                {
+                    datos = new AccesoDatos();
+                    datos.SetearConsulta(@"
+                INSERT INTO ARTICULOSXRESERVA (IDReserva, IDArticulo)
+                VALUES (@IDReserva, @IDArticulo)");
+
+                    datos.SetearParametro("@IDReserva", idReserva);
+                    datos.SetearParametro("@IDArticulo", art.IdArticulo);
+
+                    datos.EjecutarAccion();
+                    datos.cerrarConexion();
+                }
+
+                return idReserva;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
     }
 }

@@ -105,38 +105,41 @@ namespace APP_Web_Equipo10A
         {
             try
             {
-                // Verificamos que haya un ID de artículo en el query string
-                if (Request.QueryString["id"] != null)
+                // Validamos ID de artículo
+                if (Request.QueryString["id"] == null)
+                    return;
+
+                int idArticulo = int.Parse(Request.QueryString["id"]);
+
+                // Validamos usuario logueado
+                Usuario usuario = Session["Usuario"] as Usuario;
+                if (usuario == null)
                 {
-                    int id = int.Parse(Request.QueryString["id"]);
-                    ArticuloNegocio negocio = new ArticuloNegocio();
-                    Articulo articulo = negocio.ObtenerPorId(id);
-
-                    if (articulo != null)
-                    {
-                        // Si no existe aún el carrito, lo creamos
-                        List<Articulo> carrito = Session["CarritoReserva"] as List<Articulo>;
-                        if (carrito == null)
-                            carrito = new List<Articulo>();
-
-                        // Evitamos duplicados
-                        if (!carrito.Any(a => a.IdArticulo == articulo.IdArticulo))
-                            carrito.Add(articulo);
-
-                        // Guardamos el carrito actualizado
-                        Session["CarritoReserva"] = carrito;
-
-                        // Redirigimos al carrito
-                        Response.Redirect("CarritoReserva.aspx", false);
-                    }
+                    Response.Redirect("Login.aspx");
+                    return;
                 }
+
+                // 🔹 1. Crear/obtener carrito en BD
+                CarritoNegocio carritoNegocio = new CarritoNegocio();
+                int idCarrito = carritoNegocio.CrearCarritoSiNoExiste(
+                    usuario.IdUsuario,
+                    usuario.IdUsuario   // Por ahora el usuario es su propio admin
+                );
+
+                // 🔹 2. Guardar artículo en BD (evita duplicados)
+                carritoNegocio.AgregarArticuloAlCarrito(idCarrito, idArticulo);
+
+                // 🔹 3. Guardar ID de carrito en session para acceso rápido
+                Session["IDCarrito"] = idCarrito;
+
+                // 🔹 4. Ir al carrito
+                Response.Redirect("CarritoReserva.aspx", false);
             }
             catch (Exception ex)
             {
                 lblNombre.Text = "Error al agregar al carrito: " + ex.Message;
             }
         }
-
 
 
     }

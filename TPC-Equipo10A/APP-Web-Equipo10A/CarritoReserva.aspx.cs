@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Dominio;
 using Negocio;
 
@@ -19,61 +17,32 @@ namespace APP_Web_Equipo10A
             }
         }
 
-        protected void btnConfirmarReserva_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Usuario usuario = new Usuario
-                {
-                    IdUsuario = 1,
-                };
-                List<Articulo> articulosSeleccionados = Session["CarritoReserva"] as List<Articulo>;
-                if (articulosSeleccionados == null || articulosSeleccionados.Count == 0)
-                {
-                    Response.Write("<script>alert('No hay artículos en la reserva.');</script>");
-                    return;
-                }
-                decimal montoTotal = 0;
-                foreach (var art in articulosSeleccionados)
-                    montoTotal += art.Precio;
-
-                decimal montoSeña = montoTotal * 0.10m;
-
-
-                Reserva nuevaReserva = new Reserva
-                {
-                    IdUsuario = usuario,
-                    FechaReserva = DateTime.Now,
-                    FechaVencimiento = DateTime.Now.AddDays(7),
-                    MontoSeña = montoSeña,
-                    EstadoReserva = true,
-                    ArticulosReservados = articulosSeleccionados
-                };
-
-                ReservaNegocio negocio = new ReservaNegocio();
-                int idReserva = negocio.AgregarReserva(nuevaReserva);
-
-
-                if (idReserva > 0)
-                {
-                    Session["IdReserva"] = idReserva;
-                    Response.Redirect("PagoSeña.aspx");
-                }
-                else
-                {
-                    Response.Write("<script>alert('Error al crear la reserva.');</script>");
-                }
-            }
-            catch (Exception ex)
-            {
-                Response.Write("<script>alert('Ocurrió un error al confirmar la reserva: " + ex.Message + "');</script>");
-            }
-        }
-
         private void CargarCarrito()
         {
+            // Debe haber un usuario logueado
+            var usuario = Session["Usuario"] as Usuario;
+            if (usuario == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
 
-            List<Articulo> carrito = Session["CarritoReserva"] as List<Articulo>;
+            // Recuperar IDCarrito
+            int idCarrito = Session["IDCarrito"] != null
+                ? (int)Session["IDCarrito"]
+                : 0;
+
+            CarritoNegocio carritoNegocio = new CarritoNegocio();
+
+            // Si no está creado, lo creamos
+            if (idCarrito == 0)
+            {
+                idCarrito = carritoNegocio.CrearCarritoSiNoExiste(usuario.IdUsuario, usuario.IdUsuario);
+                Session["IDCarrito"] = idCarrito;
+            }
+
+            // Traer artículos desde BD
+            List<Articulo> carrito = carritoNegocio.ListarArticulosDelCarrito(idCarrito);
 
             if (carrito == null || carrito.Count == 0)
             {
@@ -81,46 +50,90 @@ namespace APP_Web_Equipo10A
                 repCarrito.DataBind();
                 lblSubtotal.Text = "$0.00";
                 lblSeña.Text = "$0.00";
-
-                litCarritoVacio.Text = @"
-        <div class='text-center'>
-            <h3>Tu carrito está vacío</h3>
-            <p>Agregá productos desde la página principal para hacer una reserva.</p>
-            <a href='Default.aspx' class='btn btn-primary mt-3'> Volver a la Tienda</a>
-        </div>";
-
+                pnlCarritoVacio.Visible = true;
                 return;
             }
+
+            pnlCarritoVacio.Visible = false;
 
             repCarrito.DataSource = carrito;
             repCarrito.DataBind();
 
-
             decimal subtotal = carrito.Sum(a => a.Precio);
             decimal seña = subtotal * 0.10m;
 
-            lblSubtotal.Text = subtotal.ToString("C2", new System.Globalization.CultureInfo("es-AR"));
-            lblSeña.Text = seña.ToString("C2", new System.Globalization.CultureInfo("es-AR"));
-
-            pnlCarritoVacio.Visible = false;
+            lblSubtotal.Text = subtotal.ToString("C2");
+            lblSeña.Text = seña.ToString("C2");
         }
 
-        protected void repCarrito_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void repCarrito_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Eliminar")
             {
                 int idArticulo = int.Parse(e.CommandArgument.ToString());
-                List<Articulo> carrito = Session["CarritoReserva"] as List<Articulo>;
+                int idCarrito = (int)Session["IDCarrito"];
 
-                if (carrito != null)
-                {
-                    carrito.RemoveAll(a => a.IdArticulo == idArticulo);
-                    Session["CarritoReserva"] = carrito;
-                    CargarCarrito();
-                }
+                CarritoNegocio neg = new CarritoNegocio();
+                neg.QuitarArticuloDelCarrito(idCarrito, idArticulo);
+
+                CargarCarrito();
             }
         }
 
+        protected void btnConfirmarReserva_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var usuario = Session["Usuario"] as Usuario;
+                if (usuario == null)
+                {
+                    Response.Redirect("Login.aspx");
+                    return;
+                }
 
+                int idCarrito = (int)Session["IDCarrito"];
+
+                CarritoNegocio carritoNegocio = new CarritoNegocio();
+                List<Articulo> articulos = carritoNegocio.ListarArticulosDelCarrito(idCarrito);
+
+                if (articulos.Count == 0)
+                {
+                    Response.Write("<script>alert('No hay artículos en el carrito.');</script>");
+                    return;
+                }
+
+                decimal subtotal = articulos.Sum(a => a.Precio);
+                decimal montoSeña = subtotal * 0.10m;
+
+                Reserva reserva = new Reserva
+                {
+                    IdUsuario = usuario,
+                    FechaReserva = DateTime.Now,
+                    FechaVencimiento = DateTime.Now.AddDays(7),
+                    MontoSeña = montoSeña,
+                    EstadoReserva = true,
+                    ArticulosReservados = articulos
+                };
+
+                ReservaNegocio negocio = new ReservaNegocio();
+                int idReserva = negocio.AgregarReservaConArticulos(reserva, articulos);
+
+
+                if (idReserva > 0)
+                {
+                    Session["IdReserva"] = idReserva;
+                    Response.Redirect("PagoSeña.aspx?id=" + idReserva +
+                                      "&monto=" + montoSeña.ToString());
+                }
+                else
+                {
+                    Response.Write("<script>alert('Error al generar reserva.');</script>");
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
+            }
+        }
     }
 }

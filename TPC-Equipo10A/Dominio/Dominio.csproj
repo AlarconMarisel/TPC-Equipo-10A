@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Articulo.cs" />
+    <Compile Include="Carrito.cs" />
     <Compile Include="Categoria.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="Favorito.cs" />
     <Compile Include="Imagen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reserva.cs" />
