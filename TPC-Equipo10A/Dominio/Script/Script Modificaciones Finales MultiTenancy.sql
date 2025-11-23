@@ -1,12 +1,9 @@
 USE E_COMMERCE_DB
 GO
 
--- =============================================
--- MODIFICACIONES FINALES PARA MULTI-TENANCY
--- =============================================
 
 -- =============================================
--- 1. AGREGAR CAMPO ELIMINADO A USUARIOS (Soft Delete)
+-- 1. AGREGAR CAMPO ELIMINADO A USUARIOS (Eliminacion logica)
 -- =============================================
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[USUARIOS]') AND name = 'Eliminado')
 BEGIN
@@ -47,18 +44,5 @@ ELSE
 BEGIN
     PRINT 'Constraint UNIQUE para NombreTienda ya existe'
 END
-GO
-
--- =============================================
--- RESUMEN
--- =============================================
-PRINT ''
-PRINT '============================================='
-PRINT 'MODIFICACIONES COMPLETADAS'
-PRINT '============================================='
-PRINT '1. Campo Eliminado agregado a USUARIOS'
-PRINT '2. Campo NombreTienda agregado a USUARIOS'
-PRINT '3. Constraint UNIQUE para NombreTienda'
-PRINT '============================================='
 GO
 

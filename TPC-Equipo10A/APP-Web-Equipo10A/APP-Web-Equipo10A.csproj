@@ -96,8 +96,11 @@
     <Content Include="Login.aspx" />
     <Content Include="PagoSeña.aspx" />
     <Content Include="PanelAdministrador.aspx" />
+    <Content Include="PanelSuperAdmin.aspx" />
     <Content Include="PanelUsuario.aspx" />
     <Content Include="Registro.aspx" />
+    <Content Include="SuperAdminCrearAdministrador.aspx" />
+    <Content Include="SuperAdminEditarAdministrador.aspx" />
     <Content Include="SobreNosotros.aspx" />
     <Content Include="Contacto.aspx" />
     <Content Include="PreguntasFrecuentes.aspx" />
@@ -208,6 +211,13 @@
     <Compile Include="PanelAdministrador.aspx.designer.cs">
       <DependentUpon>PanelAdministrador.aspx</DependentUpon>
     </Compile>
+    <Compile Include="PanelSuperAdmin.aspx.cs">
+      <DependentUpon>PanelSuperAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PanelSuperAdmin.aspx.designer.cs">
+      <DependentUpon>PanelSuperAdmin.aspx</DependentUpon>
+    </Compile>
     <Compile Include="PanelUsuario.aspx.cs">
       <DependentUpon>PanelUsuario.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -261,6 +271,20 @@
     </Compile>
     <Compile Include="TerminosServicio.aspx.designer.cs">
       <DependentUpon>TerminosServicio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdminCrearAdministrador.aspx.cs">
+      <DependentUpon>SuperAdminCrearAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuperAdminCrearAdministrador.aspx.designer.cs">
+      <DependentUpon>SuperAdminCrearAdministrador.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuperAdminEditarAdministrador.aspx.cs">
+      <DependentUpon>SuperAdminEditarAdministrador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuperAdminEditarAdministrador.aspx.designer.cs">
+      <DependentUpon>SuperAdminEditarAdministrador.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

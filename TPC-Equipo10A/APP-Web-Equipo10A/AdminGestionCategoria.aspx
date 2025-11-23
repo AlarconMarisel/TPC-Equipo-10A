@@ -193,7 +193,6 @@
             margin: 0 !important;
         }
         
-        /* Específico para TextBox de ASP.NET */
         #txtBusqueda,
         #MainContent_txtBusqueda {
             height: 2.5rem !important;
@@ -286,7 +285,6 @@
             box-sizing: border-box;
         }
         
-        /* Asegurar que el botón también tenga la misma altura */
         #btnBuscar,
         #MainContent_btnBuscar {
             height: 2.5rem !important;

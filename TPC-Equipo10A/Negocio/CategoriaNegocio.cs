@@ -298,5 +298,59 @@ namespace Negocio
             }
         }
 
+
+        // METODO PARA SUPERADMIN - Crea categorias por defecto
+
+        public void CrearCategoriasPorDefecto(int idAdministrador)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                string[] categoriasPorDefecto = {
+                    "Sin Categoria",
+                    "Mueble",
+                    "Electrodomestico",
+                    "Juguetes",
+                    "Electronica",
+                    "Herramientas",
+                    "Jardineria",
+                    "Vajilla",
+                    "Deporte"
+                };
+
+                foreach (string nombreCategoria in categoriasPorDefecto)
+                {
+                    // Verifica si la categoria ya existe para este administrador
+                    datos = new AccesoDatos();
+                    datos.SetearConsulta(@"
+                        SELECT COUNT(*) 
+                        FROM CATEGORIAS 
+                        WHERE Nombre = @Nombre 
+                        AND IDAdministrador = @IDAdministrador 
+                        AND Eliminado = 0");
+                    datos.SetearParametro("@Nombre", nombreCategoria);
+                    datos.SetearParametro("@IDAdministrador", idAdministrador);
+                    object result = datos.EjecutarAccionScalar();
+                    int existe = Convert.ToInt32(result);
+                    datos.cerrarConexion();
+
+                    // Solo insertar si no existe
+                    if (existe == 0)
+                    {
+                        datos = new AccesoDatos();
+                        datos.SetearConsulta("INSERT INTO CATEGORIAS (Nombre, IDAdministrador, Eliminado) VALUES (@Nombre, @IDAdministrador, 0)");
+                        datos.SetearParametro("@Nombre", nombreCategoria);
+                        datos.SetearParametro("@IDAdministrador", idAdministrador);
+                        datos.EjecutarAccion();
+                        datos.cerrarConexion();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al crear categorías por defecto: " + ex.Message, ex);
+            }
+        }
+
     }
 }

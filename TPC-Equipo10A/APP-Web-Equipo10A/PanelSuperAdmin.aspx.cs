@@ -1,0 +1,147 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Dominio;
+using Negocio;
+
+namespace APP_Web_Equipo10A
+{
+    public partial class PanelSuperAdmin : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Validar que el usuario es SuperAdmin
+            if (!ValidarSuperAdmin())
+            {
+                Response.Redirect("Default.aspx");
+                return;
+            }
+
+            if (!IsPostBack)
+            {
+                CargarAdministradores();
+                
+                // Mostrar mensaje si viene de otra página
+                if (Request.QueryString["mensaje"] != null)
+                {
+                    lblMensaje.Text = Request.QueryString["mensaje"];
+                    lblMensaje.CssClass = "text-success mt-3";
+                    lblMensaje.Visible = true;
+                }
+            }
+        }
+
+        private bool ValidarSuperAdmin()
+        {
+            Usuario usuario = Session["Usuario"] as Usuario;
+            if (usuario == null || usuario.Tipo != TipoUsuario.SUPERADMIN)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void CargarAdministradores()
+        {
+            try
+            {
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                List<Usuario> administradores = negocio.ListarAdministradores();
+
+                // Preparar datos para el GridView
+                var datosParaMostrar = administradores.Select(a => new
+                {
+                    a.IdUsuario,
+                    NombreCompleto = $"{a.Nombre} {a.Apellido}",
+                    a.Email,
+                    NombreTienda = a.NombreTienda ?? "",
+                    FechaAltaFormateada = a.FechaAlta?.ToString("dd/MM/yyyy") ?? "-",
+                    FechaVencimientoFormateada = a.FechaVencimiento?.ToString("dd/MM/yyyy"),
+                    a.Activo,
+                    a.FechaVencimiento
+                }).ToList();
+
+                gvAdministradores.DataSource = datosParaMostrar;
+                gvAdministradores.DataBind();
+            }
+            catch (Exception ex)
+            {
+                lblMensaje.Text = "Error al cargar administradores: " + ex.Message;
+                lblMensaje.Visible = true;
+            }
+        }
+
+        protected void gvAdministradores_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            try
+            {
+                if (e.CommandName == "ToggleActivo")
+                {
+                    int idAdministrador = Convert.ToInt32(e.CommandArgument);
+                    UsuarioNegocio negocio = new UsuarioNegocio();
+                    Usuario admin = negocio.ObtenerPorId(idAdministrador);
+
+                    if (admin != null && admin.Tipo == TipoUsuario.ADMIN)
+                    {
+                        negocio.ActivarDesactivarAdministrador(idAdministrador, !admin.Activo);
+                        CargarAdministradores();
+                        lblMensaje.Text = admin.Activo ? "Administrador desactivado correctamente" : "Administrador activado correctamente";
+                        lblMensaje.CssClass = "text-success mt-3";
+                        lblMensaje.Visible = true;
+                    }
+                }
+                else if (e.CommandName == "Editar")
+                {
+                    int idAdministrador = Convert.ToInt32(e.CommandArgument);
+                    Response.Redirect($"SuperAdminEditarAdministrador.aspx?id={idAdministrador}");
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMensaje.Text = "Error: " + ex.Message;
+                lblMensaje.CssClass = "text-danger mt-3";
+                lblMensaje.Visible = true;
+            }
+        }
+
+        public string GetEstadoCssClass(object activo, object fechaVencimiento)
+        {
+            bool esActivo = activo != null && (bool)activo;
+            DateTime? fechaVenc = fechaVencimiento as DateTime?;
+
+            if (!esActivo)
+            {
+                return "badge badge-inactivo";
+            }
+
+            if (fechaVenc.HasValue && fechaVenc.Value < DateTime.Now)
+            {
+                return "badge badge-vencido";
+            }
+
+            return "badge badge-activo";
+        }
+
+        public string GetEstadoTexto(object activo, object fechaVencimiento)
+        {
+            bool esActivo = activo != null && (bool)activo;
+            DateTime? fechaVenc = fechaVencimiento as DateTime?;
+
+            if (!esActivo)
+            {
+                return "Inactivo";
+            }
+
+            if (fechaVenc.HasValue && fechaVenc.Value < DateTime.Now)
+            {
+                return "Vencido";
+            }
+
+            return "Activo";
+        }
+    }
+}
+

@@ -21,21 +21,42 @@ namespace Negocio
                 while (datos.Lector.Read())
                 {
                     Usuario user = new Usuario();
-                    user.IdUsuario = (int)datos.Lector["IdUsuario"];
-                    user.Email = (string)datos.Lector["Email"];
-                    user.Password = (string)datos.Lector["Password"];
-                    user.Dni = datos.Lector["Dni"] != DBNull.Value ? (string)datos.Lector["Dni"] : null;
-                    user.Nombre = (string)datos.Lector["Nombre"];
-                    user.Apellido = (string)datos.Lector["Apellido"];
-                    user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
-                    user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
-                    user.Tipo = (TipoUsuario)(int)datos.Lector["TipoUsuario"];
-                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)datos.Lector["IDAdministrador"] : null;
-                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
-                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)datos.Lector["FechaAlta"] : null;
-                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)datos.Lector["FechaVencimiento"] : null;
-                    user.Activo = datos.Lector["Activo"] != DBNull.Value && (bool)datos.Lector["Activo"];
-                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && (bool)datos.Lector["Eliminado"];
+                    
+                    // Campos obligatorios
+                    user.IdUsuario = Convert.ToInt32(datos.Lector["IdUsuario"]);
+                    user.Email = datos.Lector["Email"] != DBNull.Value ? Convert.ToString(datos.Lector["Email"]) : null;
+                    user.Password = datos.Lector["Password"] != DBNull.Value ? Convert.ToString(datos.Lector["Password"]) : null;
+                    user.Nombre = datos.Lector["Nombre"] != DBNull.Value ? Convert.ToString(datos.Lector["Nombre"]) : null;
+                    user.Apellido = datos.Lector["Apellido"] != DBNull.Value ? Convert.ToString(datos.Lector["Apellido"]) : null;
+                    
+                    // Campos opcionales
+                    user.Dni = datos.Lector["Dni"] != DBNull.Value ? Convert.ToString(datos.Lector["Dni"]) : null;
+                    user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? Convert.ToString(datos.Lector["Telefono"]) : null;
+                    user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? Convert.ToString(datos.Lector["Domicilio"]) : null;
+                    
+                    // TipoUsuario - puede ser TINYINT (0-255)
+                    if (datos.Lector["TipoUsuario"] != DBNull.Value)
+                    {
+                        byte tipoUsuarioValue = Convert.ToByte(datos.Lector["TipoUsuario"]);
+                        user.Tipo = (TipoUsuario)tipoUsuarioValue;
+                    }
+                    else
+                    {
+                        user.Tipo = TipoUsuario.NORMAL;
+                    }
+                    
+                    // Campos de multi-tenancy
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)Convert.ToInt32(datos.Lector["IDAdministrador"]) : null;
+                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? Convert.ToString(datos.Lector["NombreTienda"]) : null;
+                    
+                    // Fechas
+                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(datos.Lector["FechaAlta"]) : null;
+                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(datos.Lector["FechaVencimiento"]) : null;
+                    
+                    // Booleanos
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Activo"]);
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Eliminado"]);
+                    
                     lista.Add(user);
                 }
                 return lista;
@@ -123,7 +144,7 @@ namespace Negocio
                 if (datos.Lector.Read())
                 {
                     user = new Usuario();
-                    user.IdUsuario = (int)datos.Lector["IdUsuario"];
+                    user.IdUsuario = Convert.ToInt32(datos.Lector["IdUsuario"]);
                     user.Nombre = datos.Lector["Nombre"] != DBNull.Value ? (string)datos.Lector["Nombre"] : null;
                     user.Apellido = datos.Lector["Apellido"] != DBNull.Value ? (string)datos.Lector["Apellido"] : null;
                     user.Email = datos.Lector["Email"] != DBNull.Value ? (string)datos.Lector["Email"] : null;
@@ -131,16 +152,141 @@ namespace Negocio
                     user.Dni = datos.Lector["Dni"] != DBNull.Value ? (string)datos.Lector["Dni"] : null;
                     user.Telefono = datos.Lector["Telefono"] != DBNull.Value ? (string)datos.Lector["Telefono"] : null;
                     user.Domicilio = datos.Lector["Domicilio"] != DBNull.Value ? (string)datos.Lector["Domicilio"] : null;
-                    user.Tipo = (TipoUsuario)(int)datos.Lector["TipoUsuario"];
-                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)datos.Lector["IDAdministrador"] : null;
+                    user.Tipo = datos.Lector["TipoUsuario"] != DBNull.Value ? (TipoUsuario)Convert.ToByte(datos.Lector["TipoUsuario"]) : TipoUsuario.NORMAL;
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)Convert.ToInt32(datos.Lector["IDAdministrador"]) : null;
                     user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
                     user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)datos.Lector["FechaAlta"] : null;
                     user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)datos.Lector["FechaVencimiento"] : null;
-                    user.Activo = datos.Lector["Activo"] != DBNull.Value && (bool)datos.Lector["Activo"];
-                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && (bool)datos.Lector["Eliminado"];
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Activo"]);
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Eliminado"]);
                 }
 
                 return user;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        // =============================================
+        // MÉTODOS PARA SUPERADMIN
+        // =============================================
+
+        public List<Usuario> ListarAdministradores()
+        {
+            List<Usuario> lista = new List<Usuario>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT IdUsuario, Nombre, Apellido, Email, TipoUsuario, IDAdministrador, NombreTienda, FechaAlta, FechaVencimiento, Activo, Eliminado FROM USUARIOS WHERE TipoUsuario = 1 AND Eliminado = 0 ORDER BY FechaAlta DESC");
+                datos.EjecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Usuario user = new Usuario();
+                    user.IdUsuario = Convert.ToInt32(datos.Lector["IdUsuario"]);
+                    user.Nombre = datos.Lector["Nombre"] != DBNull.Value ? (string)datos.Lector["Nombre"] : null;
+                    user.Apellido = datos.Lector["Apellido"] != DBNull.Value ? (string)datos.Lector["Apellido"] : null;
+                    user.Email = datos.Lector["Email"] != DBNull.Value ? (string)datos.Lector["Email"] : null;
+                    user.Tipo = datos.Lector["TipoUsuario"] != DBNull.Value ? (TipoUsuario)Convert.ToByte(datos.Lector["TipoUsuario"]) : TipoUsuario.NORMAL;
+                    user.IDAdministrador = datos.Lector["IDAdministrador"] != DBNull.Value ? (int?)Convert.ToInt32(datos.Lector["IDAdministrador"]) : null;
+                    user.NombreTienda = datos.Lector["NombreTienda"] != DBNull.Value ? (string)datos.Lector["NombreTienda"] : null;
+                    user.FechaAlta = datos.Lector["FechaAlta"] != DBNull.Value ? (DateTime?)datos.Lector["FechaAlta"] : null;
+                    user.FechaVencimiento = datos.Lector["FechaVencimiento"] != DBNull.Value ? (DateTime?)datos.Lector["FechaVencimiento"] : null;
+                    user.Activo = datos.Lector["Activo"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Activo"]);
+                    user.Eliminado = datos.Lector["Eliminado"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Eliminado"]);
+                    lista.Add(user);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public int CrearAdministradorConCategorias(Usuario nuevoAdmin, DateTime? fechaVencimiento)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            int idAdministradorCreado = 0;
+            try
+            {
+                // Crear el administrador
+                datos.SetearConsulta(@"INSERT INTO USUARIOS (Email, Password, DNI, Nombre, Apellido, Telefono, Domicilio, TipoUsuario, IDAdministrador, FechaAlta, FechaVencimiento, Activo, Eliminado, NombreTienda)
+                                       VALUES (@Email, @Password, @DNI, @Nombre, @Apellido, @Telefono, @Domicilio, 1, NULL, GETDATE(), @FechaVencimiento, @Activo, 0, NULL);
+                                       SELECT SCOPE_IDENTITY();");
+                
+                datos.SetearParametro("@Email", nuevoAdmin.Email);
+                datos.SetearParametro("@Password", nuevoAdmin.Password);
+                datos.SetearParametro("@DNI", (object)nuevoAdmin.Dni ?? DBNull.Value);
+                datos.SetearParametro("@Nombre", nuevoAdmin.Nombre);
+                datos.SetearParametro("@Apellido", nuevoAdmin.Apellido);
+                datos.SetearParametro("@Telefono", (object)nuevoAdmin.Telefono ?? DBNull.Value);
+                datos.SetearParametro("@Domicilio", (object)nuevoAdmin.Domicilio ?? DBNull.Value);
+                datos.SetearParametro("@FechaVencimiento", (object)fechaVencimiento ?? DBNull.Value);
+                datos.SetearParametro("@Activo", nuevoAdmin.Activo);
+
+                object result = datos.EjecutarAccionScalar();
+                idAdministradorCreado = Convert.ToInt32(result);
+
+                datos.cerrarConexion();
+
+                // Crear categorías por defecto
+                if (idAdministradorCreado > 0)
+                {
+                    CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
+                    categoriaNegocio.CrearCategoriasPorDefecto(idAdministradorCreado);
+                }
+
+                return idAdministradorCreado;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void ActivarDesactivarAdministrador(int idAdministrador, bool activo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE USUARIOS SET Activo = @Activo WHERE IdUsuario = @IdUsuario AND TipoUsuario = 1");
+                datos.SetearParametro("@Activo", activo);
+                datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void ActualizarFechaVencimiento(int idAdministrador, DateTime? fechaVencimiento)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE USUARIOS SET FechaVencimiento = @FechaVencimiento WHERE IdUsuario = @IdUsuario AND TipoUsuario = 1");
+                datos.SetearParametro("@FechaVencimiento", (object)fechaVencimiento ?? DBNull.Value);
+                datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarAccion();
             }
             catch (Exception ex)
             {
