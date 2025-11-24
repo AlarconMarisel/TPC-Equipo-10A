@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Web.UI;
 using Dominio;
 using Negocio;
@@ -11,15 +13,15 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("es-AR");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-AR");
+
             if (!IsPostBack)
-            {
                 CargarCarrito();
-            }
         }
 
         private void CargarCarrito()
         {
-            // Debe haber un usuario logueado
             var usuario = Session["Usuario"] as Usuario;
             if (usuario == null)
             {
@@ -27,21 +29,18 @@ namespace APP_Web_Equipo10A
                 return;
             }
 
-            // Recuperar IDCarrito
             int idCarrito = Session["IDCarrito"] != null
                 ? (int)Session["IDCarrito"]
                 : 0;
 
             CarritoNegocio carritoNegocio = new CarritoNegocio();
 
-            // Si no está creado, lo creamos
             if (idCarrito == 0)
             {
                 idCarrito = carritoNegocio.CrearCarritoSiNoExiste(usuario.IdUsuario, usuario.IdUsuario);
                 Session["IDCarrito"] = idCarrito;
             }
 
-            // Traer artículos desde BD
             List<Articulo> carrito = carritoNegocio.ListarArticulosDelCarrito(idCarrito);
 
             if (carrito == null || carrito.Count == 0)
@@ -50,9 +49,17 @@ namespace APP_Web_Equipo10A
                 repCarrito.DataBind();
                 lblSubtotal.Text = "$0.00";
                 lblSeña.Text = "$0.00";
+
                 pnlCarritoVacio.Visible = true;
+
+                btnConfirmarReserva.Visible = false;
+
                 return;
             }
+
+
+
+            CultureInfo culturaAR = new CultureInfo("es-AR");
 
             pnlCarritoVacio.Visible = false;
 
@@ -62,8 +69,8 @@ namespace APP_Web_Equipo10A
             decimal subtotal = carrito.Sum(a => a.Precio);
             decimal seña = subtotal * 0.10m;
 
-            lblSubtotal.Text = subtotal.ToString("C2");
-            lblSeña.Text = seña.ToString("C2");
+            lblSubtotal.Text = subtotal.ToString("C2", culturaAR);
+            lblSeña.Text = seña.ToString("C2", culturaAR);
         }
 
         protected void repCarrito_ItemCommand(object source, System.Web.UI.WebControls.RepeaterCommandEventArgs e)

@@ -340,7 +340,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Information Section -->
                 <div class="info-section">
                     <div class="info-card">
@@ -359,12 +358,30 @@
                     </div>
                 </div>
 
+                <!-- Upload Comprobante -->
+                <div class="upload-section mt-4">
+                    <label class="form-label fw-semibold">Adjuntar comprobante de seña</label>
+                    <asp:FileUpload ID="fileComprobante" runat="server" CssClass="form-control" />
+                </div>
+
+                <!-- Confirmar Seña -->
+                <div class="confirm-section mt-3">
+                    <asp:Button
+                        ID="btnConfirmarPago"
+                        runat="server"
+                        Text="Confirmar que realicé la seña"
+                        CssClass="btn btn-success w-100"
+                        OnClick="btnConfirmarPago_Click" />
+                </div>
+
                 <!-- Action Button -->
                 <div class="action-button">
                     <a href="Default.aspx" class="back-button text-decoration-none d-block text-center">
                         <span>Volver al inicio</span>
                     </a>
                 </div>
+
+
             </div>
         </div>
     </div>

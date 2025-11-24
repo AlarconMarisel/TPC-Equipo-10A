@@ -6,27 +6,30 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         .btn {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-.btn:hover {
-    background-color: rgba(17, 115, 212, 0.9);
-}
-        .text-center h3 {
-    color: #555;
-    font-weight: 600;
-}
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
 
-.text-center p {
-    color: #777;
-}
-       .reservation-container {
+            .btn:hover {
+                background-color: rgba(17, 115, 212, 0.9);
+            }
+
+        .text-center h3 {
+            color: #555;
+            font-weight: 600;
+        }
+
+        .text-center p {
+            color: #777;
+        }
+
+        .reservation-container {
             min-height: 100vh;
             background-color: var(--background-light);
         }
@@ -298,9 +301,13 @@
                             </ItemTemplate>
                         </asp:Repeater>
                         <asp:Literal ID="litCarritoVacio" runat="server"></asp:Literal>
-                        <asp:Panel ID="pnlCarritoVacio" runat="server" Visible="false" CssClass="text-center" Style="margin-top: 2rem;">
-                            <h3>No hay artículos en tu carrito.</h3>
-                            <p>Agregá productos desde el catálogo para continuar con tu reserva.</p>
+                        <asp:Panel ID="pnlCarritoVacio" runat="server" Visible="false">
+                            <div class='text-center'>
+                                <h3>Tu carrito está vacío</h3>
+                                <p>Agregá productos desde la página principal para hacer una reserva.</p>
+
+                                <a href='Default.aspx' class='btn btn-primary mt-3'>Volver a la Tienda</a>
+                            </div>
                         </asp:Panel>
                     </div>
                     <!-- Right Column: Payment Summary -->

@@ -45,18 +45,38 @@ namespace Negocio
             }
         }
 
-        public void AgregarArticuloAlCarrito(int idCarrito, int idArticulo, int cantidad = 1)
+        public void AgregarArticuloAlCarrito(int idCarrito, int idArticulo)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                
                 datos.SetearConsulta(@"
-            INSERT INTO CARRITOS_DETALLE (IDCarrito, IDArticulo, Cantidad)
-            VALUES (@IDCarrito, @IDArticulo, @Cantidad)");
+            SELECT 1 
+            FROM ARTICULOSXCARRITO 
+            WHERE IDCarrito = @IDCarrito AND IDArticulo = @IDArticulo
+        ");
+                datos.SetearParametro("@IDCarrito", idCarrito);
+                datos.SetearParametro("@IDArticulo", idArticulo);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                   
+                    return;
+                }
+
+                datos.cerrarConexion();
+
+               
+                datos = new AccesoDatos();
+                datos.SetearConsulta(@"
+            INSERT INTO ARTICULOSXCARRITO (IDCarrito, IDArticulo, FechaAgregado)
+            VALUES (@IDCarrito, @IDArticulo, GETDATE())
+        ");
 
                 datos.SetearParametro("@IDCarrito", idCarrito);
                 datos.SetearParametro("@IDArticulo", idArticulo);
-                datos.SetearParametro("@Cantidad", cantidad);
 
                 datos.EjecutarAccion();
             }
@@ -76,7 +96,7 @@ namespace Negocio
             try
             {
                 datos.SetearConsulta(@"
-            DELETE FROM CARRITOS_DETALLE 
+            DELETE FROM ARTICULOSXCARRITO 
             WHERE IDCarrito = @IDCarrito AND IDArticulo = @IDArticulo");
 
                 datos.SetearParametro("@IDCarrito", idCarrito);
@@ -103,13 +123,14 @@ namespace Negocio
             {
                 datos.SetearConsulta(@"
             SELECT a.IDArticulo, a.Nombre, a.Precio, i.RutaImagen
-            FROM CARRITOS_DETALLE cd
-            INNER JOIN ARTICULOS a ON a.IDArticulo = cd.IDArticulo
+            FROM ARTICULOSXCARRITO c
+            INNER JOIN ARTICULOS a ON a.IDArticulo = c.IDArticulo
             OUTER APPLY (
-                SELECT TOP 1 RutaImagen 
-                FROM IMAGENES_ARTICULOS 
+                SELECT TOP 1 RutaImagen
+                FROM IMAGENESARTICULO
                 WHERE IDArticulo = a.IDArticulo
-            ) i");
+            ) i
+            WHERE c.IDCarrito = @IDCarrito");
 
                 datos.SetearParametro("@IDCarrito", idCarrito);
                 datos.EjecutarLectura();
@@ -144,7 +165,6 @@ namespace Negocio
             }
         }
 
-  
     }
 
 }

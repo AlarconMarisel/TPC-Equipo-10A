@@ -29,12 +29,12 @@ namespace Negocio
                 }
 
                 datos.SetearConsulta("SELECT IDReserva, IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador FROM RESERVAS " + whereClause);
-                
+
                 if (idAdministrador.HasValue)
                 {
                     datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                 }
-                
+
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -192,7 +192,7 @@ namespace Negocio
             {
                 int? idAdministrador = TenantHelper.ObtenerIDAdministradorDesdeSesion();
                 string whereClause = "WHERE IDReserva = @IDReserva";
-                
+
                 // Si hay un administrador en sesión, validar que la reserva le pertenece
                 if (idAdministrador.HasValue)
                 {
@@ -201,12 +201,12 @@ namespace Negocio
 
                 datos.SetearConsulta("SELECT IDReserva, IDUsuario, FechaReserva, FechaVencimientoReserva, MontoSeña, EstadoReserva, IDAdministrador FROM RESERVAS " + whereClause);
                 datos.SetearParametro("@IDReserva", idReserva);
-                
+
                 if (idAdministrador.HasValue)
                 {
                     datos.SetearParametro("@IDAdministrador", idAdministrador.Value);
                 }
-                
+
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())
@@ -293,13 +293,13 @@ namespace Negocio
             {
                 // Obtener IDAdministrador del primer artículo o del usuario
                 int? idAdministrador = null;
-                
+
                 // Si hay artículos, obtener IDAdministrador del primero
                 if (articulos != null && articulos.Count > 0 && articulos[0].IDAdministrador > 0)
                 {
                     idAdministrador = articulos[0].IDAdministrador;
                 }
-                
+
                 // Si no, obtener del usuario que hace la reserva
                 if (!idAdministrador.HasValue && reserva.IdUsuario != null && reserva.IdUsuario.IdUsuario > 0)
                 {
@@ -374,6 +374,32 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
+        public void ConfirmarPagoSeña(int idReserva, string comprobante)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+            UPDATE RESERVAS
+            SET EstadoReserva = 2, 
+                Comprobante = @comprobante,
+                FechaComprobante = GETDATE()
+            WHERE IDReserva = @id
+        ");
+
+                datos.SetearParametro("@id", idReserva);
+                datos.SetearParametro("@comprobante", (object)comprobante ?? DBNull.Value);
+
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
 
     }
 }
