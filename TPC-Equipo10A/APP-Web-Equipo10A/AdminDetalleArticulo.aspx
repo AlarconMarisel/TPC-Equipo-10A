@@ -92,6 +92,9 @@
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.4rem;
+            margin-top: 0.4rem;
         }
         
         .user-info {

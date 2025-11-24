@@ -13,7 +13,7 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Validar que el usuario es SuperAdmin
+            // Valida que el usuario es SuperAdmin
             if (!ValidarSuperAdmin())
             {
                 Response.Redirect("Default.aspx");
@@ -24,7 +24,7 @@ namespace APP_Web_Equipo10A
             {
                 CargarAdministradores();
                 
-                // Mostrar mensaje si viene de otra página
+                // Muestra mensaje si viene de otra pagina
                 if (Request.QueryString["mensaje"] != null)
                 {
                     lblMensaje.Text = Request.QueryString["mensaje"];
@@ -36,12 +36,7 @@ namespace APP_Web_Equipo10A
 
         private bool ValidarSuperAdmin()
         {
-            Usuario usuario = Session["Usuario"] as Usuario;
-            if (usuario == null || usuario.Tipo != TipoUsuario.SUPERADMIN)
-            {
-                return false;
-            }
-            return true;
+            return ValidacionHelper.ValidarEsSuperAdmin();
         }
 
         private void CargarAdministradores()
@@ -51,7 +46,7 @@ namespace APP_Web_Equipo10A
                 UsuarioNegocio negocio = new UsuarioNegocio();
                 List<Usuario> administradores = negocio.ListarAdministradores();
 
-                // Preparar datos para el GridView
+                // Prepara datos para el GridView
                 var datosParaMostrar = administradores.Select(a => new
                 {
                     a.IdUsuario,

@@ -13,6 +13,19 @@ namespace APP_Web_Equipo10A
     {
         private const int REGISTROS_POR_PAGINA = 10;
 
+        /// <summary>
+        /// Valida que el usuario es administrador activo
+        /// </summary>
+        private bool ValidarAccesoAdministrador()
+        {
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
+            {
+                Response.Write("<script>alert('Su cuenta de administrador está inactiva o ha vencido. Contacte al super administrador.');</script>");
+                return false;
+            }
+            return true;
+        }
+
         protected int PaginaActual
         {
             get
@@ -29,6 +42,13 @@ namespace APP_Web_Equipo10A
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Valida acceso de administrador
+            if (!ValidarAccesoAdministrador())
+            {
+                Response.Redirect("Default.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 CargarFiltros();
@@ -244,7 +264,7 @@ namespace APP_Web_Equipo10A
                 ArticuloNegocio articuloNegocio = new ArticuloNegocio();
                 articuloNegocio.Eliminar(idArticulo);
 
-                // Redirigir con mensaje de éxito
+                // Redirige con mensaje de exito
                 Response.Redirect("AdminGestionArticulo.aspx?exito=eliminado", false);
             }
             catch (Exception ex)

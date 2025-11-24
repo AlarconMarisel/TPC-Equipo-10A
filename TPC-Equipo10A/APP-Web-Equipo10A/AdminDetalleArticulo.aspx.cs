@@ -10,6 +10,13 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Valida acceso de administrador
+            if (!ValidarAccesoAdministrador())
+            {
+                Response.Redirect("Default.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 if (int.TryParse(Request.QueryString["id"], out int idArticulo))
@@ -21,6 +28,19 @@ namespace APP_Web_Equipo10A
                     MostrarError("ID de artículo no válido.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Valida que el usuario es administrador activo
+        /// </summary>
+        private bool ValidarAccesoAdministrador()
+        {
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
+            {
+                Response.Write("<script>alert('Su cuenta de administrador está inactiva o ha vencido. Contacte al super administrador.');</script>");
+                return false;
+            }
+            return true;
         }
 
         private void CargarArticulo(int idArticulo)

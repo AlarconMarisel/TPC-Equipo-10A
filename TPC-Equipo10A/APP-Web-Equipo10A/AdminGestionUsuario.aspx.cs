@@ -22,7 +22,7 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Cargar usuarios
+                // Carga usuarios
                 CargarUsuarios();
             }
         }
@@ -32,20 +32,11 @@ namespace APP_Web_Equipo10A
         /// </summary>
         private bool ValidarAccesoAdministrador()
         {
-            Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
-
-            if (usuario == null)
-                return false;
-
-            if (usuario.Tipo != TipoUsuario.ADMIN)
-                return false;
-
-            if (!TenantHelper.EsAdministradorActivo())
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
             {
                 Response.Write("<script>alert('Su cuenta de administrador está inactiva o ha vencido. Contacte al super administrador.');</script>");
                 return false;
             }
-
             return true;
         }
 
@@ -81,7 +72,7 @@ namespace APP_Web_Equipo10A
                 gvUsuarios.DataSource = usuariosFormateados;
                 gvUsuarios.DataBind();
                 
-                // Mostrar paginación solo si hay usuarios
+                // Muestra paginacion solo si hay usuarios
                 pnlPaginacion.Visible = usuariosFormateados.Count > 0;
             }
             catch (Exception ex)
@@ -125,7 +116,7 @@ namespace APP_Web_Equipo10A
 
                 lblMensaje.Visible = true;
 
-                // Recargar usuarios
+                // Recarga usuarios
                 CargarUsuarios();
             }
             catch (Exception ex)

@@ -15,14 +15,14 @@ namespace APP_Web_Equipo10A
         {
             if (!IsPostBack)
             {
-                // Validar acceso de administrador
+                // Valida acceso de administrador
                 if (!ValidarAccesoAdministrador())
                 {
                     Response.Redirect("Default.aspx");
                     return;
                 }
 
-                // Cargar resumen de la tienda
+                // Carga resumen de la tienda
                 CargarResumenTienda();
             }
         }
@@ -32,29 +32,22 @@ namespace APP_Web_Equipo10A
         /// </summary>
         private bool ValidarAccesoAdministrador()
         {
-            Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
-
-            if (usuario == null)
-                return false;
-
-            // Debe ser administrador
-            if (usuario.Tipo != TipoUsuario.ADMIN)
-                return false;
-
-            // Debe estar activo
-            if (!usuario.Activo)
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
             {
-                Response.Write("<script>alert('Su cuenta de administrador está inactiva. Contacte al super administrador.');</script>");
+                Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
+                if (usuario != null && usuario.Tipo == TipoUsuario.ADMIN)
+                {
+                    if (!usuario.Activo)
+                    {
+                        Response.Write("<script>alert('Su cuenta de administrador está inactiva. Contacte al super administrador.');</script>");
+                    }
+                    else if (usuario.FechaVencimiento.HasValue && usuario.FechaVencimiento.Value < DateTime.Now)
+                    {
+                        Response.Write("<script>alert('Su cuenta de administrador ha vencido. Contacte al super administrador.');</script>");
+                    }
+                }
                 return false;
             }
-
-            // No debe estar vencido
-            if (usuario.FechaVencimiento.HasValue && usuario.FechaVencimiento.Value < DateTime.Now)
-            {
-                Response.Write("<script>alert('Su cuenta de administrador ha vencido. Contacte al super administrador.');</script>");
-                return false;
-            }
-
             return true;
         }
 
@@ -89,7 +82,7 @@ namespace APP_Web_Equipo10A
 
                 System.Diagnostics.Debug.WriteLine($"DEBUG PanelAdmin - Consultando con IDAdministrador: {idAdministrador.Value}");
 
-                // Obtener estadísticas
+                // Obtiene estadisticas
                 int cantidadArticulos = ObtenerCantidadArticulos(idAdministrador.Value);
                 int cantidadCategorias = ObtenerCantidadCategorias(idAdministrador.Value);
                 int cantidadReservasPendientes = ObtenerCantidadReservasPendientes(idAdministrador.Value);
@@ -97,27 +90,27 @@ namespace APP_Web_Equipo10A
 
                 System.Diagnostics.Debug.WriteLine($"DEBUG PanelAdmin - Resultados: Artículos={cantidadArticulos}, Categorías={cantidadCategorias}, Reservas={cantidadReservasPendientes}, Ventas={cantidadVentasMes}");
 
-                // Actualizar labels en la página
+                // Actualiza labels en la pagina
                 lblCantidadArticulos.Text = cantidadArticulos.ToString();
                 lblCantidadCategorias.Text = cantidadCategorias.ToString();
                 lblCantidadReservas.Text = cantidadReservasPendientes.ToString();
                 lblCantidadVentas.Text = cantidadVentasMes.ToString();
                 
-                // Actualizar tarjeta de acción urgente
+                // Actualiza tarjeta de accion urgente
                 lblReservasPendientes.Text = cantidadReservasPendientes.ToString();
                 lblReservasPendientesTexto.Text = cantidadReservasPendientes.ToString();
             }
             catch (Exception ex)
             {
-                // Mostrar error en la página para debugging
+                // Muestra error en la pagina para debugging
                 System.Diagnostics.Debug.WriteLine("Error al cargar resumen: " + ex.Message + " | StackTrace: " + ex.StackTrace);
-                // También mostrar en consola del navegador
+                // Tambien muestra en consola del navegador
                 Response.Write($"<script>console.error('Error al cargar resumen: {ex.Message}');</script>");
             }
         }
 
         /// <summary>
-        /// Obtiene la cantidad de artículos activos del administrador
+        /// Obtiene la cantidad de articulos activos del administrador
         /// </summary>
         private int ObtenerCantidadArticulos(int idAdministrador)
         {
@@ -137,7 +130,7 @@ namespace APP_Web_Equipo10A
         }
 
         /// <summary>
-        /// Obtiene la cantidad de categorías del administrador
+        /// Obtiene la cantidad de categorias del administrador
         /// </summary>
         private int ObtenerCantidadCategorias(int idAdministrador)
         {
@@ -165,7 +158,7 @@ namespace APP_Web_Equipo10A
             {
                 ReservaNegocio negocio = new ReservaNegocio();
                 List<Reserva> reservas = negocio.ListarReservas(idAdministrador);
-                // Filtrar solo las pendientes (asumiendo que hay un estado)
+                // Filtra solo las pendientes (asumiendo que hay un estado)
                 // Por ahora retornamos todas las reservas
                 return reservas != null ? reservas.Count : 0;
             }
@@ -189,7 +182,7 @@ namespace APP_Web_Equipo10A
                 if (ventas == null)
                     return 0;
                 
-                // Filtrar solo las del mes actual
+                // Filtra solo las del mes actual
                 DateTime inicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 return ventas.Count(v => v.FechaVenta >= inicioMes);
             }

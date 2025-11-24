@@ -11,8 +11,28 @@ namespace APP_Web_Equipo10A
 {
     public partial class AdminGestionCategoria : System.Web.UI.Page
     {
+        /// <summary>
+        /// Valida que el usuario es administrador activo
+        /// </summary>
+        private bool ValidarAccesoAdministrador()
+        {
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
+            {
+                Response.Write("<script>alert('Su cuenta de administrador está inactiva o ha vencido. Contacte al super administrador.');</script>");
+                return false;
+            }
+            return true;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Valida acceso de administrador
+            if (!ValidarAccesoAdministrador())
+            {
+                Response.Redirect("Default.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 string exito = Request.QueryString["exito"];
@@ -106,7 +126,7 @@ namespace APP_Web_Equipo10A
                 CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
                 categoriaNegocio.Eliminar(idCategoria);
 
-                // Redirigir con mensaje de éxito
+                // Redirige con mensaje de exito
                 Response.Redirect("AdminGestionCategoria.aspx?exito=eliminado", false);
             }
             catch (Exception ex)

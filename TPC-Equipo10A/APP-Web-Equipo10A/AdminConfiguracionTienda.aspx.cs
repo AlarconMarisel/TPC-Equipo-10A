@@ -16,14 +16,14 @@ namespace APP_Web_Equipo10A
         {
             if (!IsPostBack)
             {
-                // Validar acceso de administrador
+                // Valida acceso de administrador
                 if (!ValidarAccesoAdministrador())
                 {
                     Response.Redirect("Default.aspx");
                     return;
                 }
 
-                // Cargar datos actuales
+                // Carga datos actuales
                 CargarDatos();
             }
         }
@@ -33,20 +33,11 @@ namespace APP_Web_Equipo10A
         /// </summary>
         private bool ValidarAccesoAdministrador()
         {
-            Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
-
-            if (usuario == null)
-                return false;
-
-            if (usuario.Tipo != TipoUsuario.ADMIN)
-                return false;
-
-            if (!TenantHelper.EsAdministradorActivo())
+            if (!ValidacionHelper.ValidarEsAdministradorActivo())
             {
                 Response.Write("<script>alert('Su cuenta de administrador está inactiva o ha vencido. Contacte al super administrador.');</script>");
                 return false;
             }
-
             return true;
         }
 
@@ -65,16 +56,16 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Cargar nombre de tienda actual
+                // Carga nombre de tienda actual
                 if (!string.IsNullOrEmpty(usuario.NombreTienda))
                 {
                     txtNombreTienda.Text = usuario.NombreTienda;
                 }
 
-                // Mostrar ID de administrador
+                // Muestra ID de administrador
                 litIDAdministrador.Text = usuario.IdUsuario.ToString();
 
-                // Actualizar preview de URL
+                // Actualiza preview de URL
                 ActualizarPreviewURL();
             }
             catch (Exception ex)
@@ -104,38 +95,6 @@ namespace APP_Web_Equipo10A
         }
 
         /// <summary>
-        /// Valida el formato del nombre de tienda
-        /// </summary>
-        private bool ValidarFormatoNombreTienda(string nombreTienda)
-        {
-            if (string.IsNullOrWhiteSpace(nombreTienda))
-            {
-                return true; // Vacío es válido (usará admin-{ID})
-            }
-
-            // Solo letras, números y guiones
-            Regex regex = new Regex(@"^[a-z0-9-]+$", RegexOptions.IgnoreCase);
-            if (!regex.IsMatch(nombreTienda))
-            {
-                return false;
-            }
-
-            // No puede empezar o terminar con guión
-            if (nombreTienda.StartsWith("-") || nombreTienda.EndsWith("-"))
-            {
-                return false;
-            }
-
-            // Longitud mínima y máxima
-            if (nombreTienda.Length < 3 || nombreTienda.Length > 50)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Maneja el evento de guardar
         /// </summary>
         protected void btnGuardar_Click(object sender, EventArgs e)
@@ -152,8 +111,8 @@ namespace APP_Web_Equipo10A
 
                 string nombreTienda = txtNombreTienda.Text.Trim();
 
-                // Validar formato
-                if (!string.IsNullOrEmpty(nombreTienda) && !ValidarFormatoNombreTienda(nombreTienda))
+                // Valida formato usando ValidacionHelper
+                if (!string.IsNullOrEmpty(nombreTienda) && !ValidacionHelper.ValidarFormatoNombreTienda(nombreTienda))
                 {
                     lblMensaje.Text = "El nombre de tienda no es válido. Debe contener solo letras, números y guiones, tener entre 3 y 50 caracteres, y no puede empezar o terminar con guión.";
                     lblMensaje.CssClass = "alert alert-danger";
@@ -161,17 +120,26 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Convertir a minúsculas y normalizar
+                // Convierte a minusculas y normaliza
                 if (!string.IsNullOrEmpty(nombreTienda))
                 {
                     nombreTienda = nombreTienda.ToLower().Trim();
                 }
 
-                // Guardar cambios
+                // Valida que el nombre de tienda sea unico usando ValidacionHelper
+                if (!string.IsNullOrEmpty(nombreTienda) && !ValidacionHelper.ValidarNombreTiendaUnico(nombreTienda, usuario.IdUsuario))
+                {
+                    lblMensaje.Text = "El nombre de tienda ya está en uso. Por favor, elija otro nombre.";
+                    lblMensaje.CssClass = "alert alert-danger";
+                    lblMensaje.Visible = true;
+                    return;
+                }
+
+                // Guarda cambios
                 UsuarioNegocio negocio = new UsuarioNegocio();
                 negocio.ActualizarNombreTienda(usuario.IdUsuario, nombreTienda);
 
-                // Actualizar sesión
+                // Actualiza sesion
                 usuario.NombreTienda = string.IsNullOrEmpty(nombreTienda) ? null : nombreTienda;
                 Session["Usuario"] = usuario;
 
@@ -179,7 +147,7 @@ namespace APP_Web_Equipo10A
                 lblMensaje.CssClass = "alert alert-success";
                 lblMensaje.Visible = true;
 
-                // Actualizar preview
+                // Actualiza preview
                 ActualizarPreviewURL();
             }
             catch (Exception ex)

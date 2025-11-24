@@ -11,7 +11,7 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Validar que el usuario es SuperAdmin
+            // Valida que el usuario es SuperAdmin
             if (!ValidarSuperAdmin())
             {
                 Response.Redirect("Default.aspx");
@@ -26,12 +26,7 @@ namespace APP_Web_Equipo10A
 
         private bool ValidarSuperAdmin()
         {
-            Usuario usuario = Session["Usuario"] as Usuario;
-            if (usuario == null || usuario.Tipo != TipoUsuario.SUPERADMIN)
-            {
-                return false;
-            }
-            return true;
+            return ValidacionHelper.ValidarEsSuperAdmin();
         }
 
         private void CargarAdministrador()
@@ -55,13 +50,13 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Mostrar información de solo lectura
+                // Muestra informacion de solo lectura
                 lblNombre.Text = admin.Nombre ?? "-";
                 lblApellido.Text = admin.Apellido ?? "-";
                 lblEmail.Text = admin.Email ?? "-";
                 lblFechaAlta.Text = admin.FechaAlta?.ToString("dd/MM/yyyy") ?? "-";
 
-                // Cargar valores editables
+                // Carga valores editables
                 chkActivo.Checked = admin.Activo;
                 if (admin.FechaVencimiento.HasValue)
                 {
@@ -90,10 +85,10 @@ namespace APP_Web_Equipo10A
 
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                // Actualizar estado activo/inactivo
+                // Actualiza estado activo/inactivo
                 negocio.ActivarDesactivarAdministrador(idAdministrador, chkActivo.Checked);
 
-                // Actualizar fecha de vencimiento
+                // Actualiza fecha de vencimiento
                 DateTime? fechaVencimiento = null;
                 if (!string.IsNullOrEmpty(txtFechaVencimiento.Text))
                 {

@@ -52,6 +52,7 @@
     <Compile Include="ResevaNegocio.cs" />
     <Compile Include="TenantHelper.cs" />
     <Compile Include="UsuarioNegocio.cs" />
+    <Compile Include="ValidacionHelper.cs" />
     <Compile Include="VentaNegocio.cs" />
   </ItemGroup>
   <ItemGroup>

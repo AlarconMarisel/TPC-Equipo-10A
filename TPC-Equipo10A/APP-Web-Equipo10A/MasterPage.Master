@@ -54,7 +54,7 @@
                     <!-- Desktop Navigation -->
                     <nav class="d-none d-md-flex align-items-center gap-4">
                         <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
-                        <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
+                        <asp:HyperLink ID="lnkMiPerfil" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelUsuario.aspx">Mi Perfil</asp:HyperLink>
                         <asp:HyperLink ID="lnkAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelAdministrador.aspx" Visible="false">Admin</asp:HyperLink>
                         <asp:HyperLink ID="lnkSuperAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelSuperAdmin.aspx" Visible="false">Super Admin</asp:HyperLink>
                     </nav>
@@ -70,9 +70,9 @@
                         </asp:LinkButton>
                         
                         <!-- Cart Button -->
-                        <a href="CarritoReserva.aspx" class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center text-decoration-none" style="width: 40px; height: 40px;">
+                        <asp:HyperLink ID="lnkCarrito" runat="server" NavigateUrl="CarritoReserva.aspx" CssClass="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center text-decoration-none" style="width: 40px; height: 40px;">
                             <span class="material-symbols-outlined">shopping_cart</span>
-                        </a>
+                        </asp:HyperLink>
                         
                         <!-- Mobile Menu Button -->
                         <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center d-md-none" style="width: 40px; height: 40px;" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
@@ -87,14 +87,14 @@
                         <!-- Mobile Navigation -->
                         <nav class="d-flex flex-column gap-3">
                             <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
-                            <a class="text-decoration-none text-dark fw-medium" href="PanelUsuario.aspx">Mi Perfil</a>
+                            <asp:HyperLink ID="lnkMiPerfilMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelUsuario.aspx">Mi Perfil</asp:HyperLink>
                             <asp:HyperLink ID="lnkAdminMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelAdministrador.aspx" Visible="false">Admin</asp:HyperLink>
                             <asp:HyperLink ID="lnkSuperAdminMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelSuperAdmin.aspx" Visible="false">Super Admin</asp:HyperLink>
                             <hr class="my-2">
                             <asp:HyperLink ID="lnkLoginMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="Login.aspx">Iniciar Sesión</asp:HyperLink>
                             <asp:LinkButton ID="btnCerrarSesionMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" OnClick="btnCerrarSesion_Click" Visible="false">Cerrar Sesión</asp:LinkButton>
                             <a class="text-decoration-none text-dark fw-medium" href="Registro.aspx">Registrarse</a>
-                            <a class="text-decoration-none text-dark fw-medium" href="CarritoReserva.aspx">Carrito</a>
+                            <asp:HyperLink ID="lnkCarritoMobile" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="CarritoReserva.aspx">Carrito</asp:HyperLink>
                         </nav>
                     </div>
                 </div>

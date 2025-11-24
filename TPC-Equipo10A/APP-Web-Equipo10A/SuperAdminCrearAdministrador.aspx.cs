@@ -13,7 +13,7 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Validar que el usuario es SuperAdmin
+            // Valida que el usuario es SuperAdmin
             if (!ValidarSuperAdmin())
             {
                 Response.Redirect("Default.aspx");
@@ -23,12 +23,7 @@ namespace APP_Web_Equipo10A
 
         private bool ValidarSuperAdmin()
         {
-            Usuario usuario = Session["Usuario"] as Usuario;
-            if (usuario == null || usuario.Tipo != TipoUsuario.SUPERADMIN)
-            {
-                return false;
-            }
-            return true;
+            return ValidacionHelper.ValidarEsSuperAdmin();
         }
 
         protected void btnCrear_Click(object sender, EventArgs e)
@@ -40,17 +35,15 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Verificar que el email no existe
-                UsuarioNegocio negocio = new UsuarioNegocio();
-                List<Usuario> usuarios = negocio.ListarUsuarios();
-                if (usuarios.Any(u => u.Email.ToLower() == txtEmail.Text.Trim().ToLower()))
+                // Verifica que el email no existe usando ValidacionHelper
+                if (!ValidacionHelper.ValidarEmailUnico(txtEmail.Text.Trim()))
                 {
                     lblMensaje.Text = "El email ya está registrado. Por favor, use otro email.";
                     lblMensaje.Visible = true;
                     return;
                 }
 
-                // Crear objeto Usuario
+                // Crea objeto Usuario
                 Usuario nuevoAdmin = new Usuario
                 {
                     Nombre = txtNombre.Text.Trim(),
@@ -65,7 +58,7 @@ namespace APP_Web_Equipo10A
                     Eliminado = false
                 };
 
-                // Obtener fecha de vencimiento si se especificó
+                // Obtiene fecha de vencimiento si se especifico
                 DateTime? fechaVencimiento = null;
                 if (!string.IsNullOrEmpty(txtFechaVencimiento.Text))
                 {
@@ -75,7 +68,8 @@ namespace APP_Web_Equipo10A
                     }
                 }
 
-                // Crear administrador con categorías por defecto
+                // Crea administrador con categorias por defecto
+                UsuarioNegocio negocio = new UsuarioNegocio();
                 int idAdministrador = negocio.CrearAdministradorConCategorias(nuevoAdmin, fechaVencimiento);
 
                 if (idAdministrador > 0)

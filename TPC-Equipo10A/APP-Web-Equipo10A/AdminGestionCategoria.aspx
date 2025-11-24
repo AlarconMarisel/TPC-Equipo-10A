@@ -104,6 +104,9 @@
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 0.4rem;
+            margin-top: 0.4rem;
         }
         
         /* Main Content */
@@ -520,15 +523,11 @@
                         <span class="material-symbols-outlined nav-icon">settings</span>
                         <p class="nav-text">Configuración</p>
                     </a>
+                    <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
+                        <span class="material-symbols-outlined nav-icon">account_circle</span>
+                        <p class="nav-text">Mi Perfil</p>
+                    </a>
                 </nav>
-            </div>
-            
-            <!-- Footer Links -->
-            <div class="sidebar-footer">
-                <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
-                    <span class="material-symbols-outlined nav-icon">account_circle</span>
-                    <p class="nav-text">Mi Perfil</p>
-                </a>
             </div>
         </aside>
         

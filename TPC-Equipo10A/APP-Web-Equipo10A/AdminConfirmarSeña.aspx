@@ -92,9 +92,10 @@
         .sidebar-footer {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.25rem;
             border-top: 1px solid #e5e7eb;
-            padding-top: 1rem;
+            padding-top: 0.4rem;
+            margin-top: 0.4rem;
         }
         
         .user-info {
@@ -442,42 +443,39 @@
             <div class="sidebar-content">
                 <!-- Navigation -->
                 <nav class="sidebar-nav">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="PanelAdministrador.aspx">
                         <span class="material-symbols-outlined nav-icon">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
-                    <a class="nav-link active" href="#">
-                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
-                        <p class="nav-text">Reservas</p>
-                    </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionArticulo.aspx">
                         <span class="material-symbols-outlined nav-icon">inventory_2</span>
                         <p class="nav-text">Artículos</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminGestionCategoria.aspx">
+                        <span class="material-symbols-outlined nav-icon">category</span>
+                        <p class="nav-text">Categorías</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionReserva.aspx">
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Ventas</p>
+                    </a>
+                    <a class="nav-link active" href="AdminConfirmarSeña.aspx">
+                        <span class="material-symbols-outlined nav-icon">receipt_long</span>
+                        <p class="nav-text">Señas Pendientes</p>
+                    </a>
+                    <a class="nav-link" href="AdminGestionUsuario.aspx">
                         <span class="material-symbols-outlined nav-icon">group</span>
                         <p class="nav-text">Usuarios</p>
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="AdminConfiguracionTienda.aspx">
                         <span class="material-symbols-outlined nav-icon">settings</span>
                         <p class="nav-text">Configuración</p>
                     </a>
-                </nav>
-                
-                <!-- Footer -->
-                <div class="sidebar-footer">
-                    <div class="user-info">
-                        <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuJVSz-bvlmEe3L2Ot7sEcP4IMWDggoKF6E_7wKmRbTmlqPzKga7c14jnvqC7B90QA8uP6fKvYWsYSROzMmB0jLhxZX5Wf9Cg95uo5Oi3S1DHLpUQ0ytllvEz6v7HGY1AFI_B77JG0eA7TqFZ2Y2PI4x6LCdYyb8sPJ_vCDEVRufxipjrwFWIBUZ8Pevnt2b1AUzYVI9IbHsSQHMKRxI2kuMnQHqH3kTf1pAFecjUPJWP0fDahke33PW-Bs50HlTXQ5dg_q9TOUIk");'></div>
-                        <div class="user-details">
-                            <h2 class="user-name">Admin</h2>
-                            <p class="user-email">admin@example.com</p>
-                        </div>
-                    </div>
-                    <a class="nav-link" href="#">
-                        <span class="material-symbols-outlined nav-icon">logout</span>
-                        <p class="nav-text">Cerrar Sesión</p>
+                    <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
+                        <span class="material-symbols-outlined nav-icon">account_circle</span>
+                        <p class="nav-text">Mi Perfil</p>
                     </a>
-                </div>
+                </nav>
             </div>
         </aside>
         
