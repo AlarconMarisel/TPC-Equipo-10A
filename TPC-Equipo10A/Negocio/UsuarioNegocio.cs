@@ -298,6 +298,34 @@ namespace Negocio
         }
 
         /// <summary>
+        /// Verifica si un email ya existe en la base de datos
+        /// </summary>
+        /// <param name="email">Email a verificar</param>
+        /// <returns>true si el email existe, false si no</returns>
+        public bool ExisteEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM USUARIOS WHERE Email = @Email AND Eliminado = 0");
+                datos.SetearParametro("@Email", email.Trim().ToLower());
+                object result = datos.EjecutarAccionScalar();
+                return Convert.ToInt32(result) > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
         /// Lista los usuarios normales de un administrador específico
         /// </summary>
         public List<Usuario> ListarUsuariosNormales(int idAdministrador)
@@ -480,6 +508,113 @@ namespace Negocio
             finally
             {
                 datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Crea un usuario normal con IDAdministrador
+        /// </summary>
+        /// <param name="nuevo">Usuario a crear</param>
+        /// <param name="idAdministrador">ID del administrador al que pertenece (opcional)</param>
+        /// <returns>ID del usuario creado</returns>
+        public int AgregarUsuarioNormal(Usuario nuevo, int? idAdministrador = null)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(@"INSERT INTO USUARIOS 
+                                     (Email, Password, DNI, Nombre, Apellido, Telefono, Domicilio, TipoUsuario, IDAdministrador, FechaAlta, Activo, Eliminado)
+                                     VALUES 
+                                     (@Email, @Password, @DNI, @Nombre, @Apellido, @Telefono, @Domicilio, 0, @IDAdministrador, GETDATE(), 1, 0);
+                                     SELECT SCOPE_IDENTITY();");
+                
+                datos.SetearParametro("@Email", nuevo.Email);
+                datos.SetearParametro("@Password", nuevo.Password);
+                datos.SetearParametro("@DNI", (object)nuevo.Dni ?? DBNull.Value);
+                datos.SetearParametro("@Nombre", nuevo.Nombre);
+                datos.SetearParametro("@Apellido", nuevo.Apellido);
+                datos.SetearParametro("@Telefono", (object)nuevo.Telefono ?? DBNull.Value);
+                datos.SetearParametro("@Domicilio", (object)nuevo.Domicilio ?? DBNull.Value);
+                datos.SetearParametro("@IDAdministrador", (object)idAdministrador ?? DBNull.Value);
+
+                object result = datos.EjecutarAccionScalar();
+                return Convert.ToInt32(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Busca un administrador por NombreTienda o por ID (formato admin-{ID})
+        /// </summary>
+        /// <param name="identificador">NombreTienda o formato "admin-{ID}"</param>
+        /// <returns>IDAdministrador si se encuentra, null si no</returns>
+        public int? BuscarAdministradorPorIdentificador(string identificador)
+        {
+            if (string.IsNullOrWhiteSpace(identificador))
+                return null;
+
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Si el identificador es "admin-{ID}", extraer el ID
+                if (identificador.StartsWith("admin-", StringComparison.OrdinalIgnoreCase))
+                {
+                    string idStr = identificador.Substring(6); // Quitar "admin-"
+                    if (int.TryParse(idStr, out int idAdmin))
+                    {
+                        // Verificar que existe y es administrador activo
+                        datos.SetearConsulta(@"SELECT IdUsuario FROM USUARIOS 
+                                             WHERE IdUsuario = @IdUsuario 
+                                             AND TipoUsuario = 1 
+                                             AND Activo = 1 
+                                             AND Eliminado = 0");
+                        datos.SetearParametro("@IdUsuario", idAdmin);
+                        datos.EjecutarLectura();
+
+                        if (datos.Lector.Read())
+                        {
+                            int resultado = idAdmin;
+                            datos.cerrarConexion();
+                            return resultado;
+                        }
+                        datos.cerrarConexion();
+                    }
+                }
+                else
+                {
+                    // Buscar por NombreTienda (case-insensitive usando LOWER)
+                    datos.SetearConsulta(@"SELECT IdUsuario FROM USUARIOS 
+                                         WHERE LOWER(NombreTienda) = LOWER(@NombreTienda) 
+                                         AND TipoUsuario = 1 
+                                         AND Activo = 1 
+                                         AND Eliminado = 0");
+                    datos.SetearParametro("@NombreTienda", identificador);
+                    datos.EjecutarLectura();
+
+                    if (datos.Lector.Read())
+                    {
+                        int resultado = Convert.ToInt32(datos.Lector["IdUsuario"]);
+                        datos.cerrarConexion();
+                        return resultado;
+                    }
+                    datos.cerrarConexion();
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                // Cerrar conexión en caso de error
+                try { datos.cerrarConexion(); } catch { }
+                // No lanzar excepción, retornar null para que la aplicación continúe
+                return null;
             }
         }
 

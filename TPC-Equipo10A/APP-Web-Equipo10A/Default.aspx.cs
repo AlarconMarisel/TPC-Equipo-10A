@@ -14,8 +14,24 @@ namespace APP_Web_Equipo10A
         private const int ARTICULOS_POR_PAGINA = 16;
         private const int ARTICULOS_MAS_CAROS = 4;
 
+        // IDAdministrador obtenido de la URL (si existe) o de la sesión
+        private int? idAdministradorURL = null;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Obtener IDAdministrador desde la URL (Fase 5) - usando query string ?tienda=nombre
+            idAdministradorURL = TenantHelper.ObtenerIDAdministradorDesdeURL();
+            
+            // Si no hay IDAdministrador en la URL, intentar obtenerlo de la sesión
+            // (para usuarios normales que acceden directamente a Default.aspx)
+            if (!idAdministradorURL.HasValue)
+            {
+                idAdministradorURL = TenantHelper.ObtenerIDAdministradorDesdeSesion();
+            }
+            
+            // Configurar enlace de registro si hay tienda en la URL
+            ConfigurarEnlaceRegistro();
+
             if (!IsPostBack)
             {
                 CargarCategorias();
@@ -62,7 +78,7 @@ namespace APP_Web_Equipo10A
             try
             {
                 var negocio = new ArticuloNegocio();
-                var articulos = negocio.listarArticulo();
+                var articulos = negocio.listarArticulo(idAdministradorURL);
 
                 if (articulos != null && articulos.Count > 0)
                 {
@@ -90,7 +106,7 @@ namespace APP_Web_Equipo10A
             try
             {
                 var negocio = new ArticuloNegocio();
-                var todosLosArticulos = negocio.listarArticulo();
+                var todosLosArticulos = negocio.listarArticulo(idAdministradorURL);
 
                 var filtrados = todosLosArticulos
                     .Where(a =>
@@ -134,7 +150,7 @@ namespace APP_Web_Equipo10A
             try
             {
                 var negocio = new ArticuloNegocio();
-                var todosLosArticulos = negocio.listarArticulo();
+                var todosLosArticulos = negocio.listarArticulo(idAdministradorURL);
 
                 int totalArticulos = todosLosArticulos.Count;
                 int totalPaginas = (int)Math.Ceiling((double)totalArticulos / ARTICULOS_POR_PAGINA);
@@ -178,12 +194,63 @@ namespace APP_Web_Equipo10A
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             var q = (txtBusqueda.Text ?? string.Empty).Trim();
+            string url = ConstruirURL("Default.aspx");
+            
             if (string.IsNullOrEmpty(q))
             {
-                Response.Redirect("Default.aspx", false);
+                Response.Redirect(url, false);
                 return;
             }
-            Response.Redirect("Default.aspx?q=" + Server.UrlEncode(q), false);
+            Response.Redirect(url + "?q=" + Server.UrlEncode(q), false);
+        }
+
+        /// <summary>
+        /// Construye la URL manteniendo el contexto de la tienda si existe
+        /// </summary>
+        private string ConstruirURL(string pagina)
+        {
+            // Si hay un IDAdministrador de URL, mantener el contexto
+            if (idAdministradorURL.HasValue)
+            {
+                // Intentar obtener el identificador desde HttpContext.Items (URL rewriting)
+                string identificador = null;
+                if (HttpContext.Current.Items.Contains("TiendaIdentificador"))
+                {
+                    identificador = HttpContext.Current.Items["TiendaIdentificador"] as string;
+                }
+                
+                // Si no está en Items, intentar desde query string (fallback)
+                if (string.IsNullOrWhiteSpace(identificador))
+                {
+                    identificador = Request.QueryString["tienda"];
+                }
+                
+                // Si no está en Items ni en query string, intentar desde RawUrl
+                if (string.IsNullOrWhiteSpace(identificador))
+                {
+                    string rawUrl = Request.RawUrl;
+                    if (!string.IsNullOrWhiteSpace(rawUrl))
+                    {
+                        if (rawUrl.Contains("?"))
+                            rawUrl = rawUrl.Split('?')[0];
+                        if (rawUrl.StartsWith("/"))
+                            rawUrl = rawUrl.Substring(1);
+                        
+                        if (!string.IsNullOrWhiteSpace(rawUrl) && !rawUrl.Contains(".aspx"))
+                        {
+                            identificador = rawUrl.Split('/')[0];
+                        }
+                    }
+                }
+                
+                if (!string.IsNullOrWhiteSpace(identificador))
+                {
+                    // Construir URL con identificador: /identificador/pagina
+                    return "/" + identificador + "/" + pagina;
+                }
+            }
+            
+            return pagina;
         }
 
         private void CargarCategorias()
@@ -191,22 +258,86 @@ namespace APP_Web_Equipo10A
             try
             {
                 CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
-                var categorias = categoriaNegocio.ListarCategorias();
+                var categorias = categoriaNegocio.ListarCategorias(idAdministradorURL);
 
-                ddlCategoria.DataSource = categorias;
-                ddlCategoria.DataTextField = "Nombre";
-                ddlCategoria.DataValueField = "IdCategoria";
-                ddlCategoria.DataBind();
-                
-                ListItem itemTodas = new ListItem("Todas las categorías", "0");
-                itemTodas.Selected = true;
-                ddlCategoria.Items.Insert(0, itemTodas);
-                
-                ddlCategoria.SelectedIndex = 0;
+                // Si hay IDAdministrador, mostrar categorías de esa tienda
+                // Si no hay IDAdministrador, solo mostrar "Todas las categorías" para evitar duplicados
+                if (idAdministradorURL.HasValue)
+                {
+                    ddlCategoria.DataSource = categorias;
+                    ddlCategoria.DataTextField = "Nombre";
+                    ddlCategoria.DataValueField = "IdCategoria";
+                    ddlCategoria.DataBind();
+                    
+                    ListItem itemTodas = new ListItem("Todas las categorías", "0");
+                    itemTodas.Selected = true;
+                    ddlCategoria.Items.Insert(0, itemTodas);
+                    
+                    ddlCategoria.SelectedIndex = 0;
+                }
+                else
+                {
+                    // Si no hay IDAdministrador, no mostrar categorías para evitar duplicados
+                    ddlCategoria.Items.Clear();
+                    ListItem itemTodas = new ListItem("Todas las categorías", "0");
+                    itemTodas.Selected = true;
+                    ddlCategoria.Items.Add(itemTodas);
+                }
             }
             catch (Exception ex)
             {
 
+            }
+        }
+
+        /// <summary>
+        /// Configura el enlace de registro manteniendo el contexto de la tienda
+        /// </summary>
+        private void ConfigurarEnlaceRegistro()
+        {
+            // Mostrar enlace de registro solo si hay tienda en la URL y el usuario no está logueado
+            Usuario usuario = Session["Usuario"] as Usuario;
+            
+            // Obtener identificador desde HttpContext.Items (URL rewriting) o query string
+            string identificador = null;
+            if (HttpContext.Current.Items.Contains("TiendaIdentificador"))
+            {
+                identificador = HttpContext.Current.Items["TiendaIdentificador"] as string;
+            }
+            
+            if (string.IsNullOrWhiteSpace(identificador))
+            {
+                identificador = Request.QueryString["tienda"];
+            }
+            
+            if (string.IsNullOrWhiteSpace(identificador))
+            {
+                // Intentar desde RawUrl
+                string rawUrl = Request.RawUrl;
+                if (!string.IsNullOrWhiteSpace(rawUrl))
+                {
+                    if (rawUrl.Contains("?"))
+                        rawUrl = rawUrl.Split('?')[0];
+                    if (rawUrl.StartsWith("/"))
+                        rawUrl = rawUrl.Substring(1);
+                    
+                    if (!string.IsNullOrWhiteSpace(rawUrl) && !rawUrl.Contains(".aspx"))
+                    {
+                        identificador = rawUrl.Split('/')[0];
+                    }
+                }
+            }
+            
+            if (!string.IsNullOrWhiteSpace(identificador) && usuario == null)
+            {
+                pnlRegistroTienda.Visible = true;
+                // Construir URL con identificador: /identificador/Registro.aspx
+                string urlRegistro = "/" + identificador + "/Registro.aspx";
+                lnkRegistroTienda.NavigateUrl = urlRegistro;
+            }
+            else
+            {
+                pnlRegistroTienda.Visible = false;
             }
         }
 
@@ -289,7 +420,7 @@ namespace APP_Web_Equipo10A
             try
             {
                 var negocio = new ArticuloNegocio();
-                var todosLosArticulos = negocio.listarArticulo();
+                var todosLosArticulos = negocio.listarArticulo(idAdministradorURL);
 
                 var articulosMasCaros = todosLosArticulos
                     .OrderByDescending(a => a.Precio)

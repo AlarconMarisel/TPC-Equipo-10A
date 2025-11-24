@@ -314,21 +314,24 @@
                         <div class="form-group">
                             <label class="form-label">Contraseña</label>
                             <div class="password-input-container">
-                                <input type="password" class="form-input" placeholder="Mínimo 8 caracteres" style="padding-right: 40px;" />
-                                <button type="button" class="password-toggle">
+                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-input" placeholder="Mínimo 8 caracteres" style="padding-right: 40px;"></asp:TextBox>
+                                <button type="button" class="password-toggle" onclick="togglePassword('txtPassword', this)">
                                     <span class="material-symbols-outlined">visibility_off</span>
                                 </button>
                             </div>
+                            <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtPassword" runat="server" />
                         </div>                
                         <!-- Confirmacion Contraseña Field -->
                         <div class="form-group">
                             <label class="form-label">Confirmar Contraseña</label>
                             <div class="password-input-container">
-                                <input type="password" class="form-input" placeholder="Vuelve a introducir la contraseña" style="padding-right: 40px;" />
-                                <button type="button" class="password-toggle">
+                                <asp:TextBox ID="txtConfirmarPassword" runat="server" TextMode="Password" CssClass="form-input" placeholder="Vuelve a introducir la contraseña" style="padding-right: 40px;"></asp:TextBox>
+                                <button type="button" class="password-toggle" onclick="togglePassword('txtConfirmarPassword', this)">
                                     <span class="material-symbols-outlined">visibility_off</span>
                                 </button>
                             </div>
+                            <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtConfirmarPassword" runat="server" />
+                            <asp:CompareValidator CssClass="validacion" ErrorMessage="Las contraseñas no coinciden" ControlToValidate="txtConfirmarPassword" ControlToCompare="txtPassword" runat="server" />
                         </div>
                        </div>
                         
@@ -341,10 +344,10 @@
                         </div>
                         
                         <!-- Submit Button -->
-                        <button ID="AceptarRegistro" type="submit" class="register-button" Onclick="AceptarRegistro_Click">
-                            <span class="material-symbols-outlined">person_add</span>
-                            Registrarse
+                        <button type="submit" ID="btnRegistrar" runat="server" class="register-button" onserverclick="btnRegistrar_Click">
+                            <span class="material-symbols-outlined">person_add</span> Registrarse
                         </button>
+                        <asp:Label ID="lblMensaje" runat="server" CssClass="validacion" Visible="false"></asp:Label>
                     </div>
                     
                     <!-- Login Link -->
@@ -388,6 +391,18 @@
             timeoutValidacionDNI = setTimeout(function() {
                 validarDNIOnBlur(input);
             }, 2000);
+        }
+
+        function togglePassword(textBoxId, button) {
+            var textBox = document.getElementById(textBoxId);
+            var icon = button.querySelector('.material-symbols-outlined');
+            if (textBox.type === 'password') {
+                textBox.type = 'text';
+                icon.textContent = 'visibility';
+            } else {
+                textBox.type = 'password';
+                icon.textContent = 'visibility_off';
+            }
         }
         </script>
 

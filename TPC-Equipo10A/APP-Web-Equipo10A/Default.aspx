@@ -101,6 +101,10 @@
             <div class="text-center mb-4">
                 <h2 class="display-4 fw-black mb-3">Encuentra lo que buscas</h2>
                 <p class="fs-5 text-muted">Explora miles de artículos de segunda mano a los mejores precios.</p>
+                <!-- Enlace de registro si hay tienda en la URL -->
+                <asp:Panel ID="pnlRegistroTienda" runat="server" Visible="false" CssClass="mt-3">
+                    <p class="text-muted mb-2">¿No tienes cuenta? <asp:HyperLink ID="lnkRegistroTienda" runat="server" CssClass="text-primary fw-semibold text-decoration-none">Regístrate aquí</asp:HyperLink></p>
+                </asp:Panel>
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-8">
