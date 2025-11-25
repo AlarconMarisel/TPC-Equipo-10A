@@ -466,13 +466,13 @@ namespace Negocio
         /// </summary>
         public void ActualizarNombreTienda(int idAdministrador, string nombreTienda)
         {
-            // Validar que el nombre de tienda sea único (si se proporciona)
+            // Valida que el nombre de tienda sea unico (si se proporciona) - comparacion case-insensitive
             if (!string.IsNullOrEmpty(nombreTienda))
             {
                 AccesoDatos datosValidacion = new AccesoDatos();
                 try
                 {
-                    datosValidacion.SetearConsulta("SELECT COUNT(*) FROM USUARIOS WHERE NombreTienda = @NombreTienda AND IdUsuario != @IdAdministrador AND Eliminado = 0");
+                    datosValidacion.SetearConsulta("SELECT COUNT(*) FROM USUARIOS WHERE LOWER(NombreTienda) = LOWER(@NombreTienda) AND IdUsuario != @IdAdministrador AND Eliminado = 0");
                     datosValidacion.SetearParametro("@NombreTienda", nombreTienda);
                     datosValidacion.SetearParametro("@IdAdministrador", idAdministrador);
                     object result = datosValidacion.EjecutarAccionScalar();
@@ -492,7 +492,7 @@ namespace Negocio
                 }
             }
 
-            // Actualizar nombre de tienda (usar objeto separado para evitar conflictos de parámetros)
+            // Actualiza nombre de tienda (usar objeto separado para evitar conflictos de parámetros)
             AccesoDatos datos = new AccesoDatos();
             try
             {
@@ -569,7 +569,7 @@ namespace Negocio
                     string idStr = identificador.Substring(6); // Quitar "admin-"
                     if (int.TryParse(idStr, out int idAdmin))
                     {
-                        // Verificar que existe y es administrador activo
+                        // Verifica que existe y es administrador activo
                         datos.SetearConsulta(@"SELECT IdUsuario FROM USUARIOS 
                                              WHERE IdUsuario = @IdUsuario 
                                              AND TipoUsuario = 1 
@@ -589,7 +589,7 @@ namespace Negocio
                 }
                 else
                 {
-                    // Buscar por NombreTienda (case-insensitive usando LOWER)
+                    // Busca por NombreTienda (case-insensitive usando LOWER)
                     datos.SetearConsulta(@"SELECT IdUsuario FROM USUARIOS 
                                          WHERE LOWER(NombreTienda) = LOWER(@NombreTienda) 
                                          AND TipoUsuario = 1 
@@ -611,9 +611,9 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                // Cerrar conexión en caso de error
+                // Cierra conexion en caso de error
                 try { datos.cerrarConexion(); } catch { }
-                // No lanzar excepción, retornar null para que la aplicación continúe
+                // No lanza excepcion, retorna null para que la aplicacion continue
                 return null;
             }
         }

@@ -24,6 +24,9 @@ namespace APP_Web_Equipo10A
 
                 // Carga resumen de la tienda
                 CargarResumenTienda();
+                
+                // Carga nombre de la tienda o email
+                CargarNombreTienda();
             }
         }
 
@@ -190,6 +193,39 @@ namespace APP_Web_Equipo10A
             {
                 System.Diagnostics.Debug.WriteLine("Error al obtener cantidad de ventas: " + ex.Message);
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Carga el nombre de la tienda o el email del administrador
+        /// </summary>
+        private void CargarNombreTienda()
+        {
+            try
+            {
+                Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
+                
+                if (usuario != null)
+                {
+                    string textoMostrar = "";
+                    
+                    // Si tiene nombre de tienda configurado, mostrarlo
+                    if (!string.IsNullOrWhiteSpace(usuario.NombreTienda))
+                    {
+                        textoMostrar = "\"" + usuario.NombreTienda + "\"";
+                    }
+                    // Si no, mostrar el email
+                    else if (!string.IsNullOrWhiteSpace(usuario.Email))
+                    {
+                        textoMostrar = "\"" + usuario.Email + "\"";
+                    }
+                    
+                    lblNombreTienda.Text = textoMostrar;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error al cargar nombre de tienda: " + ex.Message);
             }
         }
     }

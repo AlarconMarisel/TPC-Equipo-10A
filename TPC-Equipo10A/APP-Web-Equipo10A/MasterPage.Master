@@ -29,6 +29,13 @@
         .search-input {
             padding-left: 40px;
         }
+        .nav-subtitle {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #6b7280;
+            line-height: 1.2;
+            margin-top: 0.125rem;
+        }
     </style>
     
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -52,11 +59,23 @@
                     </div>
                     
                     <!-- Desktop Navigation -->
-                    <nav class="d-none d-md-flex align-items-center gap-4">
-                        <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
-                        <asp:HyperLink ID="lnkMiPerfil" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelUsuario.aspx">Mi Perfil</asp:HyperLink>
-                        <asp:HyperLink ID="lnkAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelAdministrador.aspx" Visible="false">Admin</asp:HyperLink>
-                        <asp:HyperLink ID="lnkSuperAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelSuperAdmin.aspx" Visible="false">Super Admin</asp:HyperLink>
+                    <nav class="d-none d-md-flex align-items-center" style="gap: 2rem;">
+                        <div class="d-flex flex-column align-items-start">
+                            <a class="text-decoration-none text-dark fw-medium" href="Default.aspx">Home</a>
+                            <asp:Label ID="lblTienda" runat="server" CssClass="nav-subtitle"></asp:Label>
+                        </div>
+                        <div id="divMiPerfil" runat="server" class="d-flex flex-column align-items-start">
+                            <asp:HyperLink ID="lnkMiPerfil" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelUsuario.aspx">Mi Perfil</asp:HyperLink>
+                            <asp:Label ID="lblNombreUsuario" runat="server" CssClass="nav-subtitle"></asp:Label>
+                        </div>
+                        <div id="divAdmin" runat="server" class="d-flex flex-column align-items-start">
+                            <asp:HyperLink ID="lnkAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelAdministrador.aspx" Visible="false">Admin</asp:HyperLink>
+                            <asp:Label ID="lblNombreAdmin" runat="server" CssClass="nav-subtitle" Visible="false"></asp:Label>
+                        </div>
+                        <div id="divSuperAdmin" runat="server" class="d-flex flex-column align-items-start">
+                            <asp:HyperLink ID="lnkSuperAdmin" runat="server" CssClass="text-decoration-none text-dark fw-medium" NavigateUrl="PanelSuperAdmin.aspx" Visible="false">Super Admin</asp:HyperLink>
+                            <asp:Label ID="lblNombreSuperAdmin" runat="server" CssClass="nav-subtitle" Visible="false"></asp:Label>
+                        </div>
                     </nav>
                     
                     <!-- Action Buttons -->

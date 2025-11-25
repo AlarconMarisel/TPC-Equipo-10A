@@ -23,6 +23,9 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
+                // Carga nombre de la tienda o email
+                CargarNombreTienda();
+                
                 // Carga datos actuales
                 CargarDatos();
             }
@@ -120,13 +123,13 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
-                // Convierte a minusculas y normaliza
+                // Normaliza (trim) pero mantiene el formato original del usuario
                 if (!string.IsNullOrEmpty(nombreTienda))
                 {
-                    nombreTienda = nombreTienda.ToLower().Trim();
+                    nombreTienda = nombreTienda.Trim();
                 }
 
-                // Valida que el nombre de tienda sea unico usando ValidacionHelper
+                // Valida que el nombre de tienda sea unico usando ValidacionHelper (comparación case-insensitive)
                 if (!string.IsNullOrEmpty(nombreTienda) && !ValidacionHelper.ValidarNombreTiendaUnico(nombreTienda, usuario.IdUsuario))
                 {
                     lblMensaje.Text = "El nombre de tienda ya está en uso. Por favor, elija otro nombre.";
@@ -139,9 +142,21 @@ namespace APP_Web_Equipo10A
                 UsuarioNegocio negocio = new UsuarioNegocio();
                 negocio.ActualizarNombreTienda(usuario.IdUsuario, nombreTienda);
 
-                // Actualiza sesion
-                usuario.NombreTienda = string.IsNullOrEmpty(nombreTienda) ? null : nombreTienda;
-                Session["Usuario"] = usuario;
+                // Actualiza sesion - recargar usuario desde BD para obtener el valor actualizado
+                Usuario usuarioActualizado = negocio.ObtenerPorId(usuario.IdUsuario);
+                if (usuarioActualizado != null)
+                {
+                    Session["Usuario"] = usuarioActualizado;
+                }
+                else
+                {
+                    // Fallback: actualizar manualmente
+                    usuario.NombreTienda = string.IsNullOrEmpty(nombreTienda) ? null : nombreTienda;
+                    Session["Usuario"] = usuario;
+                }
+
+                // Actualiza el nombre en el sidebar
+                CargarNombreTienda();
 
                 lblMensaje.Text = "Configuración guardada correctamente.";
                 lblMensaje.CssClass = "alert alert-success";
@@ -155,6 +170,39 @@ namespace APP_Web_Equipo10A
                 lblMensaje.Text = "Error: " + ex.Message;
                 lblMensaje.CssClass = "alert alert-danger";
                 lblMensaje.Visible = true;
+            }
+        }
+
+        /// <summary>
+        /// Carga el nombre de la tienda o el email del administrador
+        /// </summary>
+        private void CargarNombreTienda()
+        {
+            try
+            {
+                Usuario usuario = TenantHelper.ObtenerUsuarioDesdeSesion();
+                
+                if (usuario != null)
+                {
+                    string textoMostrar = "";
+                    
+                    // Si tiene nombre de tienda configurado, mostrarlo
+                    if (!string.IsNullOrWhiteSpace(usuario.NombreTienda))
+                    {
+                        textoMostrar = "\"" + usuario.NombreTienda + "\"";
+                    }
+                    // Si no, mostrar el email
+                    else if (!string.IsNullOrWhiteSpace(usuario.Email))
+                    {
+                        textoMostrar = "\"" + usuario.Email + "\"";
+                    }
+                    
+                    lblNombreTienda.Text = textoMostrar;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error al cargar nombre de tienda: " + ex.Message);
             }
         }
     }

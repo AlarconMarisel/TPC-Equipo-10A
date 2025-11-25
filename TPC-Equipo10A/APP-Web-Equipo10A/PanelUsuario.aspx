@@ -19,80 +19,6 @@
             flex: 1;
         }
         
-        .reservations-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            white-space: nowrap;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.75rem 1rem;
-            background-color: white;
-            border-radius: 0.75rem 0.75rem 0 0;
-        }
-        
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #1e293b;
-        }
-        
-        .brand-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            color: var(--primary-color);
-        }
-        
-        .brand-title {
-            color: #0f172a;
-            font-size: 1.125rem;
-            font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -0.015em;
-        }
-        
-        .header-actions {
-            display: flex;
-            flex: 1;
-            justify-content: flex-end;
-            gap: 1rem;
-            align-items: center;
-        }
-        
-        .header-links {
-            display: none;
-            align-items: center;
-            gap: 2.25rem;
-        }
-        
-        @media (min-width: 640px) {
-            .header-links {
-                display: flex;
-            }
-        }
-        
-        .header-link {
-            color: #1e293b;
-            font-size: 0.875rem;
-            font-weight: 500;
-            line-height: 1.5;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        
-        .header-link:hover {
-            color: var(--primary-color);
-        }
-        
-        .user-avatar {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            width: 2.5rem;
-            height: 2.5rem;
-        }
         
         .main-content {
             background-color: white;
@@ -456,25 +382,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="reservations-container">
         <div class="reservations-content">
-            <!-- Header -->
-            <header class="reservations-header">
-                <div class="header-brand">
-                    <div class="brand-icon">
-                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <h2 class="brand-title">UsedGoods</h2>
-                </div>
-                <div class="header-actions">
-                    <div class="header-links">
-                        <a class="header-link" href="#">Mi Perfil</a>
-                        <a class="header-link" href="#">Cerrar Sesión</a>
-                    </div>
-                    <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCDMxCetmdWGCHFgYE6Bx0uoisbAmt3Wh38YlSdc5Kjj5zfztFjcjKs9GLCTt8gmAbQXyfl8zX7QHwodgYRSv-N8ttuGyGVlesMloag-Pq5PtaryqCo4jcbfKvAiVf4lI01MPWTEbYxKf5EBBvq8iUt1ZxBn1lGvHdAIk0LiDycr3ahHblgqMEuTF35JajCV3cnPeAjsUOzio9ZHcdsI88pokRB6gjj0kgnjc_ttw8fSt5vhm2fhphs4hEfm-yB596iBIHGLdEQAIE");'></div>
-                </div>
-            </header>
-            
             <!-- Main Content -->
             <main class="main-content">
                 <!-- Page Header -->

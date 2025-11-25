@@ -68,6 +68,14 @@
             line-height: 1.5;
         }
         
+        .brand-tienda {
+            color: #111827;
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-top: 0.25rem;
+        }
+        
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -544,6 +552,7 @@
                     <div class="brand-logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBA4gRjXTuWhKZdQ1URmz9lIoHy7MDTi-nbylti6Lpi9VJc1vHf1Vcmo-tOmmWyp1fcfwOxHdkVEckj0bTlj-dxBmCRkbPxkT2lY759Ly4_Y7y4YPFKWWFpJlwCdcMqPv5YeNaaJUSNbiSsVXP0MVpnW_oTZJjYBBglUS-Fwtj-IYikT6VCJrElFGYbRb9ycQtiFGhTco22FhbzTrO1ryuHqoBLLKNm0sOCHG9mcBo-9gv403-NAQKluRS3QHfZ3PejbvaWti-ddgE");'></div>
                     <div class="brand-info">
                         <h1 class="brand-subtitle">Panel de Administrador</h1>
+                        <asp:Label ID="lblNombreTienda" runat="server" CssClass="brand-tienda"></asp:Label>
                     </div>
                 </div>
                 
