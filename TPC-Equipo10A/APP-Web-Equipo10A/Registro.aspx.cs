@@ -132,6 +132,8 @@ namespace APP_Web_Equipo10A
             lblMensaje.Visible = true;
             lblMensaje.CssClass = esError ? "validacion" : "alert alert-success";
         }
+
+
     }
 
 }

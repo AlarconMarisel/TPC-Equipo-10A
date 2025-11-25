@@ -315,23 +315,27 @@
                             <label class="form-label">Contraseña</label>
                             <div class="password-input-container">
                                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-input" placeholder="Mínimo 8 caracteres" style="padding-right: 40px;"></asp:TextBox>
-                                <button type="button" class="password-toggle" onclick="togglePassword('txtPassword', this)">
+                                <button type="button" class="password-toggle" onclick="togglePassword('<%= txtPassword.ClientID %>', this)">
                                     <span class="material-symbols-outlined">visibility_off</span>
                                 </button>
                             </div>
+                            <div>
                             <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtPassword" runat="server" />
+                            </div>
                         </div>                
                         <!-- Confirmacion Contraseña Field -->
                         <div class="form-group">
                             <label class="form-label">Confirmar Contraseña</label>
                             <div class="password-input-container">
                                 <asp:TextBox ID="txtConfirmarPassword" runat="server" TextMode="Password" CssClass="form-input" placeholder="Vuelve a introducir la contraseña" style="padding-right: 40px;"></asp:TextBox>
-                                <button type="button" class="password-toggle" onclick="togglePassword('txtConfirmarPassword', this)">
+                                <button type="button" class="password-toggle" onclick="togglePassword('<%= txtConfirmarPassword.ClientID %>', this)">
                                     <span class="material-symbols-outlined">visibility_off</span>
-                                </button>
+                                </button>   
                             </div>
+                            <div>
                             <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtConfirmarPassword" runat="server" />
                             <asp:CompareValidator CssClass="validacion" ErrorMessage="Las contraseñas no coinciden" ControlToValidate="txtConfirmarPassword" ControlToCompare="txtPassword" runat="server" />
+                            </div>
                         </div>
                        </div>
                         

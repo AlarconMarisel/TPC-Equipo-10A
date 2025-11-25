@@ -69,15 +69,6 @@ namespace APP_Web_Equipo10A
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
 
         /// <summary>
-        /// Control chkTerminos.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkTerminos;
-
-        /// <summary>
         /// Control txtPassword.
         /// </summary>
         /// <remarks>
@@ -96,6 +87,15 @@ namespace APP_Web_Equipo10A
         protected global::System.Web.UI.WebControls.TextBox txtConfirmarPassword;
 
         /// <summary>
+        /// Control chkTerminos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkTerminos;
+
+        /// <summary>
         /// Control btnRegistrar.
         /// </summary>
         /// <remarks>
@@ -112,5 +112,7 @@ namespace APP_Web_Equipo10A
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+
     }
 }
