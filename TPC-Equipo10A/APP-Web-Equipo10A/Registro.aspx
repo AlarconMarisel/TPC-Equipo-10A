@@ -341,17 +341,21 @@
                         
                         <!-- Terms Checkbox -->
                         <div class="checkbox-container">
+                            <div>
                             <label class="checkbox-label" for="terms-checkbox">
                             <asp:Checkbox runat="server" id="chkTerminos"/>
                                 Acepto los Términos y Condiciones y la Política de Privacidad.
                             </label>
+                            </div>
+                            <div>
+                                <asp:Label ID="lblMensaje" runat="server" CssClass="validacion" Visible="false"></asp:Label>
+                            </div>
                         </div>
                         
                         <!-- Submit Button -->
                         <button type="submit" ID="btnRegistrar" runat="server" class="register-button" onserverclick="btnRegistrar_Click">
                             <span class="material-symbols-outlined">person_add</span> Registrarse
                         </button>
-                        <asp:Label ID="lblMensaje" runat="server" CssClass="validacion" Visible="false"></asp:Label>
                     </div>
                     
                     <!-- Login Link -->

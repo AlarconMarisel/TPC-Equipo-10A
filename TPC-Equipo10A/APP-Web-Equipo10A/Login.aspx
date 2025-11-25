@@ -103,6 +103,13 @@
             line-height: 1.5;
             padding-bottom: 0.5rem;
         }
+        .password-input-container {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex: 1;
+            align-items: center;
+        }
 
         .form-input-container {
             display: flex;
@@ -248,6 +255,7 @@
                 </div>
                 <h1 class="login-title">Reventa Rápida</h1>
                 <p class="login-subtitle">Tu mercado de confianza para artículos usados.</p>
+                <asp:Label ID="lblMensaje" runat="server" CssClass="validacion" Visible="false"></asp:Label>
             </div>
 
             <!-- Contenedor -->
@@ -276,10 +284,13 @@
                     <div class="form-group">
                         <label class="form-label">Contraseña</label>
                         <div class="form-input-container">
+                            <div class="password-input-container">
                             <asp:TextBox ID="txtPassword" runat="server" CssClass="form-input" TextMode="Password" placeholder="Introduce tu contraseña" />
-                            <button type="button" class="password-toggle">
-                                <span class="material-symbols-outlined">visibility</span>
+                            <%--<button type="button" class="password-toggle">--%>
+                            <button type="button" class="password-toggle" onclick="togglePassword('<%= txtPassword.ClientID %>', this)">
+                                <span class="material-symbols-outlined">visibility_off</span>
                             </button>
+                            </div>
                         </div>
                     </div>
 
@@ -304,6 +315,21 @@
 
         </div>
     </div>
+
+ <script type="text/javascript">
+
+     function togglePassword(textBoxId, button) {
+         var textBox = document.getElementById(textBoxId);
+         var icon = button.querySelector('.material-symbols-outlined');
+         if (textBox.type === 'password') {
+             textBox.type = 'text';
+             icon.textContent = 'visibility';
+         } else {
+             textBox.type = 'password';
+             icon.textContent = 'visibility_off';
+         }
+     }
+</script>
 
 </asp:Content>
 

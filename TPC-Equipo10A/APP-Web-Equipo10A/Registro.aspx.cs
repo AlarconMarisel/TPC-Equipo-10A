@@ -106,6 +106,15 @@ namespace APP_Web_Equipo10A
 
                 if (idUsuarioCreado > 0)
                 {
+                    //Envio de email de confirmación
+                    EmailService emailService = new EmailService();
+                    string asunto = "Registro exitoso en nuestra plataforma";
+                    string cuerpo = $"<h2>Estimado {nuevoUsuario.Nombre} {nuevoUsuario.Apellido}<h2/>" +
+                                    "<p>Gracias por registrarte en nuestra plataforma. Tu cuenta ha sido creada exitosamente.<p/><br/>" +
+                                    "<p>Saludos cordiales.<p/>";
+                    emailService.ArmarEmail(nuevoUsuario.Email, asunto, cuerpo);
+                    emailService.EnviarEmail();
+
                     // Redirigir al login con mensaje de éxito
                     string redirectUrl = "Login.aspx?registro=exitoso";
                     if (idAdministradorTienda.HasValue)

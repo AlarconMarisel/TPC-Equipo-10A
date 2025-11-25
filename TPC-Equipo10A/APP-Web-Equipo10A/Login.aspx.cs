@@ -12,7 +12,14 @@ namespace APP_Web_Equipo10A
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["registro"] == "exitoso")
+                {
+                    // Muestra el mensaje de éxito en la página de Login
+                    MostrarMensaje("Registro exitoso. Se ha enviado un email de confirmación.", false);
+                }
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -135,6 +142,13 @@ namespace APP_Web_Equipo10A
             {
                 // Log futuro
             }
+        }
+
+        private void MostrarMensaje(string mensaje, bool esError)
+        {
+            lblMensaje.Text = mensaje;
+            lblMensaje.Visible = true;
+            lblMensaje.CssClass = esError ? "validacion" : "alert alert-success";
         }
 
     }
