@@ -150,7 +150,9 @@
                 Crear Nuevo Administrador
             </a>
         </div>
-
+    <div>
+        <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger mt-3" Visible="false"></asp:Label>
+    </div>
         <div class="table-container">
             <asp:GridView ID="gvAdministradores" runat="server" CssClass="table" AutoGenerateColumns="false" 
                 EmptyDataText="No hay administradores registrados" OnRowCommand="gvAdministradores_RowCommand">
@@ -185,7 +187,6 @@
             </asp:GridView>
         </div>
 
-        <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger mt-3" Visible="false"></asp:Label>
     </div>
 </asp:Content>
 

@@ -109,7 +109,7 @@ namespace APP_Web_Equipo10A
                     //Envio de email de confirmación
                     EmailService emailService = new EmailService();
                     string asunto = "Registro exitoso en nuestra plataforma";
-                    string cuerpo = $"<h2>Estimado {nuevoUsuario.Nombre} {nuevoUsuario.Apellido}<h2/>" +
+                    string cuerpo = $"<h2>Estimado/a {nuevoUsuario.Nombre} {nuevoUsuario.Apellido}<h2/>" +
                                     "<p>Gracias por registrarte en nuestra plataforma. Tu cuenta ha sido creada exitosamente.<p/><br/>" +
                                     "<p>Saludos cordiales.<p/>";
                     emailService.ArmarEmail(nuevoUsuario.Email, asunto, cuerpo);
