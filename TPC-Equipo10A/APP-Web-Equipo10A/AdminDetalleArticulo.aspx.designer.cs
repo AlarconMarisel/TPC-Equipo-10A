@@ -15,6 +15,15 @@ namespace APP_Web_Equipo10A
     {
 
         /// <summary>
+        /// Control lblNombreTienda.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNombreTienda;
+
+        /// <summary>
         /// Control pnlError.
         /// </summary>
         /// <remarks>
@@ -247,16 +256,5 @@ namespace APP_Web_Equipo10A
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUsuarioVentaTelefono;
-
-        /// <summary>
-        /// Control lblNombreTienda.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNombreTienda;
-
     }
 }
-

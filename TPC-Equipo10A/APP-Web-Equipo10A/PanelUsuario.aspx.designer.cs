@@ -13,5 +13,14 @@ namespace APP_Web_Equipo10A
 
     public partial class PanelUsuario
     {
+
+        /// <summary>
+        /// Control rptReservas.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptReservas;
     }
 }

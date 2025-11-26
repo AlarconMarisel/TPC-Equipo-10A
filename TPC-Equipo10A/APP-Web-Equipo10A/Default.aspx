@@ -43,8 +43,7 @@
                 padding: 8px;
             }
 
-            .category-chip option:checked,
-            .category-chip option:selected {
+            .category-chip option:checked {
                 color: #212529 !important;
                 background-color: #f8f9fa !important;
             }

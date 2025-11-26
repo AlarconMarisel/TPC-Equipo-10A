@@ -116,9 +116,9 @@ namespace APP_Web_Equipo10A
                 {
                     IdUsuario = usuario,
                     FechaReserva = DateTime.Now,
-                    FechaVencimiento = DateTime.Now.AddDays(7),
+                    FechaVencimiento = DateTime.Now.AddHours(72),
                     MontoSeña = montoSeña,
-                    EstadoReserva = true,
+                    EstadoReserva = false,
                     ArticulosReservados = articulos
                 };
 
@@ -128,9 +128,10 @@ namespace APP_Web_Equipo10A
 
                 if (idReserva > 0)
                 {
-                    Session["IdReserva"] = idReserva;
-                    Response.Redirect("PagoSeña.aspx?id=" + idReserva +
-                                      "&monto=" + montoSeña.ToString());
+                    carritoNegocio.VaciarCarrito(idCarrito);
+
+                    Response.Redirect("PagoSeña.aspx?id=" + idReserva + "&monto=" + montoSeña.ToString(), false);
+                    return;
                 }
                 else
                 {

@@ -368,7 +368,7 @@
                 <!-- Navigation -->
                 <nav class="sidebar-nav">
                     <a class="nav-link" href="PanelAdministrador.aspx">
-                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                        <span class="material-symbols-outlined nav-icon" style="font-variation-settings: 'FILL' ;">dashboard</span>
                         <p class="nav-text">Dashboard</p>
                     </a>
                     <a class="nav-link active" href="AdminGestionArticulo.aspx">

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Dominio;
 using Negocio;
 
 namespace APP_Web_Equipo10A
@@ -60,32 +61,31 @@ namespace APP_Web_Equipo10A
         {
             try
             {
-                int idReserva = int.Parse(Request.QueryString["id"]);
-                ReservaNegocio negocio = new ReservaNegocio();
 
-                string rutaComprobante = null;
-
-                if (fileComprobante.HasFile)
+                var usuario = Session["Usuario"] as Usuario;
+                if (usuario == null)
                 {
-                    string carpeta = Server.MapPath("~/Content/Comprobantes/");
-                    if (!Directory.Exists(carpeta))
-                        Directory.CreateDirectory(carpeta);
+                    Response.Redirect("Login.aspx");
+                    return;
 
-                    string nombreArchivo = "reserva_" + idReserva + "_" + DateTime.Now.Ticks + Path.GetExtension(fileComprobante.FileName);
-                    string rutaFisica = Path.Combine(carpeta, nombreArchivo);
-
-                    fileComprobante.SaveAs(rutaFisica);
-
-                    rutaComprobante = "Content/Comprobantes/" + nombreArchivo;
                 }
+                
+                int idReserva = Convert.ToInt32(Request.QueryString["id"]);
 
-                negocio.ConfirmarPagoSeña(idReserva, rutaComprobante);
+                // Actualizar estado
+                ReservaNegocio negocio = new ReservaNegocio();
+                negocio.MarcarSeniaComoPagada(idReserva);
 
-                Response.Write("<script>alert('¡Seña confirmada! El administrador revisará tu comprobante.'); window.location='Default.aspx';</script>");
+                string script = @"
+                alert('¡Tu seña fue confirmada exitosamente! La reserva quedó registrada.');
+                window.location.href='PanelUsuario.aspx';
+                ";
+                ClientScript.RegisterStartupScript(this.GetType(), "redirigir", script, true);
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
+                ScriptManager.RegisterStartupScript(this, GetType(),
+                "error", $"alert('Error: {ex.Message}');", true);
             }
         }
 
