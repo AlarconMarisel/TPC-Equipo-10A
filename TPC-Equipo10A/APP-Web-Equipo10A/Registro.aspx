@@ -321,7 +321,6 @@
                             </div>
                             <div>
                             <asp:RequiredFieldValidator CssClass="validacion" ErrorMessage="Campo requerido!" ControlToValidate="txtPassword" runat="server" />
-                            <asp:Label ID="Label1" runat="server" CssClass="validacion" Visible="false"></asp:Label>
                             </div>
                         </div>                
                         <!-- Confirmacion Contraseña Field -->

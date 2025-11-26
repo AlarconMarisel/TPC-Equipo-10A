@@ -391,7 +391,7 @@
                         <span class="material-symbols-outlined nav-icon">settings</span>
                         <p class="nav-text">Configuración</p>
                     </a>
-                    <a class="nav-link" href="javascript:void(0);" onclick="alert('Funcionalidad de Mi Perfil próximamente'); return false;">
+                    <a class="nav-link" href="AdminMiPerfil.aspx">
                         <span class="material-symbols-outlined nav-icon">account_circle</span>
                         <p class="nav-text">Mi Perfil</p>
                     </a>

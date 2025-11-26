@@ -100,15 +100,6 @@
             width: 1.25rem;
             height: 1.25rem;
         }
-        .password-input-container {
-            position: relative;
-            display: flex;
-            width: 100%;
-            flex: 1;
-            align-items: center;
-        }
-        
-
     </style>
 </asp:Content>
 
@@ -145,24 +136,19 @@
 
         <div class="form-group">
             <label class="form-label" for="txtPassword">Contraseña <span class="text-danger">*</span></label>
-            <div class="password-input-container">
             <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" required="true"></asp:TextBox>
-                <button type="button" class="password-toggle" onclick="togglePassword('<%= txtPassword.ClientID %>', this)">
-                    <span class="material-symbols-outlined">visibility_off</span>
-                </button>
-            </div>
             <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" 
                 ErrorMessage="La contraseña es requerida" CssClass="text-danger" Display="Dynamic"></asp:RequiredFieldValidator>
         </div>
 
         <div class="form-group">
             <label class="form-label" for="txtDNI">DNI</label>
-            <asp:TextBox ID="txtDNI" runat="server" CssClass="form-control" MaxLength="8" onkeypress="return soloNumeros(event)"></asp:TextBox>
+            <asp:TextBox ID="txtDNI" runat="server" CssClass="form-control"></asp:TextBox>
         </div>
 
         <div class="form-group">
             <label class="form-label" for="txtTelefono">Teléfono</label>
-            <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control" onkeypress="return soloNumeros(event)"></asp:TextBox>
+            <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control"></asp:TextBox>
         </div>
 
         <div class="form-group">
@@ -188,50 +174,6 @@
             <a href="PanelSuperAdmin.aspx" class="btn-cancel">Cancelar</a>
         </div>
     </div>
-<script type="text/javascript">
-        var timeoutId;
-        
-        function soloNumeros(event) {
-            var charCode = (event.which) ? event.which : event.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                return false;
-            }
-            return true;
-        }
-
-        function soloLetrasYEspacios(event) {
-            var charCode = (event.which) ? event.which : event.keyCode;
-            if (charCode > 31 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122) && charCode !== 32 && charCode !== 241 && charCode !== 209) {
-                return false;
-            }
-            return true;
-        }
-
-        var timeoutValidacionDNI;
-
-        function validarDNIOnInput(input) {
-            if (timeoutValidacionDNI) {
-                clearTimeout(timeoutValidacionDNI);
-            }
-            
-            timeoutValidacionDNI = setTimeout(function() {
-                validarDNIOnBlur(input);
-            }, 2000);
-        }
-
-        function togglePassword(textBoxId, button) {
-            var textBox = document.getElementById(textBoxId);
-            var icon = button.querySelector('.material-symbols-outlined');
-            if (textBox.type === 'password') {
-                textBox.type = 'text';
-                icon.textContent = 'visibility';
-            } else {
-                textBox.type = 'password';
-                icon.textContent = 'visibility_off';
-            }
-        }
-</script>
-
 </asp:Content>
 
 

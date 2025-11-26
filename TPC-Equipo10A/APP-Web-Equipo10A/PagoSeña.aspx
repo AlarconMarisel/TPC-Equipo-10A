@@ -366,11 +366,12 @@
 
                 <!-- Confirmar Seña -->
                 <div class="confirm-section mt-3">
-                    <asp:Button ID="btnConfirmarPago" runat="server"
-                        Text="Confirmar Seña"
-                        CssClass="btn btn-primary"
+                    <asp:Button
+                        ID="btnConfirmarPago"
+                        runat="server"
+                        Text="Confirmar que realicé la seña"
+                        CssClass="btn btn-success w-100"
                         OnClick="btnConfirmarPago_Click" />
-
                 </div>
 
                 <!-- Action Button -->

@@ -427,7 +427,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // Validar que el usuario pertenece al administrador
+                // Valida que el usuario pertenece al administrador
                 datos.SetearConsulta("SELECT IDAdministrador FROM USUARIOS WHERE IdUsuario = @IdUsuario AND TipoUsuario = 0");
                 datos.SetearParametro("@IdUsuario", idUsuario);
                 datos.EjecutarLectura();
@@ -446,7 +446,7 @@ namespace Negocio
 
                 datos.cerrarConexion();
 
-                // Actualizar eliminado
+                // Actualiza eliminado
                 datos.SetearConsulta("UPDATE USUARIOS SET Eliminado = 0 WHERE IdUsuario = @IdUsuario");
                 datos.SetearParametro("@IdUsuario", idUsuario);
                 datos.EjecutarAccion();
@@ -615,6 +615,81 @@ namespace Negocio
                 try { datos.cerrarConexion(); } catch { }
                 // No lanza excepcion, retorna null para que la aplicacion continue
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza los datos personales de un administrador (Nombre, Apellido, DNI, Teléfono, Domicilio)
+        /// </summary>
+        public void ActualizarDatosPersonales(int idAdministrador, string nombre, string apellido, string dni, string telefono, string domicilio)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE USUARIOS SET Nombre=@Nombre, Apellido=@Apellido, Dni=@Dni, Telefono=@Telefono, Domicilio=@Domicilio WHERE IdUsuario=@IdUsuario AND TipoUsuario = 1");
+                datos.SetearParametro("@Nombre", nombre);
+                datos.SetearParametro("@Apellido", apellido);
+                datos.SetearParametro("@Dni", (object)dni ?? DBNull.Value);
+                datos.SetearParametro("@Telefono", (object)telefono ?? DBNull.Value);
+                datos.SetearParametro("@Domicilio", (object)domicilio ?? DBNull.Value);
+                datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        /// <summary>
+        /// Cambia la contraseña de un administrador validando la contraseña actual
+        /// </summary>
+        public void CambiarPassword(int idAdministrador, string passwordActual, string passwordNuevo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // Primero validar que la contraseña actual sea correcta
+                datos.SetearConsulta("SELECT Password FROM USUARIOS WHERE IdUsuario = @IdUsuario AND TipoUsuario = 1");
+                datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarLectura();
+
+                if (!datos.Lector.Read())
+                {
+                    datos.cerrarConexion();
+                    throw new Exception("Administrador no encontrado.");
+                }
+
+                string passwordBD = datos.Lector["Password"] != DBNull.Value ? (string)datos.Lector["Password"] : null;
+
+                if (passwordBD != passwordActual)
+                {
+                    datos.cerrarConexion();
+                    throw new Exception("La contraseña actual es incorrecta.");
+                }
+
+                datos.cerrarConexion();
+
+                // Crea nueva instancia para la segunda consulta (evita conflictos de parametros)
+                datos = new AccesoDatos();
+                
+                // Si la contraseña actual es correcta, actualizar a la nueva
+                datos.SetearConsulta("UPDATE USUARIOS SET Password = @Password WHERE IdUsuario = @IdUsuario AND TipoUsuario = 1");
+                datos.SetearParametro("@Password", passwordNuevo);
+                datos.SetearParametro("@IdUsuario", idAdministrador);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
             }
         }
 
