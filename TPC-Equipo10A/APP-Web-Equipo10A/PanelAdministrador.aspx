@@ -621,52 +621,6 @@
                         </div>
                     </div>
                 </section>
-                
-                <!-- Charts Section -->
-                <section class="charts-section">
-                    <!-- Sales Chart -->
-                    <div class="chart-card">
-                        <h3 class="chart-title">Evolución de Ventas (Últimos 7 días)</h3>
-                        <div class="chart-container">
-                            <img class="chart-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyG4vrvz1zdvc_2a3kmZMa-6irwOFtpIscsXgnD8Tycw9_VtsgATzZ6UaSzsQY25lPdPPVuyOMdPKMApbuTN2ep9ny_miBm7AXpEZaFvQBGOHl7kJrQQb-wGdCzIH4VzMVDhWnPVzKBtBgmEe0Q--TQIbKd7Qxg7pstUudV8MLrir4qgDsYpHxpPAhVOE5sC26gWcE76Y1beb85JSklZJTk7elmU06RwjkoLnRcN3cXAZyzCTMDqKtjbsJf3m2aKGr95eFLkOVXmA" alt="A line chart showing sales trends over the last 7 days, with an upward trend." />
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Users -->
-                    <div class="chart-card">
-                        <h3 class="chart-title">Últimos Usuarios Registrados</h3>
-                        <div class="users-list">
-                            <div class="user-item">
-                                <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDjjpQRJq9J6bWaQqoBnwgnAtze7MulL70U099T_80rgNKdOTfBjtSl4BvtHen9ID5BRcaak3ImHCBrwTNO8u7tNT1_dkX1ThzHxXnj64wKvtCZ3ocPTMAiKppHjuJZsT4D-Nf4OnHYFyqv5Nz7JfjjYYqVPnrEHmORpJVN43tzKCPgvrWiYZHy9Ode45o9-DP-M1EmkiVoLwEiJYGZmo_cP6Ikpeh1IomL_yWhd5MSVP18sDJGsn94RVeUkCPYugBF1f_piui94NA");'></div>
-                                <div class="user-info">
-                                    <p class="user-name">Elena Gómez</p>
-                                    <p class="user-time">Hace 2 horas</p>
-                                </div>
-                            </div>
-                            <div class="user-item">
-                                <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDme87Qa29yknTGF5LJ210fzSyG5ntV-1Tkx-UMr1iBSJnDoeray1MovdWzmziKKrBFwLRXMEpqfrWAVLduJ8p9DIkYF-9dj1S8Lw0QEu4BOu5fQ8qZuwXkwZGeP5VoI-wGa4s4KyF98nJFy9lb4g4085Lp8AwV4W9Cd5DkBE0I1SA_CxczHJzaYiqVQMN1hFoiq5z5kxc0nwTYhfQx5rg07qdglyuaHVkxFiK7shtesNfNR6Lx8SZk2vUTUf7rt3FzmGn2q_IvJgQ");'></div>
-                                <div class="user-info">
-                                    <p class="user-name">Carlos Ruiz</p>
-                                    <p class="user-time">Hace 5 horas</p>
-                                </div>
-                            </div>
-                            <div class="user-item">
-                                <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCqt0V88pt_f1gw0V6HnpL7___IcyPcB6vnx4ufA6-X-YthPFskO8IrxaVkmzvNaZ4A-1eYpU5B11F-ejdwQyuDizRdded-b_dBgmPqzf7_SuZs0WfmZSBKDaeySIJC1MIBne5RJ-kiQJXEswVqWNh-ggzBlu5Eu-Sx9iIV7ubdd3CjYIXVFvyI8StOU6K1k32sFbK9mYt4_Ulh4xzF3FNsc5fmCJTN31ggeGTHcVoB1aPUImdKCE_xZFJCn7E-bTn7hXt7VGu233s");'></div>
-                                <div class="user-info">
-                                    <p class="user-name">Ana Fernández</p>
-                                    <p class="user-time">Hace 1 día</p>
-                                </div>
-                            </div>
-                            <div class="user-item">
-                                <div class="user-avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuABcn69A9jh5vnHpLQ7AETf9d3HI9RHgf0TyKrSh7U3CiaoxtA4nabi9ojMWkU2x3p8RDkWhd8MpI7xx-OKFQvn-r8zwDM06Fv2KkQPwj0hctbcob3B4x_rlTGbZ24EmU3F7b13bF-vUEt-p9a_Dmn0DF453XhHvBfBsM7BR-xgl2q6IM22MmuNq6r7h9H_9WBKNsTvv-w05x36pI9v4NTUPNaRXZe7ye_s3g1pn3A664M3U3PZHnfBd0wyxtkPRGMB4OgBGbuxWBY");'></div>
-                                <div class="user-info">
-                                    <p class="user-name">Javier Moreno</p>
-                                    <p class="user-time">Hace 2 días</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </div>
         </main>
     </div>
