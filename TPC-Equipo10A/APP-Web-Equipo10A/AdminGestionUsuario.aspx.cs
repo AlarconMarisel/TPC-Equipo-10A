@@ -11,6 +11,8 @@ namespace APP_Web_Equipo10A
 {
     public partial class AdminGestionUsuario : System.Web.UI.Page
     {
+        private const int USUARIOS_POR_PAGINA = 10;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -75,8 +77,8 @@ namespace APP_Web_Equipo10A
                 gvUsuarios.DataSource = usuariosFormateados;
                 gvUsuarios.DataBind();
                 
-                // Muestra paginacion solo si hay usuarios
-                pnlPaginacion.Visible = usuariosFormateados.Count > 0;
+                // Muestra paginacion solo si hay mas usuarios que el maximo por pagina
+                pnlPaginacion.Visible = usuariosFormateados.Count > USUARIOS_POR_PAGINA;
             }
             catch (Exception ex)
             {
