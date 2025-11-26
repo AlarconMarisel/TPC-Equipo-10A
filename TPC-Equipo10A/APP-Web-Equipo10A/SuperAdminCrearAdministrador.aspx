@@ -121,14 +121,14 @@
 
         <div class="form-group">
             <label class="form-label" for="txtNombre">Nombre <span class="text-danger">*</span></label>
-            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" required="true" onkeypress="return soloLetrasYEspacios(event)"></asp:TextBox>
             <asp:RequiredFieldValidator ID="rfvNombre" runat="server" ControlToValidate="txtNombre" 
                 ErrorMessage="El nombre es requerido" CssClass="text-danger" Display="Dynamic"></asp:RequiredFieldValidator>
         </div>
 
         <div class="form-group">
             <label class="form-label" for="txtApellido">Apellido <span class="text-danger">*</span></label>
-            <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+            <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" required="true" onkeypress="return soloLetrasYEspacios(event)"></asp:TextBox>
             <asp:RequiredFieldValidator ID="rfvApellido" runat="server" ControlToValidate="txtApellido" 
                 ErrorMessage="El apellido es requerido" CssClass="text-danger" Display="Dynamic"></asp:RequiredFieldValidator>
         </div>

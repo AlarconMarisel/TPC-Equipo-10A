@@ -97,7 +97,48 @@ namespace APP_Web_Equipo10A
                         fechaVencimiento = fecha;
                     }
                 }
+                // Si se activa y no hay fecha, asigna 1 mes desde la fecha de activacion
+                if (chkActivo.Checked)
+                {
+                    if (fechaVencimiento == null)
+                    {
+                        DateTime fechacreacion = DateTime.Now;
+
+                        fechaVencimiento = fechacreacion.AddMonths(1);
+                    }
+                }
+                // Si se inactiva, no hay fecha de vencimiento
+                if (!chkActivo.Checked)
+                {
+                    fechaVencimiento = null; 
+                }
+                // Actualiza en la base la fecha de vencimiento
                 negocio.ActualizarFechaVencimiento(idAdministrador, fechaVencimiento);
+
+                //Envio de email de Modificacion
+                if(chkActivo.Checked && fechaVencimiento!=null)
+                {
+                    EmailService email = new EmailService();
+                    string asunto = "Actualizacion de cuenta";
+                    string cuerpo = $"<h2> Estimado/a {negocio.ObtenerPorId(idAdministrador).Nombre} {negocio.ObtenerPorId(idAdministrador).Apellido},<h2/><br/>" +
+                                    "<p>Su cuenta se encuentra Activa.<p/>" +
+                                    $"<p>Su suscripcion tiene vigencia hasta el: {fechaVencimiento?.ToString("dd/MM/yyyy") ?? "No especificada"}.<p/><br/>" +
+                                    "<p>Saludos cordiales.<p/>";
+                    email.ArmarEmail(negocio.ObtenerPorId(idAdministrador).Email, asunto, cuerpo);
+                    email.EnviarEmail();
+
+                }
+                else
+                {
+                    EmailService email = new EmailService();
+                    string asunto = "Inhabilitacion de cuenta";
+                    string cuerpo = $"<h2> Estimado/a {negocio.ObtenerPorId(idAdministrador).Nombre} {negocio.ObtenerPorId(idAdministrador).Apellido},<h2/><br/>" +
+                                    "<p>Su cuenta se encuentra Inactiva.<p/>" +
+                                    $"<p>Comuniquese con el Administrador Principal para reactivarla.<p/><br/>" +
+                                    "<p>Saludos cordiales.<p/>";
+                    email.ArmarEmail(negocio.ObtenerPorId(idAdministrador).Email, asunto, cuerpo);
+                    email.EnviarEmail();
+                }
 
                 Response.Redirect("PanelSuperAdmin.aspx?mensaje=Administrador actualizado correctamente");
             }

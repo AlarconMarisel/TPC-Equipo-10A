@@ -82,6 +82,39 @@ namespace APP_Web_Equipo10A
                     if (admin != null && admin.Tipo == TipoUsuario.ADMIN)
                     {
                         negocio.ActivarDesactivarAdministrador(idAdministrador, !admin.Activo);
+                        if (admin.Activo)
+                        {
+                            // Enviar email de desactivacion
+                            EmailService emailService = new EmailService();
+                            string asunto = "Cuenta de Administrador Desactivada";
+                            string cuerpo = $"<h2>Estimado/a {admin.Nombre} {admin.Apellido},<h2/><br/>" +
+                                 "<p>Tu cuenta de administrador ha sido desactivada por el Administrador Principal.<p/>" +
+                                 "<p> Si crees que esto es un error, por favor contacta con soporte.<p/><br/>" +
+                                 "<p> Saludos Cordiales.<p/>";
+                            emailService.ArmarEmail(admin.Email, asunto, cuerpo);
+                            emailService.EnviarEmail();
+                        }
+                        else {
+                            // Actualiza fecha de vencimiento al activar
+                            DateTime? fechaVencimiento = null;
+                            if (fechaVencimiento == null)
+                            {
+                                DateTime fechacreacion = DateTime.Now;
+
+                                fechaVencimiento = fechacreacion.AddMonths(1);
+                            }
+                            negocio.ActualizarFechaVencimiento(idAdministrador, fechaVencimiento);
+                            // Enviar email de activacion
+                            EmailService emailService = new EmailService();
+                            string asunto = "Cuenta de Administrador Activada";
+                            string cuerpo = $"<h2>Estimado/a {admin.Nombre} {admin.Apellido},<h2/><br/>" +
+                                 "<p>Tu cuenta de administrador ha sido activada por el Administrador Principal.<p/>" +
+                                 "<p> Ya puedes iniciar sesión y gestionar tu tienda.<p/>" +
+                                 $"<p> Su suscripcion tiene vigencia hasta el: {fechaVencimiento?.ToString("dd/MM/yyyy") ?? "No especificada"}.<p/><br/>" +
+                                 "<p> Saludos Cordiales.<p/>";
+                            emailService.ArmarEmail(admin.Email, asunto, cuerpo);
+                            emailService.EnviarEmail();
+                        }
                         CargarAdministradores();
                         lblMensaje.Text = admin.Activo ? "Administrador desactivado correctamente" : "Administrador activado correctamente";
                         lblMensaje.CssClass = "text-success mt-3";

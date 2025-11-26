@@ -89,7 +89,7 @@ namespace APP_Web_Equipo10A
                     //Envio de email de confirmación
                     EmailService email = new EmailService();
                     string asunto = "Administrador creado exitosamente";
-                    string cuerpo = $"<h2> Estimado/a {nuevoAdmin.Nombre} {nuevoAdmin.Apellido},<h2/>" +
+                    string cuerpo = $"<h2> Estimado/a {nuevoAdmin.Nombre} {nuevoAdmin.Apellido},<h2/><br/>" +
                                     "<p>Su cuenta de administrador ha sido creada exitosamente.<p/>" +
                                     $"<p>Su ID de Administrador es: {idAdministrador}.<p/>" +
                                     $"<p>Ya podes comenzar a vender ingresando con tu email: {nuevoAdmin.Email}<p/>" +
