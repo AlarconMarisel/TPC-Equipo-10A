@@ -116,21 +116,26 @@ namespace APP_Web_Equipo10A
                 {
                     IdUsuario = usuario,
                     FechaReserva = DateTime.Now,
-                    FechaVencimiento = DateTime.Now.AddDays(7),
+                    FechaVencimiento = DateTime.Now.AddHours(72),
                     MontoSeña = montoSeña,
-                    EstadoReserva = true,
+                    EstadoReserva = false, 
                     ArticulosReservados = articulos
                 };
 
                 ReservaNegocio negocio = new ReservaNegocio();
                 int idReserva = negocio.AgregarReservaConArticulos(reserva, articulos);
 
-
                 if (idReserva > 0)
                 {
+                    
+                    carritoNegocio.VaciarCarrito(idCarrito);
+
+                   
                     Session["IdReserva"] = idReserva;
-                    Response.Redirect("PagoSeña.aspx?id=" + idReserva +
-                                      "&monto=" + montoSeña.ToString());
+
+                    
+                    Response.Redirect("PagoSeña.aspx?id=" + idReserva + "&monto=" + montoSeña.ToString(), false);
+                    return;
                 }
                 else
                 {
@@ -142,5 +147,6 @@ namespace APP_Web_Equipo10A
                 Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
             }
         }
+
     }
 }

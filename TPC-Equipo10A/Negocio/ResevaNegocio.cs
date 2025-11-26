@@ -400,6 +400,126 @@ namespace Negocio
             }
         }
 
+        public List<Articulo> ListarArticulosDeReserva(int idReserva)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            List<Articulo> lista = new List<Articulo>();
+
+            try
+            {
+                datos.SetearConsulta(@"
+            SELECT A.IDArticulo, A.Nombre, A.Descripcion, A.Precio,
+                   I.RutaImagen
+            FROM ARTICULOSXRESERVA AR
+            INNER JOIN ARTICULOS A ON A.IDArticulo = AR.IDArticulo
+            OUTER APPLY (
+                SELECT TOP 1 RutaImagen
+                FROM IMAGENESARTICULO
+                WHERE IDArticulo = A.IDArticulo
+            ) I
+            WHERE AR.IDReserva = @idReserva");
+
+                datos.SetearParametro("@idReserva", idReserva);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Articulo art = new Articulo();
+                    art.IdArticulo = (int)datos.Lector["IDArticulo"];
+                    art.Nombre = datos.Lector["Nombre"].ToString();
+                    art.Descripcion = datos.Lector["Descripcion"].ToString();
+                    art.Precio = (decimal)datos.Lector["Precio"];
+
+                    string ruta = datos.Lector["RutaImagen"] != DBNull.Value
+                        ? datos.Lector["RutaImagen"].ToString()
+                        : "/Images/no-image.png";
+
+                    art.Imagenes = new List<Imagen>
+            {
+                new Imagen { RutaImagen = ruta }
+            };
+
+                    lista.Add(art);
+                }
+
+                return lista;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public List<Reserva> ListarReservasPorUsuario(int idUsuario)
+        {
+            List<Reserva> lista = new List<Reserva>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"
+        SELECT 
+            R.IDReserva,
+            R.FechaReserva,
+            R.FechaVencimientoReserva,
+            R.MontoSeña,
+            R.EstadoReserva,
+            R.IDAdministrador,
+            U.Nombre AS AdminNombre,
+            U.Apellido AS AdminApellido,
+            U.Email AS AdminEmail
+        FROM RESERVAS R
+        INNER JOIN USUARIOS U ON U.IDUsuario = R.IDAdministrador
+        WHERE R.IDUsuario = @idUsuario
+        ");
+
+                datos.SetearParametro("@idUsuario", idUsuario);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Reserva reserva = new Reserva();
+                    reserva.IdReserva = (int)datos.Lector["IDReserva"];
+                    reserva.FechaReserva = (DateTime)datos.Lector["FechaReserva"];
+                    reserva.FechaVencimiento = (DateTime)datos.Lector["FechaVencimientoReserva"];
+                    reserva.MontoSeña = (decimal)datos.Lector["MontoSeña"];
+                    reserva.EstadoReserva = (bool)datos.Lector["EstadoReserva"];
+                    reserva.IDAdministrador = (int)datos.Lector["IDAdministrador"];
+
+                    reserva.Administrador = new Usuario()
+                    {
+                        Nombre = datos.Lector["AdminNombre"].ToString(),
+                        Apellido = datos.Lector["AdminApellido"].ToString(),
+                        Email = datos.Lector["AdminEmail"].ToString()
+                    };
+                    reserva.ArticulosReservados = ListarArticulosDeReserva(reserva.IdReserva);
+
+                    lista.Add(reserva);
+                }
+
+                return lista;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void MarcarSeniaComoPagada(int idReserva)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE RESERVAS SET EstadoReserva = 1 WHERE IDReserva = @id");
+                datos.SetearParametro("@id", idReserva);
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
 
     }
 }

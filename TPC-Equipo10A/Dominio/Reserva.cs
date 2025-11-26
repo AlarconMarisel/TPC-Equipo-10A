@@ -16,5 +16,7 @@ namespace Dominio
         public Decimal MontoSeña { get; set; }
         public bool EstadoReserva { get; set; }
         public int IDAdministrador { get; set; }
+
+        public Usuario Administrador { get; set; }
     }
 }

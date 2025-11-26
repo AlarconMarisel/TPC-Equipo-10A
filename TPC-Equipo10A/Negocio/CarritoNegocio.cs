@@ -50,7 +50,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                
+
                 datos.SetearConsulta(@"
             SELECT 1 
             FROM ARTICULOSXCARRITO 
@@ -62,13 +62,13 @@ namespace Negocio
 
                 if (datos.Lector.Read())
                 {
-                   
+
                     return;
                 }
 
                 datos.cerrarConexion();
 
-               
+
                 datos = new AccesoDatos();
                 datos.SetearConsulta(@"
             INSERT INTO ARTICULOSXCARRITO (IDCarrito, IDArticulo, FechaAgregado)
@@ -158,6 +158,21 @@ namespace Negocio
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void VaciarCarrito(int idCarrito)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("DELETE FROM ARTICULOSXCARRITO WHERE IDCarrito = @idCarrito");
+                datos.SetearParametro("@idCarrito", idCarrito);
+                datos.EjecutarAccion();
             }
             finally
             {
