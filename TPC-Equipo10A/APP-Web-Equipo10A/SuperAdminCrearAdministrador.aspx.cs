@@ -35,12 +35,52 @@ namespace APP_Web_Equipo10A
                     return;
                 }
 
+                // Validar que las contraseñas coincidan
+                if (txtPassword.Text != txtConfirmarPassword.Text)
+                {
+                    lblMensaje.Text = "Las contraseñas no coinciden.";
+                    lblMensaje.Visible = true;
+                    return;
+                }
+
+                // Validar longitud mínima de contraseña
+                if (txtPassword.Text.Length < 8)
+                {
+                    lblMensaje.Text = "La contraseña debe tener al menos 8 caracteres.";
+                    lblMensaje.Visible = true;
+                    return;
+                }
+
                 // Verifica que el email no existe usando ValidacionHelper
                 if (!ValidacionHelper.ValidarEmailUnico(txtEmail.Text.Trim()))
                 {
                     lblMensaje.Text = "El email ya está registrado. Por favor, use otro email.";
                     lblMensaje.Visible = true;
                     return;
+                }
+
+                // Validar DNI si se ingresó
+                string dni = txtDNI.Text.Trim();
+                if (!string.IsNullOrEmpty(dni))
+                {
+                    if (dni.Length != 8 || !System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d+$"))
+                    {
+                        lblMensaje.Text = "El DNI debe tener exactamente 8 dígitos numéricos.";
+                        lblMensaje.Visible = true;
+                        return;
+                    }
+                }
+
+                // Validar Teléfono si se ingresó
+                string telefono = txtTelefono.Text.Trim();
+                if (!string.IsNullOrEmpty(telefono))
+                {
+                    if (telefono.Length < 10 || telefono.Length > 15 || !System.Text.RegularExpressions.Regex.IsMatch(telefono, @"^\d+$"))
+                    {
+                        lblMensaje.Text = "El teléfono debe tener entre 10 y 15 dígitos numéricos.";
+                        lblMensaje.Visible = true;
+                        return;
+                    }
                 }
 
                 // Crea objeto Usuario
@@ -64,7 +104,20 @@ namespace APP_Web_Equipo10A
                 {
                     if (DateTime.TryParse(txtFechaVencimiento.Text, out DateTime fecha))
                     {
+                        // Validar que la fecha sea futura
+                        if (fecha.Date <= DateTime.Now.Date)
+                        {
+                            lblMensaje.Text = "La fecha de vencimiento debe ser futura.";
+                            lblMensaje.Visible = true;
+                            return;
+                        }
                         fechaVencimiento = fecha;
+                    }
+                    else
+                    {
+                        lblMensaje.Text = "La fecha de vencimiento ingresada no es válida.";
+                        lblMensaje.Visible = true;
+                        return;
                     }
                 }
 
@@ -111,6 +164,52 @@ namespace APP_Web_Equipo10A
             {
                 lblMensaje.Text = "Error: " + ex.Message;
                 lblMensaje.Visible = true;
+            }
+        }
+
+        // Validadores del lado del servidor
+        protected void cvPasswordLength_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = txtPassword.Text.Length >= 8;
+        }
+
+        protected void cvDNI_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            string dni = txtDNI.Text.Trim();
+            if (string.IsNullOrEmpty(dni))
+            {
+                args.IsValid = true; // Es opcional
+                return;
+            }
+            args.IsValid = dni.Length == 8 && System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d+$");
+        }
+
+        protected void cvTelefono_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            string telefono = txtTelefono.Text.Trim();
+            if (string.IsNullOrEmpty(telefono))
+            {
+                args.IsValid = true; // Es opcional
+                return;
+            }
+            int length = telefono.Length;
+            args.IsValid = length >= 10 && length <= 15 && System.Text.RegularExpressions.Regex.IsMatch(telefono, @"^\d+$");
+        }
+
+        protected void cvFechaVencimiento_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (string.IsNullOrEmpty(txtFechaVencimiento.Text))
+            {
+                args.IsValid = true; // Es opcional
+                return;
+            }
+            if (DateTime.TryParse(txtFechaVencimiento.Text, out DateTime fecha))
+            {
+                args.IsValid = fecha.Date > DateTime.Now.Date;
+            }
+            else
+            {
+                args.IsValid = false;
             }
         }
     }
