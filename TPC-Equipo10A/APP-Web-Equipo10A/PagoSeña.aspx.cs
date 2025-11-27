@@ -76,6 +76,29 @@ namespace APP_Web_Equipo10A
                 ReservaNegocio negocio = new ReservaNegocio();
                 negocio.MarcarSeniaComoPagada(idReserva);
 
+                List<Articulo> articulos = negocio.ListarArticulosDeReserva(idReserva);
+                int idEstadoReservado = 2;
+
+                foreach (var articulo in articulos)
+                {
+                    ArticuloNegocio articuloNegocio = new ArticuloNegocio();
+                    articuloNegocio.ActualizarEstadoArticuloIndividual(articulo.IdArticulo, idEstadoReservado);
+                }
+
+                //Envio de email al administrador para informar que tiene una reserva a confirmar.
+                int idAminitrador = negocio.ObtenerPorId(idReserva).IDAdministrador;
+                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+
+                EmailService emailService = new EmailService();
+                string asunto = "Confirmar Cobro de Reserva";
+                string cuerpo = $"<h2>Estimado/a {usuarioNegocio.ObtenerPorId(idAminitrador).NombreCompleto}<h2/>" +
+                                $"<p>El Usuario {usuario.NombreCompleto} ha realizado una reserva.<p/>" +
+                                $"<p>Confirmar la misma.<p/><br/>" +
+                                "<p>Saludos cordiales.<p/>";
+                emailService.ArmarEmail(usuarioNegocio.ObtenerPorId(idAminitrador).Email, asunto, cuerpo);
+                emailService.EnviarEmail();
+
+
                 string script = @"
                 alert('¡Tu seña fue confirmada exitosamente! La reserva quedó registrada.');
                 window.location.href='PanelUsuario.aspx';

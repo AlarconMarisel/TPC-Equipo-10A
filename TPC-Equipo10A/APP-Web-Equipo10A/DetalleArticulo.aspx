@@ -243,6 +243,12 @@
                             <span class="material-symbols-outlined">add_shopping_cart</span>
                             <span>Agregar al Carrito</span>
                         </asp:LinkButton>
+                        <asp:LinkButton ID="btnReservadoRegresar"
+                            runat="server"
+                            CssClass="btn btn-primary cta-button w-100 w-md-auto d-flex align-items-center justify-content-center gap-2 text-decoration-none"
+                            OnClick="btnReservadoRegresar_Click" Visible="false">
+                            <span>No Disponible, Regresar</span>
+                        </asp:LinkButton>
                     </div>
                 </div>
             </div>

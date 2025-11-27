@@ -22,6 +22,13 @@ namespace APP_Web_Equipo10A
                 if (int.TryParse(Request.QueryString["id"], out int id))
                 {
                     CargarArticulo(id);
+                    ArticuloNegocio negocio = new ArticuloNegocio();
+                    Articulo art = negocio.ObtenerPorId(id);
+                    if (art.EstadoArticulo.Nombre!= "Disponible")
+                    {
+                        btnAgregarCarrito.Visible=false;
+                        btnReservadoRegresar.Visible = true;
+                    }
                 }
                 else
                 {
@@ -141,6 +148,10 @@ namespace APP_Web_Equipo10A
             }
         }
 
+        protected void btnReservadoRegresar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Default.aspx");
+        }
 
     }
 }

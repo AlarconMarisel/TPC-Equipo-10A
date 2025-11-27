@@ -52,17 +52,38 @@ namespace Negocio
             {
 
                 datos.SetearConsulta(@"
-                SELECT 1 
-                FROM ARTICULOSXCARRITO 
-                WHERE IDCarrito = @IDCarrito AND IDArticulo = @IDArticulo");
+                SELECT A.IDEstado, AC.IDArticulo
+                FROM ARTICULOS A
+                LEFT JOIN ARTICULOSXCARRITO AC ON A.IDArticulo = AC.IDArticulo AND AC.IDCarrito = @IDCarrito
+                WHERE A.IDArticulo = @IDArticulo");
+
                 datos.SetearParametro("@IDCarrito", idCarrito);
                 datos.SetearParametro("@IDArticulo", idArticulo);
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())
                 {
+                    int estadoArticulo = (int)datos.Lector["IDEstado"];
+                    object idArticuloEnCarrito = datos.Lector["IDArticulo"];
+                    
+                    // Si el estado no es 1, lanzar una excepción o simplemente salir.
+                    if (estadoArticulo != 1)
+                    {
+                        // Puedes lanzar una excepción personalizada o manejar el error como prefieras.
+                        throw new InvalidOperationException("El artículo se encuentra reservado.");
+                        // O simplemente: return;
+                    }
 
-                    return;
+                    // Si el artículo ya está en el carrito (IDArticuloXCARRITO no es DBNull), no hacer nada y salir.
+                    if (idArticuloEnCarrito != DBNull.Value)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    // Si no se encuentra el artículo con el ID especificado, puedes manejar el error aquí.
+                    throw new ArgumentException("No se encontró el artículo especificado.");
                 }
 
                 datos.cerrarConexion();

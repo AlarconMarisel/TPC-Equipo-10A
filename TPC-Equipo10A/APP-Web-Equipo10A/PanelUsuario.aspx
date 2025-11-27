@@ -179,26 +179,6 @@
 
     <div class="reservations-container">
         <div class="reservations-content">
-            <!-- HEADER -->
-            <header class="reservations-header">
-                <div class="header-brand">
-                    <div class="brand-icon">
-                        <svg fill="none" viewBox="0 0 48 48">
-                            <path d="M24 4H6V30.6H24V44H42V17.3H24V4Z" fill="currentColor"></path>
-                        </svg>
-                    </div>
-                    <h2 class="brand-title">UsedGoods</h2>
-                </div>
-
-                <div class="header-actions">
-                    <div class="header-links">
-                        <a class="header-link" href="#">Mi Perfil</a>
-                        <a class="header-link" href="#">Cerrar Sesión</a>
-                    </div>
-
-                    <div class="user-avatar" style='background-image: url("/Images/avatar-default.png");'></div>
-                </div>
-            </header>
 
             <!-- MAIN -->
             <main class="main-content">
@@ -213,7 +193,6 @@
                 <!-- TABS -->
                 <div class="tabs-container">
                     <div class="tabs">
-                        <a class="tab" href="#">Pendientes de Seña</a>
                         <a class="tab active" href="#">Reservas Activas</a>
                         <a class="tab" href="#">Completadas</a>
                         <a class="tab" href="#">Vencidas</a>
